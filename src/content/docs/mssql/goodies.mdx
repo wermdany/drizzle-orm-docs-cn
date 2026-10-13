@@ -1,8 +1,8 @@
 import Callout from '@mdx/Callout.astro';
 import CodeTabs from '@mdx/CodeTabs.astro';
 
-## Type API
-Use Drizzle's type helpers to infer `select` and `insert` models from a MSSQL table schema.
+## 类型 API
+使用 Drizzle 的类型辅助工具从 MSSQL 表 schema 推断 `select` 和 `insert` 模型。
 
 ```ts
 import { int, text, mssqlTable } from 'drizzle-orm/mssql-core';
@@ -15,13 +15,13 @@ const users = mssqlTable('users', {
 
 type SelectUser = typeof users.$inferSelect;
 type InsertUser = typeof users.$inferInsert;
-// or
+// 或
 type SelectUser = InferSelectModel<typeof users>;
 type InsertUser = InferInsertModel<typeof users>;
 ```
 
-## Logging
-Enable default query logging by passing `{ logger: true }` to `drizzle`.
+## 日志
+通过向 `drizzle` 传入 `{ logger: true }` 启用默认查询日志记录。
 
 ```ts
 import { drizzle } from "drizzle-orm/node-mssql";
@@ -29,14 +29,14 @@ import { drizzle } from "drizzle-orm/node-mssql";
 const db = drizzle(process.env.DB_URL, { logger: true });
 ```
 
-You can change the logs destination by creating a `DefaultLogger` instance and providing a custom `writer` to it:
+你可以通过创建 `DefaultLogger` 实例并为其提供自定义 `writer` 来更改日志的输出目标：
 ```typescript copy
 import { DefaultLogger, type LogWriter } from "drizzle-orm/logger";
 import { drizzle } from "drizzle-orm/node-mssql";
 
 class MyLogWriter implements LogWriter {
   write(message: string) {
-    // Write to file, stdout, etc.
+    // 写入文件、stdout 等。
   }
 }
 
@@ -44,7 +44,7 @@ const logger = new DefaultLogger({ writer: new MyLogWriter() });
 const db = drizzle(process.env.DB_URL, { logger });
 ```
 
-You can also provide a custom logger.
+你也可以提供一个自定义 logger。
 
 ```ts
 import type { Logger } from 'drizzle-orm/logger';
@@ -59,8 +59,8 @@ class MyLogger implements Logger {
 const db = drizzle(process.env.DB_URL, { logger: new MyLogger() });
 ```
 
-## Multi-project schema
-Use `mssqlTableCreator` to customize table names when several projects share one database.
+## 多项目 schema
+当多个项目共用一个数据库时，使用 `mssqlTableCreator` 自定义表名。
 
 ```ts
 import { int, text, mssqlTableCreator } from 'drizzle-orm/mssql-core';
@@ -95,8 +95,8 @@ CREATE TABLE [project1_users] (
 );
 ```
 
-## Printing SQL Query
-Print generated SQL from a query with `.toSQL()`.
+## 打印 SQL 查询
+使用 `.toSQL()` 打印由查询生成的 SQL。
 
 ```ts
 const query = db
@@ -106,8 +106,8 @@ const query = db
   .toSQL();
 ```
 
-## Raw SQL Queries
-Use `db.execute` for raw parametrized SQL.
+## 原始 SQL 查询
+使用 `db.execute` 执行原始的参数化 SQL。
 
 ```ts
 import { sql } from 'drizzle-orm';
@@ -116,8 +116,8 @@ const statement = sql`select * from ${users} where ${users.id} = ${userId}`;
 const result = await db.execute(statement);
 ```
 
-## Standalone Query Builder
-Use the MSSQL query builder without creating a database instance.
+## 独立查询构建器
+在不创建数据库实例的情况下使用 MSSQL 查询构建器。
 
 ```ts
 import { QueryBuilder } from 'drizzle-orm/mssql-core';
@@ -127,8 +127,8 @@ const query = qb.select().from(users).where(eq(users.name, 'Dan'));
 const { sql, params } = query.toSQL();
 ```
 
-## Get Typed Columns
-Use `getColumns` to get a typed column map, which is useful when excluding fields from a selection.
+## 获取带类型的列
+使用 `getColumns` 获取一个类型化的列映射，这在从选择中排除字段时很有用。
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
 ```ts
@@ -152,8 +152,8 @@ export const user = mssqlTable("user", {
 ```
 </CodeTabs>
 
-## Get Table Information
-Use `getTableConfig` to inspect PostgreSQL table metadata.
+## 获取表信息
+使用 `getTableConfig` 检查 PostgreSQL 表元数据。
 
 ```ts
 import { getTableConfig, mssqlTable } from 'drizzle-orm/mssql-core';
@@ -164,19 +164,19 @@ const { columns, indexes, foreignKeys, checks, primaryKeys, name, schema } =
   getTableConfig(table);
 ```
 
-## Compare Object Types
-Use `is()` instead of `instanceof` to check Drizzle object types.
+## 比较对象类型
+使用 `is()` 而不是 `instanceof` 来检查 Drizzle 对象类型。
 
 ```ts
 import { Column, is } from 'drizzle-orm';
 
 if (is(value, Column)) {
-  // value is narrowed to Column
+  // value 被收窄为 Column
 }
 ```
 
-## Mock Driver
-Use `drizzle.mock()` when you need a typed database object without a real PostgreSQL connection.
+## 模拟驱动
+当你需要一个类型化的数据库对象而不需要真实的 PostgreSQL 连接时，使用 `drizzle.mock()`。
 
 ```ts
 import { drizzle } from 'drizzle-orm/node-mssql';

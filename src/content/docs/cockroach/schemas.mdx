@@ -1,9 +1,9 @@
 import Section from '@mdx/Section.astro';
 import Callout from '@mdx/Callout.astro';
 
-# Table schemas
+# 表 schema
 
-If you declare an entity within a schema, query builder will prepend schema names in queries:<br/>
+如果你在 schema 中声明一个实体，查询构建器会在查询中加上 schema 名称前缀：<br/>
 `select * from "schema"."users"`
 
 <Section>
@@ -33,7 +33,7 @@ If you declare an entity within a schema, query builder will prepend schema name
     ```
     </Section>
 
-{/* TODO: ??? example > **Warning**
-> If you will have tables with same names in different schemas then drizzle will respond with `never[]` error in result types and error from database
+{/* TODO: ??? 示例 > **警告**
+> 如果你在不同 schema 中有同名的表，那么 drizzle 会在结果类型中返回 `never[]` 错误，并且数据库会报错
 >
-> In this case you may use [alias syntax](./joins#join-aliases-and-self-joins) */}
+> 这种情况下你可以使用 [别名语法](./joins#join-aliases-and-self-joins) */}

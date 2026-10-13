@@ -1,17 +1,17 @@
-# Query performance
-When it comes to **Drizzle** — we're a thin TypeScript layer on top of SQL with 
-almost 0 overhead and to make it actual 0, you can utilise our prepared statements API.
+# 查询性能
+谈到 **Drizzle**——我们是 SQL 之上的一层轻量 TypeScript 封装，
+开销几乎为 0；而要让它真正达到 0，你可以利用我们的 prepared statements API。
   
-**When you run a query on the database, there are several things that happen:**
-- all the configurations of the query builder got concatenated to the SQL string
-- that string and params are sent to the database driver
-- driver compiles SQL query to the binary SQL executable format and sends it to the database
+**当你在数据库上运行查询时，会发生以下几件事：**
+- 查询构建器的所有配置被拼接为 SQL 字符串
+- 该字符串和参数被发送到数据库驱动
+- 驱动把 SQL 查询编译为二进制 SQL 可执行格式，并将其发送到数据库
 
-With prepared statements you do SQL concatenation once on the Drizzle ORM side and then database 
-driver is able to reuse precompiled binary SQL instead of parsing query all the time. 
-It has extreme performance benefits on large SQL queries.  
+使用 prepared statements，你在 Drizzle ORM 侧只进行一次 SQL 拼接，之后数据库
+驱动就可以复用预编译的二进制 SQL，而不必每次都解析查询。
+它对大型 SQL 查询有极大的性能优势。  
 
-## Prepared statement
+## 预处理语句
 
 	```typescript copy {3}
     const db = drizzle(...);
@@ -23,8 +23,8 @@ It has extreme performance benefits on large SQL queries.
     const res3 = await prepared.execute();
     ```
 
-## Placeholder
-Whenever you need to embed a dynamic runtime value - you can use the `sql.placeholder(...)` api
+## 占位符
+每当你需要嵌入动态的运行时值时——你可以使用 `sql.placeholder(...)` api
 
 ```ts {6,9-10,15,18}
     import { sql } from "drizzle-orm";

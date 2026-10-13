@@ -4,21 +4,21 @@ import Section from '@mdx/Section.astro';
 # SQL Update
 
 <Callout type='info'>
-All the values provided to `.set()`are parameterized automatically.
-For example, this query:
+传递给 `.set()` 的所有值都会自动参数化。
+例如，这个查询：
 ```ts
 await db.update(users).set({ name: "Mr. Dan" }).where(eq(users.name, "Dan"));
 ```
-will be translated to:
+会被转换为：
 ```sql
-update "users" set "name" = $1 where "users"."name" = $2; -- params: ['Mr. Dan', 'Dan']
+update "users" set "name" = $1 where "users"."name" = $2; -- 参数：['Mr. Dan', 'Dan']
 ```
 </Callout>
 
 <br/>
 
-The object that you pass to `update` should have keys that match column names in your database schema.
-Values of `undefined` are ignored in the object: to set a column to `null`, pass `null`.
+传递给 `update` 的对象的键应与数据库 schema 中的列名匹配。
+对象中 `undefined` 的值会被忽略：要将列设置为 `null`，请传 `null`。
 
 ```typescript copy
 await db.update(users)
@@ -31,7 +31,7 @@ await db.update(users)
   .where(eq(users.name, 'Dan'));
 ```
 
-You can pass SQL as a value to be used in the update object, like this:
+你可以将 SQL 作为值传入以用于 update 对象，如下所示：
 
 ```typescript copy
 await db.update(users)
@@ -41,7 +41,7 @@ await db.update(users)
 
 ### Returning
 
-You can update a row and get it back in CockroachDB:
+在 CockroachDB 中，你可以更新一行并获取其返回结果：
 ```typescript copy
 const updatedUserId = await db.update(users).set({ name: "Mr. Dan" }).where(eq(users.name, "Dan")).returning({ updatedId: users.id });
 //      ^ { updatedId: number | null }[]
@@ -50,13 +50,13 @@ const updatedUserId = await db.update(users).set({ name: "Mr. Dan" }).where(eq(u
 update "users" set "name" = 'Mr. Dan' where "users"."name" = 'Dan' returning "id";
 ```
 
-## `with update` clause
+## `with update` 子句
 
 <Callout>
-  Check how to use WITH statement with [select](/docs/cockroach/select#with-clause), [insert](/docs/cockroach/insert#with-insert-clause), [delete](/docs/cockroach/delete#with-delete-clause)
+  查看如何将 WITH 语句与 [select](/docs/cockroach/select#with-子句)、[insert](/docs/cockroach/insert#with-insert-子句)、[delete](/docs/cockroach/delete#with-delete-子句) 一起使用
 </Callout>
 
-Using the `with` clause can help you simplify complex queries by splitting them into smaller subqueries called common table expressions (CTEs):
+使用 `with` 子句可以将复杂查询拆分为更小的子查询（称为公共表表达式 CTE），从而帮助简化查询：
 <Section>
 ```typescript copy
 const averagePrice = db.$with('average_price').as(
@@ -83,9 +83,9 @@ returning "id"
 
 ## Update ... from
 
-As CockroachDB documentation states:
+正如 CockroachDB 文档所述：
 
-> A table expression allowing columns from other tables to appear in the WHERE condition and update expressions
+> 一个表表达式，允许其他表的列出现在 WHERE 条件和更新表达式中
 
 <Section>
 ```ts
@@ -102,7 +102,7 @@ where (("cities"."name" = 'Seattle') and ("users"."name" = 'John'))
 ```
 </Section>
 
-You can also alias tables that are joined (you can also alias the updating table too).
+你还可以为连接的表设置别名（也可以为被更新的表设置别名）。
 <Section>
 ```ts
 const c = alias(cities, 'c');
@@ -117,7 +117,7 @@ from "cities" "c"
 ```
 </Section>
 
-In Postgres, you can also return columns from the joined tables.
+在 Postgres 中，你还可以从连接的表返回列。
 <Section>
 ```ts
 const updatedUsers = await db

@@ -2,14 +2,14 @@ import Npm from '@mdx/Npm.astro';
 import Callout from '@mdx/Callout.astro';
 
 <Callout type="error">
-Starting from `drizzle-orm@1.0.0-beta.15`, `drizzle-zod` has been deprecated in favor of first-class schema generation support within Drizzle ORM itself
+从 `drizzle-orm@1.0.0-beta.15` 开始，`drizzle-zod` 已被废弃，改为在 Drizzle ORM 本身中提供一流的 schema 生成支持
 
-You can still use `drizzle-zod` package but all new update will be added to Drizzle ORM directly
+你仍然可以使用 `drizzle-zod` 包，但所有新的更新都将直接添加到 Drizzle ORM 中
 </Callout>
 
 # zod
 
-### Install the dependencies
+### 安装依赖
 
 <Npm>
 zod
@@ -17,7 +17,7 @@ zod
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库中查询得到的数据的形状 - 可用于校验 API 响应。
 
 ```ts copy
 import { int, singlestoreTable, text } from 'drizzle-orm/singlestore-core';
@@ -32,17 +32,17 @@ const users = singlestoreTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // Error: `age` is not returned in the above query
+const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // 错误：上述查询未返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // Will parse successfully
+const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // 将成功解析
 ```
 
-Column enums are supported through the SingleStore table schema and can be validated with the generated table schemas.
+列枚举通过 SingleStore 表 schema 得到支持，并可使用生成的表 schema 进行校验。
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据的形状 - 可用于校验 API 请求。
 
 ```ts copy
 import { int, singlestoreTable, text } from 'drizzle-orm/singlestore-core';
@@ -57,16 +57,16 @@ const users = singlestoreTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: { name: string, age: number } = userInsertSchema.parse(user); // Error: `age` is not defined
+const parsed: { name: string, age: number } = userInsertSchema.parse(user); // 错误：`age` 未定义
 
 const user = { name: 'Jane', age: 30 };
-const parsed: { name: string, age: number } = userInsertSchema.parse(user); // Will parse successfully
+const parsed: { name: string, age: number } = userInsertSchema.parse(user); // 将成功解析
 await db.insert(users).values(parsed);
 ```
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据的形状 - 可用于校验 API 请求。
 
 ```ts copy
 import { int, singlestoreTable, text } from 'drizzle-orm/singlestore-core';
@@ -81,16 +81,16 @@ const users = singlestoreTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { id: 5, name: 'John' };
-const parsed: { name?: string | undefined, age?: number | undefined } = userUpdateSchema.parse(user); // Error: `id` is a generated column, it can't be updated
+const parsed: { name?: string | undefined, age?: number | undefined } = userUpdateSchema.parse(user); // 错误：`id` 是生成列，无法更新
 
 const user = { age: 35 };
-const parsed: { name?: string | undefined, age?: number | undefined } = userUpdateSchema.parse(user); // Will parse successfully
+const parsed: { name?: string | undefined, age?: number | undefined } = userUpdateSchema.parse(user); // 将成功解析
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a Zod schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，你可以用它来扩展、修改或完全覆盖某个字段的 schema。定义回调函数会扩展或修改，而提供 Zod schema 则会覆盖它。
 
 ```ts copy
 import { int, json, singlestoreTable, text } from 'drizzle-orm/singlestore-core';
@@ -105,9 +105,9 @@ const users = singlestoreTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => schema.max(20), // Extends schema
-  bio: (schema) => schema.max(1000), // Extends schema before becoming nullable/optional
-  preferences: z.object({ theme: z.string() }) // Overwrites the field, including its nullability
+  name: (schema) => schema.max(20), // 扩展 schema
+  bio: (schema) => schema.max(1000), // 在变为可空/可选之前扩展 schema
+  preferences: z.object({ theme: z.string() }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: {
@@ -120,16 +120,16 @@ const parsed: {
 } = userSelectSchema.parse(...);
 ```
 
-### Factory functions
+### 工厂函数
 
-For more advanced use cases, you can use the `createSchemaFactory` function.
+对于更高级的用例，你可以使用 `createSchemaFactory` 函数。
 
-**Use case: Using an extended Zod instance**
+**用例：使用扩展的 Zod 实例**
 
 ```ts copy
 import { int, singlestoreTable, text } from 'drizzle-orm/singlestore-core';
 import { createSchemaFactory } from 'drizzle-orm/zod';
-import { z } from '@hono/zod-openapi'; // Extended Zod instance
+import { z } from '@hono/zod-openapi'; // 扩展的 Zod 实例
 
 const users = singlestoreTable('users', {
   id: int().primaryKey().autoincrement(),
@@ -140,12 +140,12 @@ const users = singlestoreTable('users', {
 const { createInsertSchema } = createSchemaFactory({ zodInstance: z });
 
 const userInsertSchema = createInsertSchema(users, {
-  // We can now use the extended instance
+  // 现在我们可以使用扩展的实例
   name: (schema) => schema.openapi({ example: 'John' })
 });
 ```
 
-**Use case: Type coercion**
+**用例：类型强制转换**
 
 ```ts copy
 import { singlestoreTable, timestamp } from 'drizzle-orm/singlestore-core';
@@ -158,21 +158,21 @@ const users = singlestoreTable('users', {
 });
 
 const { createInsertSchema } = createSchemaFactory({
-  // This configuration will only coerce dates. Set `coerce` to `true` to coerce all data types or specify others
+  // 此配置只会强制转换日期。将 `coerce` 设为 `true` 可强制转换所有数据类型，或另行指定其它类型
   coerce: {
     date: true
   }
 });
 
 const userInsertSchema = createInsertSchema(users);
-// The above is the same as this:
+// 上面的写法与下面这段等价：
 const userInsertSchema = z.object({
   ...,
   createdAt: z.coerce.date()
 });
 ```
 
-### Data type reference
+### 数据类型参考
 
 ```ts
 singlestore.boolean();
@@ -221,7 +221,7 @@ z.string().max(length);
 singlestore.text();
 
 // Schema
-z.string().max(65_535); // unsigned 16-bit integer limit
+z.string().max(65_535); // 无符号 16 位整数上限
 ```
 
 ```ts
@@ -238,70 +238,70 @@ z.enum(enum);
 singlestore.tinyint();
 
 // Schema
-z.number().min(-128).max(127).int(); // 8-bit integer lower and upper limit
+z.number().min(-128).max(127).int(); // 8 位整数下限与上限
 ```
 
 ```ts
 singlestore.tinyint({ unsigned: true });
 
 // Schema
-z.number().min(0).max(255).int(); // unsigned 8-bit integer lower and upper limit
+z.number().min(0).max(255).int(); // 无符号 8 位整数下限与上限
 ```
 
 ```ts
 singlestore.smallint();
 
 // Schema
-z.number().min(-32_768).max(32_767).int(); // 16-bit integer lower and upper limit
+z.number().min(-32_768).max(32_767).int(); // 16 位整数下限与上限
 ```
 
 ```ts
 singlestore.smallint({ unsigned: true });
 
 // Schema
-z.number().min(0).max(65_535).int(); // unsigned 16-bit integer lower and upper limit
+z.number().min(0).max(65_535).int(); // 无符号 16 位整数下限与上限
 ```
 
 ```ts
 singlestore.float();
 
 // Schema
-z.number().min(-8_388_608).max(8_388_607); // 24-bit integer lower and upper limit
+z.number().min(-8_388_608).max(8_388_607); // 24 位整数下限与上限
 ```
 
 ```ts
 singlestore.mediumint();
 
 // Schema
-z.number().min(-8_388_608).max(8_388_607).int(); // 24-bit integer lower and upper limit
+z.number().min(-8_388_608).max(8_388_607).int(); // 24 位整数下限与上限
 ```
 
 ```ts
 singlestore.float({ unsigned: true });
 
 // Schema
-z.number().min(0).max(16_777_215); // unsigned 24-bit integer lower and upper limit
+z.number().min(0).max(16_777_215); // 无符号 24 位整数下限与上限
 ```
 
 ```ts
 singlestore.mediumint({ unsigned: true });
 
 // Schema
-z.number().min(0).max(16_777_215).int(); // unsigned 24-bit integer lower and upper limit
+z.number().min(0).max(16_777_215).int(); // 无符号 24 位整数下限与上限
 ```
 
 ```ts
 singlestore.int();
 
 // Schema
-z.number().min(-2_147_483_648).max(2_147_483_647).int(); // 32-bit integer lower and upper limit
+z.number().min(-2_147_483_648).max(2_147_483_647).int(); // 32 位整数下限与上限
 ```
 
 ```ts
 singlestore.int({ unsigned: true });
 
 // Schema
-z.number().min(0).max(4_294_967_295).int(); // unsgined 32-bit integer lower and upper limit
+z.number().min(0).max(4_294_967_295).int(); // 无符号 32 位整数下限与上限
 ```
 
 ```ts
@@ -309,42 +309,42 @@ singlestore.double();
 singlestore.real();
 
 // Schema
-z.number().min(-140_737_488_355_328).max(140_737_488_355_327); // 48-bit integer lower and upper limit
+z.number().min(-140_737_488_355_328).max(140_737_488_355_327); // 48 位整数下限与上限
 ```
 
 ```ts
 singlestore.double({ unsigned: true });
 
 // Schema
-z.number().min(0).max(281_474_976_710_655); // unsigned 48-bit integer lower and upper limit
+z.number().min(0).max(281_474_976_710_655); // 无符号 48 位整数下限与上限
 ```
 
 ```ts
 singlestore.bigint({ mode: 'number' });
 
 // Schema
-z.number().min(-9_007_199_254_740_991).max(9_007_199_254_740_991).int(); // Javascript min. and max. safe integers
+z.number().min(-9_007_199_254_740_991).max(9_007_199_254_740_991).int(); // Javascript 最小和最大安全整数
 ```
 
 ```ts
 singlestore.serial();
 
 // Schema
-z.number().min(0).max(9_007_199_254_740_991).int(); // Javascript max. safe integer
+z.number().min(0).max(9_007_199_254_740_991).int(); // Javascript 最大安全整数
 ```
 
 ```ts
 singlestore.bigint({ mode: 'bigint' });
 
 // Schema
-z.bigint().min(-9_223_372_036_854_775_808n).max(9_223_372_036_854_775_807n); // 64-bit integer lower and upper limit
+z.bigint().min(-9_223_372_036_854_775_808n).max(9_223_372_036_854_775_807n); // 64 位整数下限与上限
 ```
 
 ```ts
 singlestore.bigint({ mode: 'bigint', unsigned: true });
 
 // Schema
-z.bigint().min(0).max(18_446_744_073_709_551_615n); // unsigned 64-bit integer lower and upper limit
+z.bigint().min(0).max(18_446_744_073_709_551_615n); // 无符号 64 位整数下限与上限
 ```
 
 ```ts
@@ -360,4 +360,3 @@ singlestore.json();
 // Schema
 z.union([z.union([z.string(), z.number(), z.boolean(), z.null()]), z.record(z.any()), z.array(z.any())]);
 ```
-

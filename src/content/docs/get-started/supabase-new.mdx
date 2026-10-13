@@ -19,43 +19,43 @@ import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and Supabase
+# Drizzle 与 Supabase 入门
 
 <Prerequisites>
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **Supabase** - open source Firebase alternative - [read here](https://supabase.com/)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **Supabase** - 开源的 Firebase 替代方案 - [阅读文档](https://supabase.com/)
 </Prerequisites>
 
 <FileStructure/>
 
-#### Step 1 - Install **postgres** package
+#### 步骤 1 - 安装 **postgres** 包
 <InstallPackages lib='postgres'/>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 设置连接变量
 
 <SetupEnv env_variable='DATABASE_URL' />
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 步骤 3 - 将 Drizzle ORM 连接到数据库
 
 <ConnectSupabase/>
 
-#### Step 4 - Create a table
+#### 步骤 4 - 创建表
 
 <CreateTable />
 
-#### Step 5 - Setup Drizzle config file
+#### 步骤 5 - 设置 Drizzle 配置文件
 
 <SetupConfig dialect='postgresql' env_variable='DATABASE_URL'/>
 
-#### Step 6 - Applying changes to the database
+#### 步骤 6 - 将变更应用到数据库
 
 <ApplyChanges />
 
-#### Step 7 - Seed and Query the database
+#### 步骤 7 - 填充种子数据并查询数据库
 
 <QueryDatabase dialect='postgres-js' env_variable='DATABASE_URL'/>
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>

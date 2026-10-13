@@ -20,68 +20,68 @@ import UpdateSchema from '@mdx/get-started/sqlite/UpdateSchema.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and Node:SQLite in existing project
+# 在现有项目中使用 Drizzle 和 Node:SQLite 快速上手
 
 <Prerequisites>  
-  - **node v22.5.0+** - JavaScript runtime - [read here](https://nodejs.org/)
-  - **node:sqlite** - native implementation of a high-performance SQLite3 driver - [read here](https://nodejs.org/api/sqlite.html)
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.is/)
+  - **node v22.5.0+** - JavaScript 运行时 - [阅读文档](https://nodejs.org/)
+  - **node:sqlite** - 高性能 SQLite3 驱动的原生实现 - [阅读文档](https://nodejs.org/api/sqlite.html)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.is/)
 </Prerequisites>
 
 <FileStructure />
 
-#### Step 1 - Install required packages
+#### 步骤 1 - 安装所需包
 
 <Npm>
     drizzle-orm@rc dotenv
     -D drizzle-kit@rc tsx
 </Npm>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 配置连接变量
 
 <SetupEnv env_variable='DB_FILE_NAME' />
 
-<Callout type='info' title='important'>
-For example, if you have an SQLite database file in the root of your project, you can use this example:
+<Callout type='info' title='重要'>
+例如，如果你的项目根目录下有一个 SQLite 数据库文件，可以使用这个示例：
 ```plaintext copy
 DB_FILE_NAME=mydb.sqlite
 ```
 </Callout>
 
 
-#### Step 3 - Setup Drizzle config file
+#### 步骤 3 - 配置 Drizzle 配置文件
 
 <SetupConfig dialect='sqlite' env_variable='DB_FILE_NAME'/>
 
-#### Step 4 - Introspect your database
+#### 步骤 4 - 内省数据库
 
 <IntrospectSqlite/>
 
-#### Step 5 - Transfer code to your actual schema file
+#### 步骤 5 - 将代码迁移到实际的 schema 文件
 
 <TransferCode/>
 
-#### Step 6 - Connect Drizzle ORM to the database
+#### 步骤 6 - 将 Drizzle ORM 连接到数据库
 
 <ConnectNode/>
 
-#### Step 7 - Query the database
+#### 步骤 7 - 查询数据库
 
 <QueryDatabase dialect='node-sqlite' env_variable='DB_FILE_NAME' />
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>
 
-#### Step 9 - Update your table schema (optional)
+#### 步骤 9 - 更新表结构 schema（可选）
 
 <UpdateSchema/>
 
-#### Step 9 - Applying changes to the database (optional)
+#### 步骤 9 - 将变更应用到数据库（可选）
 
 <ApplyChanges/>
 
-#### Step 10 - Query the database with a new field (optional)
+#### 步骤 10 - 使用新字段查询数据库（可选）
 
 <QueryDatabaseUpdated dialect='node-sqlite' env_variable='DB_FILE_NAME' />

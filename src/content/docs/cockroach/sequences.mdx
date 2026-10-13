@@ -1,16 +1,16 @@
 import Callout from '@mdx/Callout.astro';
 
-# Sequences
+# 序列
 
-Sequences in CockroachDB and CockroachDB are special single-row tables created to generate unique identifiers, often used for auto-incrementing primary key values. They provide a thread-safe way to generate unique sequential values across multiple sessions.
+CockroachDB 和 CockroachDB 中的序列是特殊的单行表，用于生成唯一标识符，通常用于自增主键值。它们提供了一种线程安全的方式，可以在多个会话之间生成唯一的顺序值。
 
 ```ts
 import { cockroachSchema, cockroachSequence } from 'drizzle-orm/cockroach-core';
 
-// No params specified
+// 未指定参数
 export const customSequence = cockroachSequence('name');
 
-// Sequence with params
+// 带参数的序列
 export const customSequence = cockroachSequence('name', {
   startWith: 100,
   maxValue: 10000,
@@ -19,7 +19,7 @@ export const customSequence = cockroachSequence('name', {
   increment: 2,
 });
 
-// Sequence in custom schema
+// 自定义 schema 中的序列
 export const customSchema = cockroachSchema('custom_schema');
 export const customSequence = customSchema.sequence('name');
 ```

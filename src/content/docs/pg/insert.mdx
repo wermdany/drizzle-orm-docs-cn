@@ -6,22 +6,22 @@ import Tabs from '@mdx/Tabs.astro';
 # SQL Insert
 
 <Callout type='info'>
-All the values provided to `.values()`are parameterized automatically.
-For example, this query:
+所有提供给 `.values()` 的值都会自动参数化。
+例如，这个查询：
 ```ts
 await db.insert(users).values({ name: 'Andrew' });
 ```
-will be translated to:
+会被转换为：
 ```sql
-insert into "users" ("id", "name") values (default, $1) -- params: ['Andrew']
+insert into "users" ("id", "name") values (default, $1) -- 参数: ['Andrew']
 ```
 </Callout>
 
 <br/>
 
-Drizzle ORM provides you the most SQL-like way to insert rows into the database tables.
+Drizzle ORM 为你提供了最接近 SQL 的方式，将行插入数据库表中。
 
-Inserting data with Drizzle is extremely straightforward and sql-like. See for yourself:
+使用 Drizzle 插入数据极其直观且接近 SQL。你自己看：
 
 <Section>
 ```typescript copy 
@@ -33,7 +33,7 @@ insert into "users" ("id", "name", "age") values (default, 'Andrew', default)
 ```
 </Section>
 
-If you need insert type for a particular table you can use `typeof usersTable.$inferInsert` syntax. 
+如果你需要某张特定表的插入类型，可以使用 `typeof usersTable.$inferInsert` 语法。 
 ```typescript copy 
 type NewUser = typeof users.$inferInsert;
 
@@ -47,32 +47,32 @@ await insertUser(newUser);
 
 ## returning
 
-You can insert a row and get it back in PostgreSQL like such:
+在 PostgreSQL 中，你可以像这样插入一行并把它取回来：
 ```typescript copy
 await db.insert(users).values({ name: "Dan" }).returning();
 
-// partial return
+// 部分返回
 await db.insert(users).values({ name: "Partial Dan" }).returning({ insertedId: users.id });
 ```
 
-## Insert multiple rows
+## 插入多行
 ```typescript copy
 await db.insert(users).values([{ name: 'Andrew' }, { name: 'Dan' }]);
 ```
 
-## Upserts and conflicts
-Drizzle ORM provides simple interfaces for handling upserts and conflicts.
+## Upsert 与冲突
+Drizzle ORM 提供了简单的接口来处理 upsert 和冲突。
 
 ### On conflict do nothing
 
-`onConflictDoNothing` will cancel the insert if there's a conflict:
+`onConflictDoNothing` 会在存在冲突时取消插入：
 
 ```typescript copy
 await db.insert(users)
   .values({ id: 1, name: 'John' })
   .onConflictDoNothing();
 
-// explicitly specify conflict target
+// 显式指定冲突目标
 await db.insert(users)
   .values({ id: 1, name: 'John' })
   .onConflictDoNothing({ target: users.id });
@@ -80,17 +80,17 @@ await db.insert(users)
 
 ### On conflict do update
 
-`onConflictDoUpdate` will update the row if there's a conflict:
+`onConflictDoUpdate` 会在存在冲突时更新该行：
 ```typescript
 await db.insert(users)
   .values({ id: 1, name: 'Dan' })
   .onConflictDoUpdate({ target: users.id, set: { name: 'John' } });
 ```
 
-#### `where` clauses
+#### `where` 子句
 
-`on conflict do update` can have a `where` clause in two different places -
-as part of the conflict target (i.e. for partial indexes) or as part of the `update` clause:
+`on conflict do update` 可以在两个不同的位置包含 `where` 子句——
+作为冲突目标的一部分（即用于部分索引），或作为 `update` 子句的一部分：
 
 ```sql
 insert into "employees" ("employee_id", "name") 
@@ -104,7 +104,7 @@ on conflict ("employee_id") do update set "name" = 'John Doe'
 where name <> 'John Doe';
 ```
 
-To specify these conditions in Drizzle, you can use `setWhere` and `targetWhere` clauses:
+要在 Drizzle 中指定这些条件，你可以使用 `setWhere` 和 `targetWhere` 子句：
 
 ```typescript
 await db.insert(employees)
@@ -124,7 +124,7 @@ await db.insert(employees)
   });
 ```
 
-Upsert with composite indexes, or composite primary keys for `onConflictDoUpdate`:
+使用复合索引或复合主键进行 `onConflictDoUpdate` 的 Upsert：
 
 ```typescript
 await db.insert(users)
@@ -135,13 +135,13 @@ await db.insert(users)
   });
 ```
 
-## `with insert` clause
+## `with insert` 子句
 
 <Callout>
-  Check how to use WITH statement with [select](/docs/select#with-clause), [update](/docs/update#with-update-clause), [delete](/docs/delete#with-delete-clause)
+  查看如何在 [select](/docs/select#with-子句)、[update](/docs/update#with-update-子句)、[delete](/docs/delete#with-delete-子句) 中使用 WITH 语句
 </Callout>
 
-Using the `with` clause can help you simplify complex queries by splitting them into smaller subqueries called common table expressions (CTEs):
+使用 `with` 子句可以帮助你通过将复杂查询拆分为更小的子查询（称为公共表表达式，CTE）来简化它们：
 <Section>
 ```typescript copy
 const userCount = db.$with('user_count').as(
@@ -167,19 +167,19 @@ returning "admin"
 
 ## Insert into ... select
 
-As the PostgreSQL documentation mentions:
+如 PostgreSQL 文档所述：
 <Callout>
-A query (SELECT statement) that supplies the rows to be inserted
+一个提供要插入行的查询（SELECT 语句）
 </Callout>
 
-Drizzle supports the current syntax for all dialects, and all of them share the same syntax. Let's review some common scenarios and API usage. 
-There are several ways to use select inside insert statements, allowing you to choose your preferred approach:
+Drizzle 为所有方言支持当前语法，并且它们都共享相同的语法。让我们回顾一些常见场景和 API 用法。 
+在 insert 语句中使用 select 有几种方式，你可以选择自己喜欢的方式：
 
-- You can pass a query builder inside the select function.
-- You can use a query builder inside a callback.
-- You can pass an SQL template tag with any custom select query you want to use
+- 你可以在 select 函数中传入查询构建器。
+- 你可以在回调中使用查询构建器。
+- 你可以传入带任意自定义 select 查询的 SQL 模板标签
 
-<Tabs items={["Query Builder", "Callback", "SQL template tag"]}>
+<Tabs items={["查询构建器", "回调", "SQL 模板标签"]}>
 <Tab>
 <Section>
 ```ts

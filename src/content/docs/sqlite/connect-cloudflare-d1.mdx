@@ -9,29 +9,29 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> Cloudflare D1
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
-- D1 Database - [website](https://developers.cloudflare.com/d1/)
-- D1 driver - [website](https://developers.cloudflare.com/d1/build-with-d1/d1-client-api/)
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
+- D1 Database - [官网](https://developers.cloudflare.com/d1/)
+- D1 驱动 - [官网](https://developers.cloudflare.com/d1/build-with-d1/d1-client-api/)
 </Prerequisites>
 
-According to the **[official website](https://developers.cloudflare.com/d1/)**, 
-D1 is Cloudflare's first queryable relational database.  
+根据 **[官方网站](https://developers.cloudflare.com/d1/)** 的描述，
+D1 是 Cloudflare 首个可查询的关系型数据库。  
   
-Drizzle ORM fully supports the Cloudflare D1 database and Cloudflare Workers environment.
-We embrace SQL dialects and dialect specific drivers and syntax and mirror most popular 
-SQLite-like `all`, `get`, `values` and `run` query methods syntax.
+Drizzle ORM 完全支持 Cloudflare D1 数据库和 Cloudflare Workers 环境。
+我们拥抱 SQL 方言以及特定方言的驱动和语法，并且镜像了最流行的
+类 SQLite 的 `all`、`get`、`values` 和 `run` 查询方法语法。
 
-To setup project for your Cloudflare D1 please refer to **[official docs.](https://developers.cloudflare.com/d1/)**
+要为你的 Cloudflare D1 设置项目，请参考 **[官方文档。](https://developers.cloudflare.com/d1/)**
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
  drizzle-orm@rc
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并执行查询
 
-You would need to have either a `wrangler.json` or a `wrangler.toml` file for D1 database and will look something like this:
+你需要为 D1 数据库准备一个 `wrangler.json` 或 `wrangler.toml` 文件，内容大致如下：
 <CodeTabs items={["wrangler.json", "wrangler.toml"]}>
 ```json
 {
@@ -65,7 +65,7 @@ migrations_dir = "drizzle/migrations"
 ```
 </CodeTabs>
 
-Make your first D1 query:
+发起你的第一个 D1 查询：
 ```typescript copy
 import { drizzle } from 'drizzle-orm/d1';
 
@@ -82,6 +82,6 @@ export default {
 };
 ```
 
-#### What's next?
+#### 下一步？
 
 <WhatsNextSQLite/>

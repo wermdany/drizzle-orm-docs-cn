@@ -1,18 +1,18 @@
 ---
-title: DrizzleORM v0.29.5 release
+title: DrizzleORM v0.29.5 发布
 pubDate: 2024-03-06
-description: Added with update, with delete, with insert, possibility to specify custom schema and custom name for migrations table, sqlite proxy batch and relational queries support.
+description: 新增了 with update、with delete、with insert，支持为迁移表指定自定义 schema 和自定义名称，以及 sqlite 代理批处理和关系查询支持。
 ---
 
 import Section from "@mdx/Section.astro";
 
-## New Features
+## 新特性
 
 ### 🎉 WITH UPDATE, WITH DELETE, WITH INSERT
 
-You can now use `WITH` statements with [INSERT](/docs/insert#with-insert-clause), [UPDATE](/docs/update#with-update-clause) and [DELETE](/docs/delete#with-delete-clause) statements
+你现在可以在 [INSERT](/docs/insert#with-insert-子句)、[UPDATE](/docs/update#with-update-子句) 和 [DELETE](/docs/delete#with-delete-子句) 语句中使用 `WITH` 语句
 
-Usage examples
+用法示例
 
 <Section>
 ```ts copy {6,7}
@@ -37,22 +37,21 @@ returning "id";
 ```
 </Section>
 
-For more examples for all statements, check docs:
+有关所有语句的更多示例，请查看文档：
 
-- [with insert docs](/docs/insert#with-insert-clause)
-- [with update docs](/docs/update#with-update-clause)
-- [with delete docs](/docs/delete#with-delete-clause)
+- [with insert 文档](/docs/insert#with-insert-子句)
+- [with update 文档](/docs/update#with-update-子句)
+- [with delete 文档](/docs/delete#with-delete-子句)
 
-### 🎉 Possibility to specify custom schema and custom name for migrations table
+### 🎉 可为 migrations 表指定自定义 schema 和自定义名称
 
-- **Custom table for migrations**
+- **迁移的自定义表**
 
-By default, all information about executed migrations will be stored in the database inside the `__drizzle_migrations` table,
-and for PostgreSQL, inside the `drizzle` schema. However, you can configure where to store those records.
+默认情况下，所有关于已执行迁移的信息都会存储在数据库的 `__drizzle_migrations` 表中，对于 PostgreSQL，则存储在 `drizzle` schema 中。不过，你可以配置这些记录的存储位置。
 
-To add a custom table name for migrations stored inside your database, you should use the `migrationsTable` option
+要为存储在数据库中的迁移添加自定义表名，你应该使用 `migrationsTable` 选项
 
-Usage example
+用法示例
 
 ```ts copy {3}
 await migrate(db, {
@@ -61,13 +60,13 @@ await migrate(db, {
 });
 ```
 
-- **Custom schema for migrations**
+- **迁移的自定义 schema**
 
-> Works only with PostgreSQL databases
+> 仅适用于 PostgreSQL 数据库
 
-To add a custom schema name for migrations stored inside your database, you should use the `migrationsSchema` option
+要为存储在数据库中的迁移添加自定义 schema 名称，你应该使用 `migrationsSchema` 选项
 
-Usage example
+用法示例
 
 ```ts copy {3}
 await migrate(db, {
@@ -76,15 +75,15 @@ await migrate(db, {
 });
 ```
 
-### 🎉 SQLite Proxy bacth and Relational Queries support
+### 🎉 SQLite Proxy 批处理与关系查询支持
 
-You can find more information about SQLite proxy in [docs](/docs/sqlite/get-started-sqlite#http-proxy).
+你可以在[文档](/docs/sqlite/get-started-sqlite#http-proxy)中找到关于 SQLite 代理的更多信息。
 
-- You can now use `.query.findFirst` and `.query.findMany` syntax with sqlite proxy driver
+- 你现在可以在 sqlite 代理驱动中使用 `.query.findFirst` 和 `.query.findMany` 语法
 
-- SQLite Proxy supports batch requests, the same as it's done for all other drivers. Check full [docs](/docs/batch-api)
+- SQLite Proxy 支持批处理请求，与所有其他驱动的做法相同。查看完整[文档](/docs/batch-api)
 
-  You will need to specify a specific callback for batch queries and handle requests to proxy server:
+  你需要为批处理查询指定一个特定的回调，并处理对代理服务器的请求：
 
 ```ts
 import { drizzle } from 'drizzle-orm/sqlite-proxy';
@@ -118,6 +117,6 @@ const db = drizzle(
 );
 ```
 
-And then you can use `db.batch([])` method, that will proxy all queries
+然后你可以使用 `db.batch([])` 方法，它会代理所有查询
 
-> Response from the batch should be an array of raw values (an array within an array), in the same order as they were sent to the proxy server
+> 批处理的响应应该是一个原始值数组（数组中包含数组），顺序与它们发送到代理服务器时的顺序相同

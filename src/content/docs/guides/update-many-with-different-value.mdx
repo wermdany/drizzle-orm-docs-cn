@@ -1,5 +1,5 @@
 ---
-title: Update many with different values for each row
+title: 为每行更新不同的值
 ---
 
 import Section from "@mdx/Section.astro";
@@ -9,12 +9,12 @@ import IsSupportedChipGroup from "@mdx/IsSupportedChipGroup.astro";
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach)
-- [Update statement](/docs/update)
-- [Filters](/docs/operators) and [sql operator](/docs/sql)
+- 从 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach) 开始
+- [更新语句](/docs/update)
+- [过滤器](/docs/operators) 和 [sql operator](/docs/sql)
 </Prerequisites>
 
-To implement update many with different values for each row within 1 request you can use `sql` operator with `case` statement and `.update().set()` methods like this:
+要在一次请求中为每一行更新不同的值，你可以像这样使用 `sql` operator 配合 `case` 语句以及 `.update().set()` 方法：
 
 <Section>
 ```ts {26, 29, 32, 36, 38, 40}
@@ -38,7 +38,7 @@ const inputs = [
   },
 ];
 
-// You have to be sure that inputs array is not empty
+// 你必须确保 inputs 数组不为空
 if (inputs.length === 0) {
   return;
 }

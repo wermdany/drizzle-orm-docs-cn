@@ -3,7 +3,7 @@ import Callout from '@mdx/Callout.astro';
 
 # arktype
 
-### Install the dependencies
+### 安装依赖
 
 <Npm>
 drizzle-orm@rc arktype
@@ -11,7 +11,7 @@ drizzle-orm@rc arktype
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询的数据结构 —— 可用于校验 API 响应。
 
 ```ts copy
 import { int, mssqlTable, text } from 'drizzle-orm/mssql-core';
@@ -27,13 +27,13 @@ const users = mssqlTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).top(1).from(users);
-const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // Error: `age` is not returned in the above query
+const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // 错误：上面的查询未返回 `age`
 
 const rows = await db.select().top(1).from(users);
-const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // Will parse successfully
+const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // 将成功解析
 ```
 
-Views and enums are also supported.
+也支持视图和枚举。
 ```ts copy
 import { pgEnum, pgView } from 'drizzle-orm/mssql-core';
 import { gt } from 'drizzle-orm';
@@ -47,7 +47,7 @@ const parsed: ArkErrors | { id: number; name: string; age: number } = usersViewS
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据结构 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int, mssqlTable, text } from 'drizzle-orm/mssql-core';
@@ -63,10 +63,10 @@ const users = mssqlTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // Error: `age` is not defined
+const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // 错误：未定义 `age`
 
 const user = { name: 'Jane', age: 30 };
-const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // Will parse successfully
+const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // 将成功解析
 
 if (parsed instanceof ArkErrors) {
   console.error(parsed.summary);
@@ -77,7 +77,7 @@ await db.insert(users).values(parsed);
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据结构 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int, mssqlTable, text } from 'drizzle-orm/mssql-core';
@@ -95,7 +95,7 @@ const users = mssqlTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { age: 35 };
-const parsed: ArkErrors | { name?: string | undefined, age?: number | undefined } = userUpdateSchema(user); // Will parse successfully
+const parsed: ArkErrors | { name?: string | undefined, age?: number | undefined } = userUpdateSchema(user); // 将成功解析
 
 if (parsed instanceof ArkErrors) {
   console.error(parsed.summary);
@@ -105,9 +105,9 @@ if (parsed instanceof ArkErrors) {
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a arktype schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，你可以用它来扩展、修改或完全覆盖某个字段的 schema。定义回调函数会扩展或修改该字段，而提供一个 arktype schema 则会将其覆盖。
 
 ```ts copy
 import { int, mssqlTable, text } from 'drizzle-orm/mssql-core';
@@ -122,9 +122,9 @@ const users = mssqlTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => schema.atMostLength(20), // Extends schema
-  bio: () => type.string.atMostLength(2000), // Extends schema before becoming nullable/optional
-  preferences: type({ theme: 'string' }) // Overwrites the field, including its nullability
+  name: (schema) => schema.atMostLength(20), // 扩展 schema
+  bio: () => type.string.atMostLength(2000), // 在变为可空/可选之前扩展 schema
+  preferences: type({ theme: 'string' }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: ArkErrors | {
@@ -137,6 +137,6 @@ const parsed: ArkErrors | {
 } = userSelectSchema(...);
 ```
 
-### Data type reference
+### 数据类型参考
 
-MSSQL data type mappings follow the MSSQL column builders. See the [MSSQL data types](/docs/mssql/column-types) page for the full column reference.
+MSSQL 数据类型映射遵循 MSSQL 列构建器。完整的列参考请参见 [MSSQL 数据类型](/docs/mssql/column-types) 页面。

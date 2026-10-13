@@ -1,18 +1,17 @@
 import Callout from '@mdx/Callout.astro';
 import Section from '@mdx/Section.astro';
 
-# Views
+# 视图
 
-There're several ways you can declare views with Drizzle ORM.  
+在 Drizzle ORM 中，有几种声明视图的方式。
 
-You can declare views that have to be created or you can declare views that already exist in the database. 
+你可以声明需要被创建的视图，也可以声明数据库中已存在的视图。
 
-You can declare views statements with an inline `query builder` syntax, with `standalone query builder` and with raw `sql` operators. 
+你可以用内联 `query builder` 语法、`standalone query builder` 以及原始 `sql` 操作符来声明视图语句。
 
-When views are created with either inlined or standalone query builders, view columns schema will be automatically inferred, 
-yet when you use `sql` you have to explicitly declare view columns schema.
+当使用内联或独立的查询构建器创建视图时，视图列的 schema 会被自动推断；而当你使用 `sql` 时，你必须显式声明视图列的 schema。
 
-### Declaring views
+### 声明视图
 
 <Section>
       ```ts filename="schema.ts" copy {14-15}
@@ -38,7 +37,7 @@ yet when you use `sql` you have to explicitly declare view columns schema.
       ```
     </Section>
 
-You can also declare views using `standalone query builder`, it works exactly the same way:
+你也可以使用 `standalone query builder` 来声明视图，它的工作方式完全相同：
 
 <Section>
       ```ts filename="schema.ts" copy {4,16-17}
@@ -66,19 +65,18 @@ You can also declare views using `standalone query builder`, it works exactly th
       ```
     </Section>
 
-### Declaring views with raw SQL
-Whenever you need to declare view using a syntax that is not supported by the query builder, 
-you can directly use `sql` operator and explicitly specify view columns schema.
+### 使用原始 SQL 声明视图
+当你需要用查询构建器不支持的语法来声明视图时，你可以直接使用 `sql` 操作符并显式指定视图列的 schema。
 
 ```ts copy
-// regular view
+// 普通视图
 export const newYorkers = pgView('new_yorkers', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
   cityId: integer('city_id').notNull(),
 }).as(sql`select * from ${users} where ${eq(users.cityId, 1)}`);
 
-// materialized view
+// 物化视图
 export const newYorkers = pgMaterializedView('new_yorkers', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
@@ -86,9 +84,8 @@ export const newYorkers = pgMaterializedView('new_yorkers', {
 }).as(sql`select * from ${users} where ${eq(users.cityId, 1)}`);
 ```
 
-### Declaring existing views
-When you're provided with a read only access to an existing view in the database you should use `.existing()` view configuration, 
-`drizzle-kit` will ignore and will not generate a `create view` statement in the generated migration.
+### 声明已有视图
+当你对数据库中已存在的视图只有只读访问权限时，你应该使用 `.existing()` 视图配置，`drizzle-kit` 会忽略它，并且不会在生成的迁移中产生 `create view` 语句。
 ```ts {16,23}
 export const user = pgTable("user", {
   id: serial(),
@@ -100,14 +97,14 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at"),
 });
 
-// regular view
+// 普通视图
 export const trimmedUser = pgView("trimmed_user", {
   id: serial("id"),
   name: text("name"),
   email: text("email"),
 }).existing();
 
-// materialized view won't make any difference, yet you can use it for consistency
+// 物化视图不会有任何区别，但你可以为了保持一致而使用它
 export const trimmedUser = pgMaterializedView("trimmed_user", {
   id: serial("id"),
   name: text("name"),
@@ -115,14 +112,14 @@ export const trimmedUser = pgMaterializedView("trimmed_user", {
 }).existing();
 ```
 
-### Materialized views
+### 物化视图
 
-According to the official docs, PostgreSQL and CockroachDB have both **[`regular`](https://www.postgresql.org/docs/current/sql-createview.html)**
-and **[`materialized`](https://www.postgresql.org/docs/current/sql-creatematerializedview.html)** views.
-  
-Materialized views in PostgreSQL and CockroachDB use the rule system like views do, but persist the results in a table-like form.
-{/* This means that when a query is executed against a materialized view, the results are returned directly from the materialized view,
-like from a table, rather than being reconstructed by executing the query against the underlying base tables that make up the view. */}
+根据官方文档，PostgreSQL 和 CockroachDB 都有 **[`regular`](https://www.postgresql.org/docs/current/sql-createview.html)**
+和 **[`materialized`](https://www.postgresql.org/docs/current/sql-creatematerializedview.html)** 视图。
+
+PostgreSQL 和 CockroachDB 中的物化视图像视图一样使用规则系统，但会把结果以类似表的形式持久化。
+{/* 这意味着，当针对物化视图执行查询时，结果会直接从物化视图中返回，
+就像从表中返回一样，而不是通过针对构成该视图的底层基表执行查询来重建。 */}
 
 <Section>
 ```ts filename="schema.ts" copy
@@ -133,7 +130,7 @@ CREATE MATERIALIZED VIEW "new_yorkers" AS (SELECT * FROM "users");
 ```
 </Section>
 
-You can then refresh materialized views in the application runtime:
+然后你可以在应用运行时刷新物化视图：
 ```ts copy
 await db.refreshMaterializedView(newYorkers);
 
@@ -142,13 +139,13 @@ await db.refreshMaterializedView(newYorkers).concurrently();
 await db.refreshMaterializedView(newYorkers).withNoData();
 ```
 
-### Extended example
+### 扩展示例
 <Callout type="info" emoji="ℹ️">
-All the parameters inside the query will be inlined, instead of replaced by `$1`, `$2`, etc.
+查询内部的所有参数都会被内联，而不是被替换为 `$1`、`$2` 等。
 </Callout>
 
 ```ts copy
-// regular view
+// 普通视图
 export const newYorkers = pgView('new_yorkers')
   .with({
     checkOption: 'cascaded',
@@ -167,7 +164,7 @@ export const newYorkers = pgView('new_yorkers')
     return qb.with(sq).select().from(sq).where(sql`${sq.homeCity} = 1`);
   });
 
-// materialized view
+// 物化视图
 export const newYorkers2 = pgMaterializedView('new_yorkers_2')
   .using('heap')
   .with({

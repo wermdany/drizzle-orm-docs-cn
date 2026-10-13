@@ -2,17 +2,17 @@ import Callout from '@mdx/Callout.astro';
 import Section from '@mdx/Section.astro';
 
 # SQL Delete
-You can delete all rows in the table:
+你可以删除表中的所有行：
 ```typescript copy
 await db.delete(users);
 ```
-And you can delete with filters and conditions:
+你也可以带过滤条件和条件进行删除：
 ```typescript copy
 await db.delete(users).where(eq(users.name, 'Dan'));
 ```
 
 ### Limit
-Use `.limit()` to add `limit` clause to the query - for example:
+使用 `.limit()` 为查询添加 `limit` 子句 - 例如：
 <Section>
 ```typescript
 await db.delete(users).where(eq(users.name, 'Dan')).limit(2);
@@ -23,7 +23,7 @@ delete from `users` where `users`.`name` = 'Dan' limit 2;
 </Section>
 
 ### Order By
-Use `.orderBy()` to add `order by` clause to the query, sorting the results by the specified fields:
+使用 `.orderBy()` 为查询添加 `order by` 子句，按指定字段对结果排序：
 <Section>
 ```typescript
 import { asc, desc } from 'drizzle-orm';
@@ -31,7 +31,7 @@ import { asc, desc } from 'drizzle-orm';
 await db.delete(users).where(eq(users.name, 'Dan')).orderBy(users.name);
 await db.delete(users).where(eq(users.name, 'Dan')).orderBy(desc(users.name));
 
-// order by multiple fields
+// 按多个字段排序
 await db.delete(users).where(eq(users.name, 'Dan')).orderBy(users.name, users.name2);
 await db.delete(users).where(eq(users.name, 'Dan')).orderBy(asc(users.name), desc(users.name2));
 ```
@@ -43,4 +43,3 @@ delete from `users` where `users`.`name` = 'Dan' order by `users`.`name`, `users
 delete from `users` where `users`.`name` = 'Dan' order by `users`.`name` asc, `users`.`name2` desc;
 ```
 </Section>
-

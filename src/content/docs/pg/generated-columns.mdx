@@ -2,36 +2,36 @@ import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 import Callout from '@mdx/Callout.astro';
 
-# Generated Columns
+# 生成列
 
-Stored (or persistent) Generated Columns: These columns are computed when a row is inserted or updated and their values are stored in the database. This allows them to be indexed and can improve query performance since the values do not need to be recomputed for each query.
+存储（或持久化）生成列：这些列在插入或更新行时计算，其值会存储在数据库中。这使它们可以被索引，并能提升查询性能，因为无需在每次查询时重新计算值。
 
-#### Database side
-    **Types**: `STORED` only
+#### 数据库端
+    **类型**：仅支持 `STORED`
 
-    **How It Works**
-    - Automatically computes values based on other columns during insert or update.
+    **工作原理**
+    - 在插入或更新时，基于其它列自动计算值。
 
-    **Capabilities**
-    - Simplifies data access by precomputing complex expressions.
-    - Enhances query performance with index support on generated columns.
+    **能力**
+    - 通过预计算复杂表达式简化数据访问。
+    - 借助对生成列的索引支持提升查询性能。
 
-    **Limitations**
-    - Cannot specify default values.
-    - Expressions cannot reference other generated columns or include subqueries.
-    - Schema changes required to modify generated column expressions.
-    - Cannot directly use in primary keys, foreign keys, or unique constraints   
+    **限制**
+    - 不能指定默认值。
+    - 表达式不能引用其它生成列，也不能包含子查询。
+    - 修改生成列表达式需要变更 schema。
+    - 不能直接用于主键、外键或唯一约束
 
-    For more info, please check [PostgreSQL](https://www.postgresql.org/docs/current/ddl-generated-columns.html) docs 
+    更多信息，请查看 [PostgreSQL](https://www.postgresql.org/docs/current/ddl-generated-columns.html) 文档
 
-    #### Drizzle side
-    In Drizzle you can specify `.generatedAlwaysAs()` function on any column type and add a supported sql query, 
-    that will generate this column data for you.
+    #### Drizzle 侧
+    在 Drizzle 中，你可以在任何列类型上指定 `.generatedAlwaysAs()` 函数，并添加一条受支持的 sql 查询，
+    它会为你生成该列的数据。
 
-    #### Features 
-    This function can accept generated expression in 2 ways:
+    #### 特性
+    该函数可以通过 2 种方式接受生成表达式：
 
-    **`sql`** tag - if you want drizzle to escape some values for you
+    **`sql`** 标签 - 如果你希望 drizzle 为你转义某些值
 
     <CodeTab>
     ```ts
@@ -46,7 +46,7 @@ Stored (or persistent) Generated Columns: These columns are computed when a row 
     ```
     </CodeTab>
 
-    **`callback`** - if you need to reference columns from a table
+    **`callback`** - 如果你需要引用表中的列
     <CodeTab>
     ```ts
     export const test = pgTable("test", {
@@ -64,7 +64,7 @@ Stored (or persistent) Generated Columns: These columns are computed when a row 
     ```
     </CodeTab>
 
-    **Example** generated columns with full-text search
+    **示例** 使用全文搜索的生成列
    <CodeTabs items={["schema.ts"]}>
 	<CodeTab>
 	```typescript copy {17-19}

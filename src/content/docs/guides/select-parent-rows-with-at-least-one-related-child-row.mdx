@@ -1,5 +1,5 @@
 ---
-title: Select parent rows with at least one related child row
+title: 选择至少有一个关联子行的父行
 ---
 
 import Prerequisites from "@mdx/Prerequisites.astro";
@@ -11,13 +11,13 @@ import Section from "@mdx/Section.astro";
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach)
-- [Select statement](/docs/select) and [select from subquery](/docs/select#select-from-subquery)
-- [Inner join](/docs/joins#inner-join)
-- [Filter operators](/docs/operators) and [exists function](/docs/operators#exists)
+- 从 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach) 开始
+- [查询语句](/docs/select) 和 [从子查询查询](/docs/select#从子查询-select)
+- [内连接](/docs/joins#inner-join)
+- [过滤操作符](/docs/operators) 和 [exists 函数](/docs/operators#exists)
 </Prerequisites>
 
-This guide demonstrates how to select parent rows with the condition of having at least one related child row. Below, there are examples of schema definitions and the corresponding database data:
+本指南演示如何查询满足以下条件的父行：至少有一条关联的子行。下面提供了 schema 定义示例及相应的数据库数据：
 
   ```ts copy
   import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
@@ -66,7 +66,7 @@ This guide demonstrates how to select parent rows with the condition of having a
   </CodeTab>
 </CodeTabs>
 
-To select parent rows with at least one related child row and retrieve child data you can use `.innerJoin()` method:
+要查询至少有一条关联子行的父行并获取子行数据，你可以使用 `.innerJoin()` 方法：
 
 <Section>
   ```ts copy {12}
@@ -92,7 +92,7 @@ To select parent rows with at least one related child row and retrieve child dat
   ```
 
   ```ts
-  // result data, there is no user with id 2 because he has no posts
+  // 结果数据，没有 id 为 2 的用户，因为他没有帖子
   [
     {
       user: { id: 1, name: 'John Doe', email: 'john_doe@email.com' },
@@ -125,7 +125,7 @@ To select parent rows with at least one related child row and retrieve child dat
   ```
 </Section>
 
-To only select parent rows with at least one related child row you can use subquery with `exists()` function like this:
+要仅查询至少有一条关联子行的父行，你可以像这样使用带 `exists()` 函数的子查询：
 
 <Section>
 ```ts copy {8}
@@ -144,7 +144,7 @@ select * from users where exists (select 1 from posts where posts.user_id = user
 ```
 
 ```ts
-// result data, there is no user with id 2 because he has no posts
+// 结果数据，没有 id 为 2 的用户，因为他没有帖子
 [
   { id: 1, name: 'John Doe', email: 'john_doe@email.com' },
   { id: 3, name: 'Nick Smith', email: 'nick_smith@email.com' }

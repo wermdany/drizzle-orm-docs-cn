@@ -19,44 +19,44 @@ import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and SQLite Cloud
+# Drizzle 与 SQLite Cloud 入门
 
 <Prerequisites>
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **SQLite Cloud database** - [read here](https://docs.sqlitecloud.io/docs/overview)
-  - **SQLite Cloud driver** - [read here](https://docs.sqlitecloud.io/docs/sdk-js-introduction) & [GitHub](https://github.com/sqlitecloud/sqlitecloud-js)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **SQLite Cloud 数据库** - [阅读文档](https://docs.sqlitecloud.io/docs/overview)
+  - **SQLite Cloud 驱动** - [阅读文档](https://docs.sqlitecloud.io/docs/sdk-js-introduction) & [GitHub](https://github.com/sqlitecloud/sqlitecloud-js)
 </Prerequisites>
 
 <FileStructure/>
 
-#### Step 1 - Install required package
+#### 步骤 1 - 安装所需的包
 <Npm>
     drizzle-orm@rc @sqlitecloud/drivers dotenv
     -D drizzle-kit@rc tsx
 </Npm>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 设置连接变量
 
 <SetupEnv env_variable='SQLITE_CLOUD_CONNECTION_STRING' />
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 步骤 3 - 将 Drizzle ORM 连接到数据库
 
 <ConnectSQLiteCloud/>
 
-#### Step 4 - Create a table
+#### 步骤 4 - 创建表
 
 <CreateTable />
 
-#### Step 5 - Setup Drizzle config file
+#### 步骤 5 - 设置 Drizzle 配置文件
 
 <SetupConfig dialect='sqlite' env_variable='SQLITE_CLOUD_CONNECTION_STRING'/>
 
-#### Step 6 - Applying changes to the database
+#### 步骤 6 - 将变更应用到数据库
 
 <ApplyChanges />
 
-#### Step 7 - Seed and Query the database
+#### 步骤 7 - 填充种子数据并查询数据库
 
 ```typescript copy filename="src/index.ts"
 import 'dotenv/config';
@@ -102,6 +102,6 @@ async function main() {
 main();
 ```
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>

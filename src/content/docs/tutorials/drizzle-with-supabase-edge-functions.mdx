@@ -1,5 +1,5 @@
 ---
-title: "Drizzle with Supabase Edge Functions"
+title: "Drizzle 与 Supabase Edge Functions"
 date: "2024-05-03"
 ---
 
@@ -9,24 +9,24 @@ import Steps from '@mdx/Steps.astro';
 import Section from "@mdx/Section.astro";
 import Callout from '@mdx/Callout.astro';
 
-This tutorial demonstrates how to use Drizzle ORM with [Supabase Edge Functions](https://supabase.com/docs/guides/functions).
+本教程演示如何将 Drizzle ORM 与 [Supabase Edge Functions](https://supabase.com/docs/guides/functions) 一起使用。
 
 <Prerequisites>
-- You should have the latest version of [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started#installing-the-supabase-cli) installed.
-- You should have installed Drizzle ORM and [Drizzle kit](https://orm.drizzle.team/kit-docs/overview). You can do this by running the following command:
+- 你需要安装最新版本的 [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started#installing-the-supabase-cli)。
+- 你需要安装 Drizzle ORM 和 [Drizzle kit](https://orm.drizzle.team/kit-docs/overview)。你可以通过运行以下命令来完成：
 <Npm>
   drizzle-orm@rc
   -D drizzle-kit@rc
 </Npm>
-- You should have installed Docker Desktop. It is a prerequisite for local development. Follow the official [docs](https://docs.docker.com/desktop) to install.
+- 你需要安装 Docker Desktop。这是本地开发的先决条件。请遵循官方[文档](https://docs.docker.com/desktop)进行安装。
 </Prerequisites>
 
-To learn how to create a basic Edge Function on your local machine and then deploy it, see the [Edge Functions Quickstart](https://supabase.com/docs/guides/functions/quickstart).
+要了解如何在本地机器上创建一个基础的 Edge Function 然后部署它，请参阅 [Edge Functions 快速入门](https://supabase.com/docs/guides/functions/quickstart)。
 
 <Steps>
-#### Create a table
+#### 创建表
 
-Create a `schema.ts` file in your `src` directory and declare a table schema:
+在你的 `src` 目录中创建一个 `schema.ts` 文件，并声明一个表结构：
 
 ```typescript copy filename="src/schema.ts"
 import { pgTable, serial, text, integer } from "drizzle-orm/pg-core";
@@ -38,13 +38,13 @@ export const usersTable = pgTable('users_table', {
 })
 ```
 
-This file will be used to generate migrations for your database.
+该文件将用于为你的数据库生成迁移。
 
-#### Setup Drizzle config file
+#### 设置 Drizzle 配置文件
 
-**Drizzle config** - a configuration file that is used by [Drizzle Kit](https://orm.drizzle.team/kit-docs/overview) and contains all the information about your database connection, migration folder and schema files.
+**Drizzle config** —— 一个由 [Drizzle Kit](https://orm.drizzle.team/kit-docs/overview) 使用的配置文件，包含关于你的数据库连接、迁移文件夹和 schema 文件的所有信息。
 
-Create a `drizzle.config.ts` file in the root of your project and add the following content:
+在你的项目根目录下创建一个 `drizzle.config.ts` 文件，并添加以下内容：
 
 ```typescript copy filename="drizzle.config.ts"
 import { defineConfig } from "drizzle-kit";
@@ -56,79 +56,79 @@ export default defineConfig({
 });
 ```
 
-In this tutorial we will use Drizzle kit to generate migrations for our schema.
+在本教程中，我们将使用 Drizzle kit 为我们的 schema 生成迁移。
 
-#### Initialize a new Supabase project
+#### 初始化新的 Supabase 项目
 
-Create a new Supabase project in a folder on your local machine:
+在本地机器上的一个文件夹中创建一个新的 Supabase 项目：
 
 ```bash copy
 supabase init
 ```
 
-It will create `supabase` folder with `config.toml` file:
+它将创建一个包含 `config.toml` 文件的 `supabase` 文件夹：
 
 ```text
 └── supabase
     └── config.toml
 ```
 
-If you are using Visual Studio Code, follow the [Supabase documentation](https://supabase.com/docs/guides/functions/local-development#deno-with-visual-studio-code) to setup settings for Deno.
+如果你使用 Visual Studio Code，请按照 [Supabase 文档](https://supabase.com/docs/guides/functions/local-development#deno-with-visual-studio-code) 为 Deno 设置相关配置。
 
-#### Generate migrations
+#### 生成迁移
 
-Run the `drizzle-kit generate` command to generate migrations:
+运行 `drizzle-kit generate` 命令来生成迁移：
 
 ```bash copy
 npx drizzle-kit generate
 ```
 
-It will create a new migration file in the `supabase/migrations` directory:
+它将在 `supabase/migrations` 目录中创建一个新的迁移文件：
 
-#### Apply migrations
+#### 应用迁移
 
-To start the Supabase local development stack, run the following command:
+要启动 Supabase 本地开发栈，请运行以下命令：
 
 ```bash copy
 supabase start
 ```
 
-To apply migrations, run the following command:
+要应用迁移，请运行以下命令：
 
 ```bash copy
 supabase migration up
 ```
 
-You can read more about Supabase migrations in the [documentation](https://supabase.com/docs/guides/deployment/database-migrations).
+你可以在[文档](https://supabase.com/docs/guides/deployment/database-migrations)中阅读更多关于 Supabase 迁移的内容。
 
-<Callout type="warning">Don't forget to run Docker</Callout>
+<Callout type="warning">别忘了运行 Docker</Callout>
 
-Alternatively, you can apply migrations using the `drizzle-kit migrate` command. Learn more about this migration process in the [documentation](https://orm.drizzle.team/docs/migrations).
+或者，你可以使用 `drizzle-kit migrate` 命令来应用迁移。在[文档](https://orm.drizzle.team/docs/migrations)中了解更多关于此迁移流程的内容。
 
-#### Create a new Edge Function
+#### 创建新的 Edge Function
 
-Run the `supabase functions new [FUNCTION_NAME]` command to create a new Edge Function:
+运行 `supabase functions new [FUNCTION_NAME]` 命令来创建一个新的 Edge Function：
 
 ```bash copy
 supabase functions new drizzle-tutorial
 ```
 
-It will create a new folder with the function name in the `supabase/functions` directory:
+它将在 `supabase/functions` 目录中创建一个以该函数名命名的新文件夹：
 
 ```text
 └── supabase
     └── functions
     │   └── drizzle-tutorial
-    │   │   ├── .npmrc ## Function-specific npm configuration (if needed)
-    │   │   ├── deno.json ## Function-specific Deno configuration
-    │   │   └── index.ts ## Your function code
+    │   │   ├── .npmrc ## 函数专属的 npm 配置（如需要）
+    │   │   ├── deno.json ## 函数专属的 Deno 配置
+    │   │   └── index.ts ## 你的函数代码
 ```
 
-When you create a new Edge Function, it will use TypeScript by default. However, it is possible write Edge Function in JavaScript. Learn more about it in the [documentation](https://supabase.com/docs/guides/functions/quickstart#not-using-typescript).
+当你创建一个新的 Edge Function 时，默认情况下会使用 TypeScript。但是，也可以用 JavaScript 编写 Edge Function。在[文档](https://supabase.com/docs/guides/functions/quickstart#not-using-typescript)中了解更多。
 
-#### Setup imports
+#### 设置导入
 
-Add the following imports to the `deno.json` file in the `supabase/functions/drizzle-tutorial` directory:
+将以下导入添加到 `supabase/functions/drizzle-tutorial` 目录中的 `deno.json` 文件：
 
 ```json copy filename="supabase/functions/drizzle-tutorial/deno.json"
 {
@@ -139,14 +139,14 @@ Add the following imports to the `deno.json` file in the `supabase/functions/dri
 }
 ```
 
-You can read more about managing dependencies [here](https://supabase.com/docs/guides/functions/dependencies#managing-dependencies).
+你可以在[此处](https://supabase.com/docs/guides/functions/dependencies#managing-dependencies)阅读更多关于管理依赖的内容。
 
-#### Copy your schema to the functions directory
+#### 将你的 schema 复制到 functions 目录
 
-Copy the code that you will use in your edge function from `src/schema.ts` file to the `supabase/functions/drizzle-tutorial/index.ts` file:
+将你将在 edge function 中使用的代码从 `src/schema.ts` 文件复制到 `supabase/functions/drizzle-tutorial/index.ts` 文件：
 
 ```typescript copy filename="supabase/functions/drizzle-tutorial/index.ts"
-// Setup type definitions for built-in Supabase Runtime APIs
+// 为内置 Supabase Runtime API 设置类型定义
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { pgTable, serial, text, integer } from "drizzle-orm/pg-core";
 
@@ -170,16 +170,16 @@ Deno.serve(async (req) => {
 ```
 
 <Callout type="warning">
-In the Deno ecosystem, each function should be treated as an independent project with its own set of dependencies and configurations.
-For these reasons, Supabase recommend maintaining separate configuration files (`deno.json`, `.npmrc`, or `import_map.json`) within each function's directory, even if it means duplicating some configurations. Read more [here](https://supabase.com/docs/guides/functions/dependencies#managing-dependencies).
+在 Deno 生态系统中，每个函数都应被视为一个独立项目，拥有自己的一套依赖和配置。
+出于这些原因，Supabase 建议在每个函数的目录中维护单独的配置文件（`deno.json`、`.npmrc` 或 `import_map.json`），即使这意味着要重复一些配置。在此处了解更多[内容](https://supabase.com/docs/guides/functions/dependencies#managing-dependencies)。
 </Callout>
 
-#### Connect Drizzle ORM to your database
+#### 将 Drizzle ORM 连接到你的数据库
 
-Update your edge function code with your database configuration:
+用你的数据库配置更新你的 edge function 代码：
 
 ```typescript copy filename="supabase/functions/drizzle-tutorial/index.ts" {14,17,18}
-// Setup type definitions for built-in Supabase Runtime APIs
+// 为内置 Supabase Runtime API 设置类型定义
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
@@ -194,7 +194,7 @@ const usersTable = pgTable('users_table', {
 Deno.serve(async () => {
   const connectionString = Deno.env.get("SUPABASE_DB_URL")!;
 
-  // Disable prefetch as it is not supported for "Transaction" pool mode
+  // 禁用预取（prefetch），因为 "Transaction" 池模式不支持它
   const client = postgres(connectionString, { prepare: false });
   const db = drizzle({ client });
 
@@ -210,17 +210,17 @@ Deno.serve(async () => {
 })
 ```
 
-`SUPABASE_DB_URL` is default environment variable for the direct database connection. Learn more about managing environment variables in Supabase Edge Functions in the [documentation](https://supabase.com/docs/guides/functions/secrets).
+`SUPABASE_DB_URL` 是用于直接数据库连接的默认环境变量。在[文档](https://supabase.com/docs/guides/functions/secrets)中了解更多关于在 Supabase Edge Functions 中管理环境变量的内容。
 
-#### Test your code locally
+#### 在本地测试你的代码
 
-Run the following command to test your function locally:
+运行以下命令在本地测试你的函数：
 
 ```bash copy
 supabase functions serve --no-verify-jwt
 ```
 
-Navigate to the route `(e.g. /drizzle-tutorial)` in your browser:
+在浏览器中导航到路由 `(e.g. /drizzle-tutorial)`：
 
 ```plaintext
 [
@@ -232,29 +232,29 @@ Navigate to the route `(e.g. /drizzle-tutorial)` in your browser:
 ]
 ```
 
-#### Link your local project to a hosted Supabase project
+#### 将本地项目链接到托管的 Supabase 项目
 
-You can create new Supabase project in the [dashboard](https://supabase.com/dashboard) or by following this [link](https://database.new/).
+你可以在[控制面板](https://supabase.com/dashboard)中创建新的 Supabase 项目，或通过此[链接](https://database.new/)创建。
 
-Copy the `Reference ID` from project settings and use it to link your local development project to a hosted Supabase project by running the following command:
+从项目设置中复制 `Reference ID`，并通过运行以下命令用它把你的本地开发项目链接到托管的 Supabase 项目：
 
 ```bash copy
 supabase link --project-ref=<REFERENCE_ID>
 ```
 
-Push your schema changes to the hosted Supabase project by running the following command:
+通过运行以下命令将你的 schema 变更推送到托管的 Supabase 项目：
 
 ```bash copy
 supabase db push
 ```
 
-#### Setup environment variables
+#### 设置环境变量
 
-You can find `Project connect details` by clicking **Connect** in the top bar of the dashboard and copy the URI from the `Transaction pooler` section. Remember to replace the password placeholder with your actual database password.
+你可以通过点击控制面板顶栏中的 **Connect** 找到 `Project connect details`，并从 `Transaction pooler` 部分复制 URI。记得将密码占位符替换为你实际的数据库密码。
 
-Read more about Connection Pooler in the [documentation](https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler).
+在[文档](https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler)中了解更多关于 Connection Pooler 的内容。
 
-Update your edge function code to use the `DATABASE_URL` environment variable instead of `SUPABASE_DB_URL`:
+更新你的 edge function 代码，使用 `DATABASE_URL` 环境变量代替 `SUPABASE_DB_URL`：
 
 ```typescript copy filename="supabase/functions/drizzle-tutorial/index.ts"
 // imports
@@ -265,21 +265,21 @@ const connectionString = Deno.env.get("DATABASE_URL")!;
 // code
 ```
 
-Run the following command to set the environment variable:
+运行以下命令来设置环境变量：
 
 ```bash copy
 supabase secrets set DATABASE_URL=<CONNECTION_STRING>
 ```
 
-Learn more about managing environment variables in Supabase Edge Functions in the [documentation](https://supabase.com/docs/guides/functions/secrets).
+在[文档](https://supabase.com/docs/guides/functions/secrets)中了解更多关于在 Supabase Edge Functions 中管理环境变量的内容。
 
-#### Deploy your function
+#### 部署你的函数
 
-Deploy your function by running the following command:
+通过运行以下命令部署你的函数：
 
 ```bash copy
 supabase functions deploy drizzle-tutorial --no-verify-jwt
 ```
 </Steps>
 
-Finally, you can use URL of the deployed project and navigate to the route you created `(e.g. /drizzle-tutorial)` to access your edge function.
+最后，你可以使用已部署项目的 URL，并导航到你创建的路由 `(e.g. /drizzle-tutorial)` 来访问你的 edge function。

@@ -15,9 +15,9 @@ const { category, items } = Astro.props;
 <table class="supporting-table">
   <thead>
     <th>{category}</th>
-    <th>Support</th>
-    <th>Docs</th>
-    <th>Website</th>
+    <th>支持</th>
+    <th>文档</th>
+    <th>网站</th>
   </thead>
   <tbody>
     {
@@ -48,7 +48,7 @@ const { category, items } = Astro.props;
               <div class="supporting-table__unsupported-icon">⏳</div>
             )}
           </td>
-          <td>{item.docsLink && <a href={item.docsLink}>Docs</a>}</td>
+          <td>{item.docsLink && <a href={item.docsLink}>文档</a>}</td>
           <td>
             {item.websiteLink && (
               <a
@@ -56,7 +56,7 @@ const { category, items } = Astro.props;
                 rel="nofollow noreferrer"
                 href={item.websiteLink}
               >
-                Website
+                网站
               </a>
             )}
           </td>

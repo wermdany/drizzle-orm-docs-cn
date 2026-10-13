@@ -9,25 +9,25 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> Cloudflare Durable Objects SQLite
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
-- **Cloudflare SQLite Durable Objects** - SQLite database embedded within a Durable Object - [read here](https://developers.cloudflare.com/durable-objects/best-practices/access-durable-objects-storage/#sqlite-storage-backend)
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
+- **Cloudflare SQLite Durable Objects** - 嵌入在 Durable Object 中的 SQLite 数据库 - [阅读此处](https://developers.cloudflare.com/durable-objects/best-practices/access-durable-objects-storage/#sqlite-storage-backend)
 </Prerequisites>
   
-Drizzle ORM fully supports the Cloudflare Durable Objects database and Cloudflare Workers environment.
-We embrace SQL dialects and dialect specific drivers and syntax and mirror most popular 
-SQLite-like `all`, `get`, `values` and `run` query methods syntax.
+Drizzle ORM 完全支持 Cloudflare Durable Objects 数据库和 Cloudflare Workers 环境。
+我们拥抱 SQL 方言以及特定方言的驱动和语法，并且镜像了最流行的
+类 SQLite 的 `all`、`get`、`values` 和 `run` 查询方法语法。
 
-To setup project for your Cloudflare Durable Objects please refer to **[official docs.](https://developers.cloudflare.com/durable-objects)**
+要为你的 Cloudflare Durable Objects 设置项目，请参考 **[官方文档。](https://developers.cloudflare.com/durable-objects)**
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
  drizzle-orm@rc
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并执行查询
 
-You would need to have a `wrangler.toml` file for Durable Objects database and will look something like this:
+你需要为 Durable Objects 数据库准备一个 `wrangler.toml` 文件，内容大致如下：
 ```toml {16-18,21-24}
 #:schema node_modules/wrangler/config-schema.json
 name = "sqlite-durable-objects"
@@ -35,27 +35,27 @@ main = "src/index.ts"
 compatibility_date = "2024-11-12"
 compatibility_flags = [ "nodejs_compat" ]
 
-# Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
-# Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
-# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#durable-objects
+# 绑定一个 Durable Object。Durable Objects 是基于 actor 模型、可缩容到零的计算原语。
+# Durable Objects 可以按需长期存活。当你需要一个长期运行的“服务器”时可以使用，例如在实时应用中。
+# 文档：https://developers.cloudflare.com/workers/wrangler/configuration/#durable-objects
 [[durable_objects.bindings]]
 name = "MY_DURABLE_OBJECT"
 class_name = "MyDurableObject"
 
-# Durable Object migrations.
-# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#migrations
+# Durable Object 迁移。
+# 文档：https://developers.cloudflare.com/workers/wrangler/configuration/#migrations
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["MyDurableObject"]
 
-# We need rules so we can import migrations in the next steps
+# 我们需要配置规则，以便在后续步骤中导入迁移文件
 [[rules]] 
 type = "Text"
 globs = ["**/*.sql"]
 fallthrough = true
 ```
 
-Make your first Durable Objects SQLite query:
+发起你的第一个 Durable Objects SQLite 查询：
 ```typescript copy
 /// <reference types="@cloudflare/workers-types" />
 import { drizzle, DrizzleSqliteDODatabase } from 'drizzle-orm/durable-sqlite';
@@ -73,9 +73,9 @@ export class MyDurableObject extends DurableObject {
 		this.storage = ctx.storage;
 		this.db = drizzle(this.storage, { logger: false });
 
-		// Make sure all migrations complete before accepting queries.
-		// Otherwise you will need to run `this.migrate()` in any function
-		// that accesses the Drizzle database `this.db`.
+		// 确保所有迁移都在接受查询之前完成。
+		// 否则，你需要在任何访问 Drizzle 数据库 `this.db` 的
+		// 函数中运行 `this.migrate()`。
 		ctx.blockConcurrencyWhile(async () => {
 			await this._migrate();
 		});
@@ -101,20 +101,20 @@ export class MyDurableObject extends DurableObject {
 
 export default {
 	/**
-	 * This is the standard fetch handler for a Cloudflare Worker
+	 * 这是 Cloudflare Worker 的标准 fetch 处理器
 	 *
-	 * @param request - The request submitted to the Worker from the client
-	 * @param env - The interface to reference bindings declared in wrangler.toml
-	 * @param ctx - The execution context of the Worker
-	 * @returns The response to be sent back to the client
+	 * @param request - 客户端提交给 Worker 的请求
+	 * @param env - 用于引用 wrangler.toml 中声明的绑定的接口
+	 * @param ctx - Worker 的执行上下文
+	 * @returns 要发送回客户端的响应
 	 */
 	async fetch(request: Request, env: Env): Promise<Response> {
 		const id: DurableObjectId = env.MY_DURABLE_OBJECT.idFromName('durable-object');
 		const stub = env.MY_DURABLE_OBJECT.get(id);
 
-		// Option A - Maximum performance.
-		// Prefer to bundle all the database interaction within a single Durable Object call
-		// for maximum performance, since database access is fast within a DO.
+		// 方案 A - 最大性能。
+		// 倾向于将所有数据库交互打包到一次 Durable Object 调用中，
+		// 以获得最大性能，因为 DO 内部的数据库访问很快。
 		const usersAll = await stub.insertAndList({
 			name: 'John',
 			age: 30,
@@ -122,9 +122,9 @@ export default {
 		});
 		console.log('New user created. Getting all users from the database: ', users);
 
-		// Option B - Slow but maybe useful sometimes for debugging.
-		// You can also directly call individual Drizzle queries if they are exposed
-		// but keep in mind every query is a round-trip to the Durable Object instance.
+		// 方案 B - 较慢，但有时对调试有用。
+		// 你也可以在它们被暴露出来的情况下直接调用单个 Drizzle 查询，
+		// 但要记住每次查询都是一次到 Durable Object 实例的往返。
 		await stub.insert({
 			name: 'John',
 			age: 30,
@@ -140,6 +140,6 @@ export default {
 }
 ```
 
-#### What's next?
+#### 下一步？
 
 <WhatsNextSQLite/>

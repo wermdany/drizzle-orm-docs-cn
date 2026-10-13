@@ -1,8 +1,8 @@
 ---
-title: Drizzle Kit v0.23.2 release
+title: Drizzle Kit v0.23.2 发布
 pubDate: 2024-08-05
-description: Bug fixes
+description: Bug 修复
 ---
 
-- Fixed a bug in PostgreSQL with push and introspect where the `schemaFilter` object was passed. It was detecting enums even in schemas that were not defined in the schemaFilter.
-- Fixed the `drizzle-kit up` command to work as expected, starting from the sequences release.
+- 修复了 PostgreSQL 中传入 `schemaFilter` 对象时 push 和 introspect 的一个 bug。它之前在未在 schemaFilter 中定义的 schema 里也会检测到 enum。
+- 修复了 `drizzle-kit up` 命令，使其从 sequences 发布版开始能按预期工作。

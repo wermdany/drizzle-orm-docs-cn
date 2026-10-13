@@ -11,21 +11,21 @@ import LibsqlTabs from "@mdx/LibsqlTabs.mdx";
 # Drizzle \<\> Turso Database Serverless
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
-- Turso Database - [website](https://docs.turso.tech/introduction)
-- Turso Database serverless driver - [website](https://docs.turso.tech/sdk/ts/quickstart#recommended-@tursodatabase/serverless-remote-/-over-the-wire) & [GitHub](https://github.com/tursodatabase/turso/tree/main/serverless/javascript)
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
+- Turso Database - [网站](https://docs.turso.tech/introduction)
+- Turso Database serverless 驱动 - [网站](https://docs.turso.tech/sdk/ts/quickstart#recommended-@tursodatabase/serverless-remote-/-over-the-wire) & [GitHub](https://github.com/tursodatabase/turso/tree/main/serverless/javascript)
 </Prerequisites>
 
-According to the **[official website](https://docs.turso.tech/introduction)**, 
-Turso is the small database to power your big dreams in the age of AI.
+根据 **[官方网站](https://docs.turso.tech/introduction)**，
+Turso 是在 AI 时代为你的宏大梦想提供动力的小型数据库。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
  drizzle-orm@rc @tursodatabase/serverless
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并执行查询
 ```typescript
 import { drizzle } from 'drizzle-orm/tursodatabase-serverless';
 
@@ -39,7 +39,7 @@ const db = drizzle({
 const result = await db.all('select 1');
 ```
 
-If you need to provide your existing drivers:
+如果你需要提供已有的驱动：
 
 ```typescript
 import { connect } from '@tursodatabase/serverless';
@@ -54,6 +54,6 @@ const db = drizzle({ client });
 const result = await db.all('select 1');
 ```
 
-#### What's next?
+#### 下一步？
 
 <WhatsNextSQLite/>

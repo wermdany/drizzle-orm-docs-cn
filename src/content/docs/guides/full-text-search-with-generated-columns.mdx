@@ -1,5 +1,5 @@
 ---
-title: Full-text search with Generated Columns
+title: 使用生成列的全文搜索
 ---
 
 import Section from "@mdx/Section.astro";
@@ -8,15 +8,15 @@ import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql)
-- [Select statement](/docs/select)
-- [Indexes](/docs/indexes-constraints#indexes)
-- [sql operator](/docs/sql) 
-- [Full-text search](/learn/guides/postgresql-full-text-search)
-- [Generated columns](/docs/generated-columns)
+- 快速上手 [PostgreSQL](/docs/get-started-postgresql)
+- [查询语句](/docs/select)
+- [索引](/docs/indexes-constraints#索引)
+- [sql 操作符](/docs/sql) 
+- [全文搜索](/learn/guides/postgresql-full-text-search)
+- [生成列](/docs/generated-columns)
 </Prerequisites>
 
-This guide demonstrates how to implement full-text search in PostgreSQL with Drizzle and generated columns. A generated column is a special column that is always computed from other columns. It is useful because you don't have to compute the value of the column every time you query the table:
+本指南演示了如何在 PostgreSQL 中结合 Drizzle 和生成列实现全文搜索。生成列是一种特殊列，它始终由其他列计算得出。它很有用，因为你无需在每次查询表时都计算该列的值：
 
 <CodeTabs items={["schema.ts", "migration.sql"]}>
   <CodeTab>
@@ -60,7 +60,7 @@ CREATE INDEX "idx_body_search" ON "posts" USING gin ("body_search");
   ```
 </CodeTabs>
 
-When you insert a row into a table, the value of a generated column is computed from an expression that you provide when you create the column:
+当你向表中插入一行时，生成列的值会根据你创建该列时提供的表达式计算得出：
 
 <Section>
 ```ts 
@@ -89,7 +89,7 @@ await db.insert(posts).values({
 ```
 </Section>
 
-This is how you can implement full-text search with generated columns in PostgreSQL with Drizzle ORM.  The `@@` operator is used for direct matches:
+下面是你如何在 PostgreSQL 中使用 Drizzle ORM 结合生成列实现全文搜索。`@@` 操作符用于直接匹配：
 
 <Section>
 ```ts copy {6}
@@ -106,8 +106,8 @@ select * from posts where body_search @@ to_tsquery('english', 'bring');
 ```
 </Section>
 
-This is more advanced schema with a generated column. The `search` column is generated from the `title` and `body` columns and `setweight()` function is used to assign different weights to the columns for full-text search.
-This is typically used to mark entries coming from different parts of a document, such as title versus body.
+这是一个使用生成列的更高级 schema。`search` 列由 `title` 和 `body` 列生成，并使用 `setweight()` 函数为全文搜索的列分配不同的权重。
+这通常用于标记来自文档不同部分的条目，例如标题与正文。
 
 <CodeTabs items={["schema.ts", "migration.sql"]}>
   <CodeTab>
@@ -158,7 +158,7 @@ CREATE INDEX "idx_search" ON "posts" USING gin ("search");
   ```
 </CodeTabs>
 
-This is how you can query the table with full-text search:
+下面是你如何使用全文搜索查询该表：
 
 <Section>
 ```ts copy {6}

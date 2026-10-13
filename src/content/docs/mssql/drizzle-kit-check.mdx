@@ -12,27 +12,26 @@ import Dialects from "@mdx/Dialects.mdx"
 # `drizzle-kit check`
 
 <Prerequisites>
-- Get started with Drizzle and `drizzle-kit` - [read here](/docs/mssql/get-started)
-- Drizzle schema fundamentals - [read here](/docs/mssql/sql-schema-declaration)
-- Database connection basics - [read here](/docs/mssql/connect-overview)
-- Drizzle migrations fundamentals - [read here](/docs/mssql/migrations)
-- Drizzle Kit [overview](/docs/mssql/kit-overview) and [config file](/docs/mssql/drizzle-config-file)
-- `drizzle-kit generate` command - [read here](/docs/mssql/drizzle-kit-generate)
+- 开始使用 Drizzle 和 `drizzle-kit` - [在此阅读](/docs/mssql/get-started)
+- Drizzle schema 基础 - [在此阅读](/docs/mssql/sql-schema-declaration)
+- 数据库连接基础 - [在此阅读](/docs/mssql/connect-overview)
+- Drizzle 迁移基础 - [在此阅读](/docs/mssql/migrations)
+- Drizzle Kit [概览](/docs/mssql/kit-overview) 和 [配置文件](/docs/mssql/drizzle-config-file)
+- `drizzle-kit generate` 命令 - [在此阅读](/docs/mssql/drizzle-kit-generate)
 </Prerequisites>
 
-`drizzle-kit check` command lets you check consistency of your generated SQL migrations history.
+`drizzle-kit check` 命令让你检查已生成的 SQL 迁移历史的一致性。
 
-That's extremely useful when you have multiple developers working on the project and 
-altering database schema on different branches - read more about [migrations for teams](/docs/mssql/kit-migrations-for-teams).
+当有多名开发者在项目上工作，并在不同分支上修改数据库 schema 时，这极其有用 —— 阅读更多关于[团队迁移](/docs/mssql/kit-migrations-for-teams)的内容。
 
 <br/>
 <hr/>
 <br/>
 
-`drizzle-kit check` command requires you to specify `dialect`, 
-you can provide it either via [drizzle.config.ts](/docs/mssql/drizzle-config-file) config file or via CLI options
+`drizzle-kit check` 命令要求你指定 `dialect`，
+你可以通过 [drizzle.config.ts](/docs/mssql/drizzle-config-file) 配置文件或 CLI 选项来提供它
 
-<CodeTabs items={["With config file", "As CLI options"]}>
+<CodeTabs items={["使用配置文件", "作为 CLI 选项"]}>
 <Section>
 ```ts {5,8}
 // drizzle.config.ts
@@ -51,8 +50,8 @@ npx drizzle-kit check --dialect=mssql
 ```
 </CodeTabs>
 
-### Multiple configuration files in one project
-You can have multiple config files in the project, it's very useful when you have multiple database stages or multiple databases on the same project:
+### 一个项目中的多个配置文件
+你可以在项目中拥有多个配置文件，当你有多套数据库阶段或同一项目中的多个数据库时，这非常有用：
 <Npx>
   drizzle-kit check --config=drizzle-dev.config.ts
   drizzle-kit check --config=drizzle-prod.config.ts
@@ -68,24 +67,24 @@ You can have multiple config files in the project, it's very useful when you hav
  └ 📜 tsconfig.json
 ```
 
-### Ignore conflicts
+### 忽略冲突
 
-In case you need `check` command to skip commutativity checks and bypass it, you can use `--ignore-conflicts`. If there is a situation you want to use it, then
-there is a big chance that `drizzle-kit` didn't check migrations right and it's a bug. Please report us your case, so we can fix it
+如果你需要 `check` 命令跳过可交换性（commutativity）检查并绕过它，可以使用 `--ignore-conflicts`。如果你确实需要使用它，
+那么很有可能 `drizzle-kit` 没有正确检查迁移，这是一个 bug。请把你的情况报告给我们，以便我们修复
 
 ```shell
 drizzle-kit check --ignore-conflicts
 ```
 
-### Extended list of configurations
-We recommend configuring `drizzle-kit` through [drizzle.config.ts](/docs/mssql/drizzle-config-file) file, 
-yet you can provide all configuration options through CLI if necessary, e.g. in CI/CD pipelines, etc.
+### 扩展配置列表
+我们建议通过 [drizzle.config.ts](/docs/mssql/drizzle-config-file) 文件来配置 `drizzle-kit`，
+但在必要时，你也可以通过 CLI 提供所有配置选项，例如在 CI/CD 流水线中等等。
 <rem025/>
 |           |            |                                                                         |
 | :-------- | :--------- | :---------------------------------------------------------------------- |
-| `dialect` | `required` | Database dialect you are using. Can be one of <Dialects/> |
-| `out`     |            | Migrations folder, default=`./drizzle`                                         |
-| `config`  |            | Configuration file path, default=`drizzle.config.ts`                           |
+| `dialect` | `required` | 你正在使用的数据库方言。可以是以下之一 <Dialects/> |
+| `out`     |            | 迁移文件夹，默认值=`./drizzle`                                         |
+| `config`  |            | 配置文件路径，默认值=`drizzle.config.ts`                           |
 <br/>
 <Npx>
 drizzle-kit check --dialect=mssql

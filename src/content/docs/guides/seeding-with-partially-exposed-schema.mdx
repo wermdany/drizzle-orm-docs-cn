@@ -1,5 +1,5 @@
 ---
-title: Seeding Partially Exposed Tables with Foreign Key
+title: 使用外键对部分暴露的表进行种子数据填充
 ---
 
 import IsSupportedChipGroup from "@mdx/IsSupportedChipGroup.astro";
@@ -11,12 +11,12 @@ import Callout from '@mdx/Callout.astro';
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach)
-- Get familiar with [Drizzle Seed](/docs/seed-overview)
+- 从 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach) 开始
+- 熟悉 [Drizzle Seed](/docs/seed-overview)
 </Prerequisites>
 
-## Example 1
-Let's assume you are trying to seed your database using the seeding script and schema shown below.
+## 示例 1
+假设你正在使用下面所示的填充脚本和 schema 为数据库填充种子数据。
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
 ```ts
@@ -47,28 +47,28 @@ export const bloodPressure = pgTable("bloodPressure", {
 ```
 </CodeTab>
 </CodeTabs>
-If the `bloodPressure` table has a not-null constraint on the `userId` column, running the seeding script will cause an error.
+如果 `bloodPressure` 表在 `userId` 列上有非空约束，运行填充脚本将导致错误。
 
 ```
 Error: Column 'userId' has not null constraint, 
 and you didn't specify a table for foreign key on column 'userId' in 'bloodPressure' table.
 ```
 
-<Callout title='What does it mean?'>
-This means we can't fill the `userId` column with Null values due to the not-null constraint on that column. 
-Additionally, you didn't expose the `users` table to the `seed` function schema, so we can't generate `users.id` to populate the `userId` column with these values.
+<Callout title='这是什么意思？'>
+这意味着由于该列上的非空约束，我们无法用 Null 值填充 `userId` 列。
+此外，你没有将 `users` 表暴露给 `seed` 函数 schema，因此我们无法生成 `users.id` 来用这些值填充 `userId` 列。
 </Callout>
 
 
-At this point, you have several options to resolve the error:
-- You can remove the not-null constraint from the `userId` column;
-- You can expose `users` table to `seed` function schema
+此时，你有几种解决该错误的方案：
+- 你可以从 `userId` 列移除非空约束；
+- 你可以将 `users` 表暴露给 `seed` 函数 schema
 ```ts 
 await seed(db, { bloodPressure, users });
 ```
-- You can [refine](/docs/guides/seeding-with-partially-exposed-schema#refining-the-userid-column-generator) the `userId` column generator;
+- 你可以[优化](/docs/guides/seeding-with-partially-exposed-schema#优化-userid-列生成器) `userId` 列的生成器；
 
-## Example 2
+## 示例 2
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
@@ -101,23 +101,23 @@ export const bloodPressure = pgTable("bloodPressure", {
 </CodeTab>
 </CodeTabs>
 
-By running the seeding script above you will see a warning
+运行上面的填充脚本，你将看到一条警告
 ```
 Column 'userId' in 'bloodPressure' table will be filled with Null values
 because you specified neither a table for foreign key on column 'userId' 
 nor a function for 'userId' column in refinements.
 ```
-<Callout title='What does it mean?'>
-This means you neither provided the `users` table to the `seed` function schema nor refined the `userId` column generator. 
-As a result, the `userId` column will be filled with Null values.
+<Callout title='这是什么意思？'>
+这意味着你既没有将 `users` 表提供给 `seed` 函数 schema，也没有优化 `userId` 列的生成器。
+因此，`userId` 列将被填充为 Null 值。
 </Callout>
-Then you will have two choices:
-- If you're okay with filling the `userId` column with Null values, you can ignore the warning;
+那么你有两个选择：
+- 如果你可以接受用 Null 值填充 `userId` 列，你可以忽略该警告；
 
-- Otherwise, you can [refine](/docs/guides/seeding-with-partially-exposed-schema#refining-the-userid-column-generator) the `userId` column generator. 
+- 否则，你可以[优化](/docs/guides/seeding-with-partially-exposed-schema#优化-userid-列生成器) `userId` 列的生成器。
 
-## Refining the `userId` column generator
-Doing so requires the `users` table to already have IDs such as 1 and 2 in the database.
+## 优化 `userId` 列生成器
+这样做要求数据库中 `users` 表已经具有诸如 1 和 2 这样的 ID。
 <CodeTabs items={["index.ts"]}>
 <CodeTab>
 ```ts copy {8}

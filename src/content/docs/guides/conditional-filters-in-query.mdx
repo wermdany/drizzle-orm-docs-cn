@@ -1,5 +1,5 @@
 ---
-title: Conditional filters in query
+title: 查询中的条件过滤
 ---
 import Section from "@mdx/Section.astro";
 import IsSupportedChipGroup from "@mdx/IsSupportedChipGroup.astro";
@@ -8,12 +8,12 @@ import Prerequisites from "@mdx/Prerequisites.astro";
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach);
-- [Select statement](/docs/select);
-- [Filtering](/docs/select#filters) and [Filter operators](/docs/operators);
+- 快速上手 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach)；
+- [查询语句](/docs/select)；
+- [过滤](/docs/select#过滤器) 和 [过滤操作符](/docs/operators)；
 </Prerequisites>
 
-To pass a conditional filter in query you can use `.where()` method and logical operator like below:
+要在查询中传入条件过滤器，你可以像下面这样使用 `.where()` 方法和逻辑操作符：
 
 <Section>
 ```ts copy {9}
@@ -39,7 +39,7 @@ select * from posts where title ilike 'AI';
 ```
 </Section>
 
-To combine conditional filters you can use `and()` or `or()` operators like below:
+要组合条件过滤器，你可以像下面这样使用 `and()` 或 `or()` 操作符：
 
 <Section>
 ```ts copy {7,8,9,10,11,12,13}
@@ -73,7 +73,7 @@ select * from posts
 ```
 </Section>
 
-If you need to combine conditional filters in different part of the project you can create a variable, push filters and then use it in `.where()` method with `and()` or `or()` operators like below:
+如果你需要在项目的不同部分组合条件过滤器，可以创建一个变量，把过滤器 push 进去，然后像下面这样在 `.where()` 方法中配合 `and()` 或 `or()` 操作符使用它：
 
 ```ts copy {7,10}
 import { SQL, ... } from 'drizzle-orm';
@@ -93,14 +93,14 @@ filters.push(gt(posts.views, 200));
 await searchPosts(filters);
 ```
 
-Drizzle has useful and flexible API, which lets you create your custom solutions. This is how you can create a custom filter operator:
+Drizzle 拥有实用且灵活的 API，让你可以创建自定义解决方案。下面是你如何创建一个自定义过滤操作符：
 
 <Section>
 
 ```ts copy {5,14}
 import { AnyColumn, ... } from 'drizzle-orm';
 
-// length less than
+// 长度小于
 const lenlt = (column: AnyColumn, value: number) => {
   return sql`length(${column}) < ${value}`;
 };
@@ -127,10 +127,10 @@ select * from posts where (length(title) < 8 and views > 200);
 ```
 </Section>
 
-Drizzle filter operators are just SQL expressions under the hood. This is example of how `lt` operator is implemented in Drizzle:
+Drizzle 的过滤操作符本质上只是 SQL 表达式。下面是 `lt` 操作符在 Drizzle 中的实现示例：
 
 ```js
 const lt = (left, right) => {
-  return sql`${left} < ${bindIfParam(right, left)}`; // bindIfParam is internal magic function
+  return sql`${left} < ${bindIfParam(right, left)}`; // bindIfParam 是内部魔法函数
 };
 ```

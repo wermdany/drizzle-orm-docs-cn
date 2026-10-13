@@ -1,8 +1,8 @@
 import Section from '@mdx/Section.astro';
 
-# Batch API
+# 批量 API
 
-Drizzle supports running SQL statements in a batch with the Neon HTTP driver for PostgreSQL.
+Drizzle 支持通过用于 PostgreSQL 的 Neon HTTP 驱动以批量方式运行 SQL 语句。
 
 <Section>
 ```ts
@@ -26,7 +26,7 @@ type BatchResponse = [
 ```
 </Section>
 
-All possible builders that can be used inside `db.batch`:
+所有可在 `db.batch` 内使用的 builder：
 
 ```ts
 db.query.<table>.findMany(),

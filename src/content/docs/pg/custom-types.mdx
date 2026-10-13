@@ -1,13 +1,13 @@
 import Callout from "@mdx/Callout.astro";
 
-# Custom types
+# 自定义类型
 
-Custom types let you define your own column types with custom SQL data types and JS/DB value transforms
+自定义类型让你可以使用自定义的 SQL 数据类型和 JS/DB 值转换来定义自己的列类型
 
-PostgreSQL exposes `customType` from `drizzle-orm/pg-core`.
+PostgreSQL 从 `drizzle-orm/pg-core` 中导出了 `customType`。
 
-## Examples
-The best way to see how `customType` definition is working is to check how existing data types could be defined using `customType` function from Drizzle ORM.
+## 示例
+了解 `customType` 定义如何工作的最佳方式，是查看如何使用 Drizzle ORM 中的 `customType` 函数来定义现有的数据类型。
 
 #### Integer
 
@@ -71,7 +71,7 @@ export const users = pgTable('users', {
 });
 ```
 
-Usage for all types will be same as defined functions in Drizzle ORM. For example:
+所有类型的用法都将与 Drizzle ORM 中已定义的函数相同。例如：
 ```ts
 const usersTable = pgTable('users', {
   id: customInteger().primaryKey(),
@@ -81,81 +81,81 @@ const usersTable = pgTable('users', {
 });
 ```
 
-### Methods and Generic types
+### 方法与泛型类型
 <br/>
 
-| Type | Required | Description |
+| 类型 | 是否必需 | 描述 |
 |---|---|---|
-| `data` | Yes | The TypeScript type for the column after selecting/inserting. |
-| `driverData` | No | The type the database driver accepts for this data type. |
-| `driverOutput` | No | **Deprecated** — use codecs instead (bypasses JSON codecs if used). The type the driver returns, if different from `driverData`. |
-| `jsonData` | No | **Deprecated** — use codecs instead (bypasses JSON codecs if used). The type returned when aggregated to JSON. |
-| `config` | No | Config object type for `dataType` generation (e.g. `{ length: number }`). |
-| `configRequired` | No | Whether the config argument is required. Default `false`. |
-| `notNull` | No | Set to `true` if the custom type should be `notNull` by default. |
-| `default` | No | Set to `true` if the custom type has a default value. |
+| `data` | 是 | 查询/插入后列的 TypeScript 类型。 |
+| `driverData` | 否 | 数据库驱动对该数据类型所接受的类型。 |
+| `driverOutput` | 否 | **已弃用** — 请改用 codec（使用时会绕过 JSON codec）。驱动返回的类型（如果与 `driverData` 不同）。 |
+| `jsonData` | 否 | **已弃用** — 请改用 codec（使用时会绕过 JSON codec）。聚合为 JSON 时返回的类型。 |
+| `config` | 否 | 用于生成 `dataType` 的配置对象类型（例如 `{ length: number }`）。 |
+| `configRequired` | 否 | config 参数是否必需。默认为 `false`。 |
+| `notNull` | 否 | 如果自定义类型应默认为 `notNull`，则设为 `true`。 |
+| `default` | 否 | 如果自定义类型有默认值，则设为 `true`。 |
 
 <br/>
 
-| Method | Required | Description |
+| 方法 | 是否必需 | 描述 |
 |---|---|---|
-| `dataType` | Yes | Defines the SQL type string. If database data type needs additional params you can use them from `config` param |
-| `toDriver` | No | Transform inputs from desired to be used in code format to one suitable for driver |
-| `fromDriver` | No | Transform data returned by driver to desired column's output format |
-| `codec` | No | Which driver codec to use (see [Codecs](/docs/codecs) section). |
-| `fromJson` | No | **Deprecated** — use `codec` instead. Transforms value from JSON context. |
-| `forJsonSelect` | No | **Deprecated** — use `codec` instead. Modify selection of column inside JSON functions |
+| `dataType` | 是 | 定义 SQL 类型字符串。如果数据库数据类型需要额外参数，你可以使用 `config` 参数中的参数。 |
+| `toDriver` | 否 | 将你期望在代码中使用的输入格式转换为适合驱动的格式 |
+| `fromDriver` | 否 | 将驱动返回的数据转换为期望的列输出格式 |
+| `codec` | 否 | 使用哪个驱动 codec（参见 [Codecs](/docs/codecs) 章节）。 |
+| `fromJson` | 否 | **已弃用** — 请改用 `codec`。转换来自 JSON 上下文的值。 |
+| `forJsonSelect` | 否 | **已弃用** — 请改用 `codec`。修改 JSON 函数内部列的选择方式 |
 
 <br/>
 
-## TS-doc for type definitions
+## 类型定义的 TS 文档
 
-You can check `ts-doc` for types, param definition and examples
+你可以查看类型的 `ts-doc`，了解参数定义和示例
 
-<Callout collapsed="Expand details">
+<Callout collapsed="展开详情">
 ```ts
 interface CustomTypeValues {
   /**
-   * Required type for custom column, that will infer proper type model
+   * 自定义列所需的类型，它将推断出正确的类型模型
    *
-   * Examples:
+   * 示例：
    *
-   * If you want your column to be `string` type after selecting/or on inserting - use `data: string`. Like `text`, `varchar`
+   * 如果你希望列在查询/插入时为 `string` 类型 - 使用 `data: string`。例如 `text`、`varchar`
    *
-   * If you want your column to be `number` type after selecting/or on inserting - use `data: number`. Like `integer`
+   * 如果你希望列在查询/插入时为 `number` 类型 - 使用 `data: number`。例如 `integer`
    */
   data: unknown;
   /**
-   * Type helper, that represents what type database driver is accepting for specific database data type
+   * 类型辅助工具，表示数据库驱动对特定数据库数据类型所接受的类型
    */
   driverData?: unknown;
   /**
-   * @deprecated Use codecs instead
+   * @deprecated 请改用 codec
    *
-   * Type helper, that represents what type database driver is returning for specific database data type
+   * 类型辅助工具，表示数据库驱动对特定数据库数据类型所返回的类型
    *
-   * Needed only in case driver's output and input for type differ
+   * 仅在驱动的输出与输入类型不同时才需要
    *
-   * Defaults to {@link driverData}
+   * 默认为 {@link driverData}
    */
   driverOutput?: unknown;
   /**
-   * @deprecated Use codecs instead
+   * @deprecated 请改用 codec
    *
-   * Type helper, that represents what type field returns after being aggregated to JSON
+   * 类型辅助工具，表示字段聚合为 JSON 后返回的类型
    */
   jsonData?: unknown;
   /**
-   * What config type should be used for {@link CustomTypeParams} `dataType` generation
+   * 生成 {@link CustomTypeParams} 的 `dataType` 时应使用何种配置类型
    */
   config?: Record<string, any>;
   /**
-   * Whether the config argument should be required or not
+   * config 参数是否应为必需
    * @default false
    */
   configRequired?: boolean;
   /**
-   * If your custom data type should be notNull by default you can use `notNull: true`
+   * 如果你的自定义数据类型默认应为 notNull，可以使用 `notNull: true`
    *
    * @example
    * const customSerial = customType<{ data: number, notNull: true, default: true }>({
@@ -166,7 +166,7 @@ interface CustomTypeValues {
    */
   notNull?: boolean;
   /**
-   * If your custom data type has default you can use `default: true`
+   * 如果你的自定义数据类型有默认值，可以使用 `default: true`
    *
    * @example
    * const customSerial = customType<{ data: number, notNull: true, default: true }>({
@@ -179,28 +179,28 @@ interface CustomTypeValues {
 }
 interface CustomTypeParams<T extends CustomTypeValues> {
   /**
-   * Database data type string representation, that is used for migrations
+   * 数据库数据类型的字符串表示形式，用于迁移
    * @example
    * ```
    * `jsonb`, `text`
    * ```
    *
-   * If database data type needs additional params you can use them from `config` param
+   * 如果数据库数据类型需要额外参数，你可以使用 `config` 参数中的参数
    * @example
    * ```
    * `varchar(256)`, `numeric(2,3)`
    * ```
    *
-   * To make `config` be of specific type please use config generic in {@link CustomTypeValues}
+   * 要使 `config` 为特定类型，请使用 {@link CustomTypeValues} 中的 config 泛型
    *
    * @example
-   * Usage example
+   * 用法示例
    * ```
    *   dataType() {
    *     return 'boolean';
    *   },
    * ```
-   * Or
+   * 或者
    * ```
    *   dataType(config) {
    * 	   return typeof config.length !== 'undefined' ? `varchar(${config.length})` : `varchar`;
@@ -209,9 +209,9 @@ interface CustomTypeParams<T extends CustomTypeValues> {
    */
   dataType: (config: T['config'] | (Equal<T['configRequired'], true> extends true ? never : undefined)) => string;
   /**
-   * Optional mapping function, that is used to transform inputs from desired to be used in code format to one suitable for driver
+   * 可选的映射函数，用于将你期望在代码中使用的输入格式转换为适合驱动的格式
    * @example
-   * For example, when using jsonb we need to map JS/TS object to string before writing to database
+   * 例如，使用 jsonb 时，我们需要在写入数据库前将 JS/TS 对象映射为字符串
    * ```
    * toDriver(value: TData): string {
    * 	 return JSON.stringify(value);
@@ -220,22 +220,22 @@ interface CustomTypeParams<T extends CustomTypeValues> {
    */
   toDriver?: (value: T['data']) => T['driverData'] | SQL;
   /**
-   * Optional mapping function, that is used for transforming data returned by driver to desired column's output format
+   * 可选的映射函数，用于将驱动返回的数据转换为期望的列输出格式
    * @example
-   * For example, when using timestamp we need to map string Date representation to JS Date
+   * 例如，使用 timestamp 时，我们需要将字符串形式的 Date 表示映射为 JS Date
    * ```
    * fromDriver(value: string): Date {
    * 	return new Date(value);
    * }
    * ```
    *
-   * It'll cause the returned data to change from:
+   * 它会使返回的数据从：
    * ```
    * {
    * 	customField: "2025-04-07T03:25:16.635Z";
    * }
    * ```
-   * to:
+   * 变为：
    * ```
    * {
    * 	customField: new Date("2025-04-07T03:25:16.635Z");
@@ -244,29 +244,29 @@ interface CustomTypeParams<T extends CustomTypeValues> {
    */
   fromDriver?: (value: 'driverOutput' extends keyof T ? T['driverOutput'] : T['driverData']) => T['data'];
   /**
-   * @deprecated Use codecs instead; bypasses JSON codecs if used
+   * @deprecated 请改用 codec；使用时会绕过 JSON codec
    *
-   * Optional mapping function, that is used for transforming data returned by transofmed to JSON in database data to desired format
+   * 可选的映射函数，用于将数据库中以 JSON 形式返回的数据转换为期望格式
    *
-   * Used by [relational queries](https://orm.drizzle.team/docs/rqb)
+   * 由[关系查询](https://orm.drizzle.team/docs/rqb)使用
    *
-   * Defaults to {@link fromDriver} function
+   * 默认为 {@link fromDriver} 函数
    * @example
-   * For example, when querying bigint column via [RQB](https://orm.drizzle.team/docs/rqb) or JSON functions, the result field will be returned as it's string representation, as opposed to bigint from regular query
-   * To handle that, we need a separate function to handle such field's mapping:
+   * 例如，当通过 [RQB](https://orm.drizzle.team/docs/rqb) 或 JSON 函数查询 bigint 列时，结果字段将以其字符串表示形式返回，而不同于常规查询返回的 bigint
+   * 为处理这种情况，我们需要一个单独的函数来处理此类字段的映射：
    * ```
    * fromJson(value: string): bigint {
    * 	return BigInt(value);
    * },
    * ```
    *
-   * It'll cause the returned data to change from:
+   * 它会使返回的数据从：
    * ```
    * {
    * 	customField: "5044565289845416380";
    * }
    * ```
-   * to:
+   * 变为：
    * ```
    * {
    * 	customField: 5044565289845416380n;
@@ -275,24 +275,24 @@ interface CustomTypeParams<T extends CustomTypeValues> {
    */
   fromJson?: (value: T['jsonData']) => T['data'];
   /**
-   * @deprecated Use codecs instead; bypasses JSON codecs if used
+   * @deprecated 请改用 codec；使用时会绕过 JSON codec
    *
-   * Optional selection modifier function, that is used for modifying selection of column inside JSON functions
+   * 可选的选择修饰函数，用于修改 JSON 函数内部列的选择方式
    *
-   * Additional mapping that could be required for such scenarios can be handled using {@link fromJson} function
+   * 此类场景可能需要的额外映射可以使用 {@link fromJson} 函数处理
    *
-   * Used by [relational queries](https://orm.drizzle.team/docs/rqb)
+   * 由[关系查询](https://orm.drizzle.team/docs/rqb)使用
    *
-   * Following types are being casted to text by default: `bytea`, `geometry`, `timestamp`, `numeric`, `bigint`
+   * 以下类型默认会被转换为 text：`bytea`、`geometry`、`timestamp`、`numeric`、`bigint`
    * @example
-   * For example, when using bigint we need to cast field to text to preserve data integrity
+   * 例如，使用 bigint 时，我们需要将字段转换为 text 以保留数据完整性
    * ```
    * forJsonSelect(identifier: SQL, sql: SQLGenerator, arrayDimensions?: number): SQL {
    * 	return sql`${identifier}::text`
    * },
    * ```
    *
-   * This will change query from:
+   * 这会将查询从：
    * ```
    * SELECT
    * 	row_to_json("t".*)
@@ -304,7 +304,7 @@ interface CustomTypeParams<T extends CustomTypeValues> {
    * 		"table"
    * 	) AS "t"
    * ```
-   * to:
+   * 变为：
    * ```
    * SELECT
    * 	row_to_json("t".*)
@@ -317,62 +317,62 @@ interface CustomTypeParams<T extends CustomTypeValues> {
    * 	) AS "t"
    * ```
    *
-   * Returned by query object will change from:
+   * 查询对象返回的结果将从：
    * ```
    * {
-   * 	bigint: 5044565289845416000; // Partial data loss due to direct conversion to JSON format
+   * 	bigint: 5044565289845416000; // 由于直接转换为 JSON 格式而部分数据丢失
    * }
    * ```
-   * to:
+   * 变为：
    * ```
    * {
-   * 	bigint: "5044565289845416380"; // Data is preserved due to conversion of field to text before JSON-ification
+   * 	bigint: "5044565289845416380"; // 由于在 JSON 化之前将字段转换为 text，数据得以保留
    * }
    * ```
    */
   forJsonSelect?: (identifier: SQL, sql: SQLGenerator, arrayDimensions?: number) => SQL;
   /**
-   * Select which column type codec will be used for this column
+   * 选择此列将使用哪种列类型 codec
    */
   codec?: PostgresColumnType | undefined | ((config: T['config'] | (Equal<T['configRequired'], true> extends true ? never : undefined)) => PostgresColumnType | undefined);
 }
 ```
 </Callout>
 
-## Transform layers and execution order
+## 转换层与执行顺序
 
-Custom types have two transform layers: column-level (`toDriver`/`fromDriver`) and driver-level ([codecs](/docs/codecs)). Both run in a specific order. You can read more on how to use codecs with customTypes [here](/docs/codecs#how-codecs-work-in-customtype)
-
-<br/>
-
-- **Writes:** (Insert/Update) `toDriver` first → codec `normalizeParam` second
-- **Reads:** (Select) codec `normalize` first → `fromDriver` second
-- If no codec is set, only `toDriver`/`fromDriver` run
-- If no `toDriver`/`fromDriver` is set, only codecs run (if defined)
-- If neither is set, values pass through untouched
+自定义类型有两个转换层：列级（`toDriver`/`fromDriver`）和驱动级（[codecs](/docs/codecs)）。两者都按特定顺序运行。你可以在[这里](/docs/codecs#编解码器在-customtype-中如何工作)阅读更多关于如何将 codec 与 customTypes 配合使用的内容
 
 <br/>
 
-Use both (`toDriver`/`fromDriver` and `codecs`) when you need driver-level normalization AND column-level transformation:
+- **写入：**（Insert/Update）先执行 `toDriver` → 再执行 codec 的 `normalizeParam`
+- **读取：**（Select）先执行 codec 的 `normalize` → 再执行 `fromDriver`
+- 如果未设置 codec，则只运行 `toDriver`/`fromDriver`
+- 如果未设置 `toDriver`/`fromDriver`，则只运行 codec（如果已定义）
+- 如果两者都未设置，值将原样通过
+
+<br/>
+
+当你既需要驱动级规范化又需要列级转换时，请同时使用两者（`toDriver`/`fromDriver` 和 `codecs`）：
 
 ```ts
-// DB stores as bigint, driver returns string, codec converts to BigInt,
-// but you want a number in your app code
+// 数据库以 bigint 存储，驱动返回 string，codec 将其转换为 BigInt，
+// 但你希望在应用代码中使用 number
 const myColumn = customType<{ data: number; driverData: string }>({
   dataType() { return 'bigint'; },
-  codec: 'bigint',           // driver "123" → BigInt(123n)
+  codec: 'bigint',           // 驱动 "123" → BigInt(123n)
   fromDriver(value) {        // BigInt(123n) → Number(123)
     return Number(value);
   },
 });
 ```
 
-But often you can simplify by choosing the right codec variant:
+但通常你可以通过选择合适的 codec 变体来简化：
 
 ```ts
-// Same result, no fromDriver needed
+// 结果相同，无需 fromDriver
 const myColumn = customType<{ data: number; driverData: string }>({
   dataType() { return 'bigint'; },
-  codec: 'bigint:number',    // driver "123" → Number(123) directly
+  codec: 'bigint:number',    // 驱动 "123" → 直接得到 Number(123)
 });
 ```

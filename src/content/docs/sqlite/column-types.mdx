@@ -1,27 +1,27 @@
 ---
-title: SQLite column types
+title: SQLite 列类型
 ---
 
 import Section from '@mdx/Section.astro';
 import Callout from '@mdx/Callout.astro';
 
-Based on the official **[SQLite docs](https://www.sqlite.org/datatype3.html)**,
-each value stored in an SQLite database (or manipulated by the database engine)
-has one of the following storage classes `NULL`, `INTEGER`, `REAL`, `TEXT` and `BLOB`.
+基于官方 **[SQLite 文档](https://www.sqlite.org/datatype3.html)**，
+存储在 SQLite 数据库中的每个值（或由数据库引擎操作的值）
+都属于以下存储类之一：`NULL`、`INTEGER`、`REAL`、`TEXT` 和 `BLOB`。
 
-We have native support for all of them, yet if that's not enough for you, feel free to create **[custom types](/docs/sqlite/custom-types)**.
+我们对所有这些类型都提供原生支持；不过如果这些还不够，你也可以自由创建 **[自定义类型](/docs/sqlite/custom-types)**。
 
 <Callout title='important' type='warning'>
-All examples in this part of the documentation do not use database column name aliases, and column names are generated from TypeScript keys. 
+本文档这一部分的所有示例都不使用数据库列名别名，列名由 TypeScript 的键生成。
 
-You can use database aliases in column names if you want, and you can also use the `casing API` to define a mapping strategy for Drizzle.
-You can read more about it [here](/docs/sqlite/sql-schema-declaration#shape-your-data-schema)
+如果你愿意，也可以在列名中使用数据库别名，还可以使用 `casing API` 为 Drizzle 定义映射策略。
+你可以在[这里](/docs/sqlite/sql-schema-declaration#塑造你的数据-schema)了解更多
 
 </Callout>
 
 ### Integer
 
-A signed integer, stored in `0`, `1`, `2`, `3`, `4`, `6`, or `8` bytes depending on the magnitude of the value.
+一个带符号整数，根据数值大小，存储在 `0`、`1`、`2`、`3`、`4`、`6` 或 `8` 字节中。
 
 <Section>
 ```typescript
@@ -31,7 +31,7 @@ export const table = sqliteTable('table', {
 	id: integer()
 });
 
-// you can customize integer mode to be number, boolean, timestamp, timestamp_ms
+// 你可以将 integer 的 mode 自定义为 number、boolean、timestamp、timestamp_ms
 integer({ mode: 'number' })
 integer({ mode: 'boolean' })
 integer({ mode: 'timestamp_ms' })
@@ -49,7 +49,7 @@ CREATE TABLE `table` (
 
 <Section>
 ```typescript
-// to make integer primary key auto increment
+// 让 integer 主键自动递增
 integer({ mode: 'number' }).primaryKey({ autoIncrement: true })
 ```
 ```sql
@@ -61,7 +61,7 @@ CREATE TABLE `table` (
 
 ### Real
 
-A floating point value, stored as an `8-byte IEEE` floating point number.
+一个浮点值，以 `8 字节 IEEE` 浮点数形式存储。
 
 <Section>
 ```typescript
@@ -83,10 +83,10 @@ CREATE TABLE `table` (
 
 ### Text
 
-A text string, stored using the database encoding (`UTF-8`, `UTF-16BE` or `UTF-16LE`).  
+一个文本字符串，使用数据库编码（`UTF-8`、`UTF-16BE` 或 `UTF-16LE`）存储。  
 
 <Callout type="info" emoji="ℹ️">
-	You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+	你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 </Callout>
 
 <Section>
@@ -97,7 +97,7 @@ export const table = sqliteTable('table', {
 	text: text()
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 会被推断为 text: "value1" | "value2" | null
 text({ enum: ["value1", "value2"] })
 text({ mode: 'json' })
 text({ mode: 'json' }).$type<{ foo: string }>()
@@ -113,16 +113,16 @@ CREATE TABLE `table` (
 
 ### Blob
 
-A blob of data, stored exactly as it was input.
+一块二进制数据，按输入时的原样存储。
 
 <Callout type="info" emoji="ℹ️">
-	It's recommended to use `text('', { mode: 'json' })` instead of `blob('', { mode: 'json' })`, 
-	because it supports JSON functions:
+	推荐使用 `text('', { mode: 'json' })` 而不是 `blob('', { mode: 'json' })`，
+	因为它支持 JSON 函数：
 
-	All JSON functions currently throw an error if any of their arguments are BLOBs because BLOBs 
-	are reserved for a future enhancement in which BLOBs will store the binary encoding for JSON.
+	目前所有 JSON 函数在其任一参数为 BLOB 时都会抛出错误，因为 BLOB
+	是为未来的增强功能保留的，届时 BLOB 将存储 JSON 的二进制编码。
 
-	See **https://www.sqlite.org/json1.html**.
+	参见 **https://www.sqlite.org/json1.html**。
 </Callout>
 
 <Section>
@@ -148,17 +148,17 @@ CREATE TABLE `table` (
 );
 ```
 
-You can specify `.$type<..>()` for blob inference, it **won't** check runtime values. 
-It provides compile time protection for default values, insert and select schemas.  
+你可以为 blob 的类型推断指定 `.$type<..>()`，它**不会**检查运行时值。
+它为默认值、insert 和 select schema 提供编译时保护。  
 
 ```typescript
-// will be inferred as { foo: string }
+// 会被推断为 { foo: string }
 json: blob({ mode: 'json' }).$type<{ foo: string }>();
 
-// will be inferred as string[]
+// 会被推断为 string[]
 json: blob({ mode: 'json' }).$type<string[]>();
 
-// won't compile
+// 无法通过编译
 json: blob({ mode: 'json' }).$type<string[]>().default({});
 ```
 
@@ -166,9 +166,9 @@ json: blob({ mode: 'json' }).$type<string[]>().default({});
 
 ### Boolean
 
-SQLite does not have native `boolean` data type, yet you can specify `integer` column to be in a `boolean` mode. 
-This allows you to operate boolean values in your code and Drizzle stores them as 0 and 1 integer
-values in the database.
+SQLite 没有原生的 `boolean` 数据类型，但你可以将 `integer` 列指定为 `boolean` 模式。
+这样你就可以在代码中操作布尔值，而 Drizzle 会把它们作为 0 和 1 的整数值
+存储在数据库中。
 
 
 <Section>
@@ -190,8 +190,8 @@ CREATE TABLE `table` (
 
 ### Bigint
 
-Since there is no `bigint` data type in SQLite, Drizzle offers a special `bigint` mode for `blob` columns. 
-This mode allows you to work with BigInt instances in your code, and Drizzle stores them as blob values in the database.
+由于 SQLite 中没有 `bigint` 数据类型，Drizzle 为 `blob` 列提供了特殊的 `bigint` 模式。
+该模式允许你在代码中使用 BigInt 实例，而 Drizzle 会将它们作为 blob 值存储在数据库中。
 
 
 <Section>
@@ -237,8 +237,8 @@ CREATE TABLE `table` (
 
 ## ---
 
-### Customizing data type
-Every column builder has a `.$type()` method, which allows you to customize the data type of the column. This is useful, for example, with unknown or branded types.
+### 自定义数据类型
+每个列构建器都有一个 `.$type()` 方法，可用于自定义列的数据类型。例如，这在处理未知类型或品牌类型（branded type）时很有用。
 ```ts
 type UserId = number & { __brand: 'user_id' };
 type Data = {
@@ -253,7 +253,7 @@ export const users = sqliteTable('users', {
 ```
 
 ### Not null
-`NOT NULL` constraint dictates that the associated column may not contain a `NULL` value.
+`NOT NULL` 约束规定相关列不能包含 `NULL` 值。
 <Section>
 ```typescript
 export const table = sqliteTable('table', { 
@@ -268,15 +268,14 @@ CREATE TABLE table (
 ```
 </Section>
 
-### Default value
+### 默认值
 
-The `DEFAULT` clause specifies a default value to use for the column if no value
-is explicitly provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+`DEFAULT` 子句用于指定当用户执行 `INSERT` 时未显式提供值的情况下该列使用的默认值。
+如果列定义中没有附加显式的 `DEFAULT` 子句，
+那么该列的默认值为 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以指定默认值为 `NULL`、
+一个字符串常量、一个 blob 常量、一个有符号数值，或任何用括号括起来的常量表达式。
 
 <Section>
 ```typescript
@@ -297,7 +296,7 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-A default value may also be one of the special case-independent keywords `CURRENT_TIME`, `CURRENT_DATE` or `CURRENT_TIMESTAMP`.
+默认值也可以是特殊的不区分大小写关键字 `CURRENT_TIME`、`CURRENT_DATE` 或 `CURRENT_TIMESTAMP` 之一。
 
 <Section>
 ```typescript
@@ -320,12 +319,12 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-When using `$default()` or `$defaultFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all insert queries. 
-These functions can assist you in utilizing various implementations such as `uuid`, `cuid`, `cuid2`, and many more.
+使用 `$default()` 或 `$defaultFn()` 时（它们只是同一个函数的不同别名），
+你可以在运行时生成默认值，并在所有 insert 查询中使用这些值。
+这些函数可以帮助你使用诸如 `uuid`、`cuid`、`cuid2` 等各种实现。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不会影响 `drizzle-kit` 的行为，它只在 `drizzle-orm` 的运行时中使用
 </Callout>
 
 ```ts
@@ -337,16 +336,16 @@ export const table = sqliteTable('table', {
 });
 ```
 
-When using `$onUpdate()` or `$onUpdateFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all update queries. 
+使用 `$onUpdate()` 或 `$onUpdateFn()` 时（它们只是同一个函数的不同别名），
+你可以在运行时生成默认值，并在所有 update 查询中使用这些值。
 
-Adds a dynamic update value to the column. The function will be called when the row is updated, 
-and the returned value will be used as the column value if none is provided.
-If no default (or $defaultFn) value is provided, the function will be called
-when the row is inserted as well, and the returned value will be used as the column value.
+为列添加动态更新值。该函数会在行被更新时被调用，
+如果未提供值，则返回的值将用作列的值。
+如果未提供默认值（或 $defaultFn 值），该函数在行被插入时也会被调用，
+返回的值将用作列的值。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不会影响 `drizzle-kit` 的行为，它只在 `drizzle-orm` 的运行时中使用
 </Callout>
 
 ```ts

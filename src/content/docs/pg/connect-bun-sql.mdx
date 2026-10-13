@@ -9,22 +9,22 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> Bun SQL
 
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- Bun - [website](https://bun.sh/docs)
-- Bun SQL - native bindings for working with PostgreSQL databases - [read here](https://bun.sh/docs/api/sql)
+- 使用 Drizzle 的数据库[连接基础](/docs/connect-overview)
+- Bun - [网站](https://bun.sh/docs)
+- Bun SQL - 用于操作 PostgreSQL 数据库的原生绑定 - [在此阅读](https://bun.sh/docs/api/sql)
 </Prerequisites>
 
-According to the **[official website](https://bun.sh/)**, Bun is a fast all-in-one JavaScript runtime. 
+根据 **[官方网站](https://bun.sh/)**，Bun 是一个快速的、一体化的 JavaScript 运行时。
 
-Drizzle ORM natively supports **[`bun sql`](https://bun.sh/docs/api/sql)** module and it's crazy fast 🚀  
+Drizzle ORM 原生支持 **[`bun sql`](https://bun.sh/docs/api/sql)** 模块，而且快得惊人 🚀  
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <Npm>
  drizzle-orm@rc
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 ```typescript copy
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/bun-sql';
@@ -34,7 +34,7 @@ const db = drizzle(process.env.DATABASE_URL);
 const result = await db.select().from(...);
 ```
 
-If you need to provide your existing driver:
+如果你需要提供自己已有的驱动：
 ```typescript copy
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/bun-sql';
@@ -44,6 +44,6 @@ const client = new SQL(process.env.DATABASE_URL!);
 const db = drizzle({ client });
 ```
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres/>

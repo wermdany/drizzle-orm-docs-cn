@@ -1,25 +1,25 @@
 import Callout from '@mdx/Callout.astro';
 
-You can directly apply changes to your database using the `drizzle-kit push` command. This is a convenient method for quickly testing new schema designs or modifications in a local development environment, allowing for rapid iterations without the need to manage migration files:
+你可以使用 `drizzle-kit push` 命令直接对数据库应用变更。这是在本地开发环境中快速测试新的 schema 设计或修改的便捷方式，可实现快速迭代，而无需管理迁移文件：
 
 ```bash copy
 npx drizzle-kit push
 ```
 
-Read more about the push command in [documentation](/docs/drizzle-kit-push).
+在[文档](/docs/drizzle-kit-push)中阅读更多关于 push 命令的内容。
 
-<Callout type='info' title='Tips' emoji='💡'>
-Alternatively, you can generate migrations using the `drizzle-kit generate` command and then apply them using the `drizzle-kit migrate` command:
+<Callout type='info' title='提示' emoji='💡'>
+或者，你可以使用 `drizzle-kit generate` 命令生成迁移，然后使用 `drizzle-kit migrate` 命令应用它们：
 
-Generate migrations:
+生成迁移：
 ```bash copy
 npx drizzle-kit generate
 ```
 
-Apply migrations:
+应用迁移：
 ```bash copy
 npx drizzle-kit migrate
 ```
 
-Read more about migration process in [documentation](/docs/kit-overview).
+在[文档](/docs/kit-overview)中阅读更多关于迁移流程的内容。
 </Callout>

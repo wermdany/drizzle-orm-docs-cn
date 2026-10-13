@@ -11,16 +11,16 @@ import Drivers from "@mdx/Drivers.mdx"
 import DriversExamples from "@mdx/DriversExamples.mdx"
 import Npx from "@mdx/Npx.astro"
 
-# Drizzle Kit configuration file
+# Drizzle Kit 配置文件
 <Prerequisites>
-- Get started with Drizzle and `drizzle-kit` - [read here](/docs/mysql/get-started)
-- Drizzle schema fundamentals - [read here](/docs/mysql/sql-schema-declaration)
-- Database connection basics - [read here](/docs/mysql/connect-overview)
-- Drizzle migrations fundamentals - [read here](/docs/mysql/migrations)
-- Drizzle Kit [overview](/docs/mysql/kit-overview) and [config file](/docs/mysql/drizzle-config-file)
+- Drizzle 和 `drizzle-kit` 入门 - [阅读此处](/docs/mysql/get-started)
+- Drizzle schema 基础 - [阅读此处](/docs/mysql/sql-schema-declaration)
+- 数据库连接基础 - [阅读此处](/docs/mysql/connect-overview)
+- Drizzle 迁移基础 - [阅读此处](/docs/mysql/migrations)
+- Drizzle Kit [概览](/docs/mysql/kit-overview) 和 [配置文件](/docs/mysql/drizzle-config-file)
 </Prerequisites>
 
-Drizzle Kit lets you declare configuration options in `TypeScript` or `JavaScript` configuration files.
+Drizzle Kit 允许你在 `TypeScript` 或 `JavaScript` 配置文件中声明配置选项。
 
 <Section>
 ```plaintext {5}
@@ -57,7 +57,7 @@ export default defineConfig({
 </CodeTabs>
 </Section>
 
-Example of an extended config file
+扩展配置文件的示例
 ```ts collapsable
 import { defineConfig } from "drizzle-kit";
 
@@ -86,8 +86,8 @@ export default defineConfig({
 
 ```
 
-### Multiple configuration files
-You can have multiple config files in the project, it's very useful when you have multiple database stages or multiple databases or different databases on the same project:
+### 多个配置文件
+你可以在项目中拥有多个配置文件，当你存在多个数据库阶段、多个数据库，或同一项目中有不同数据库时，这非常有用：
 <Npx>
   drizzle-kit generate --config=drizzle-dev.config.ts
   drizzle-kit generate --config=drizzle-prod.config.ts
@@ -103,12 +103,12 @@ You can have multiple config files in the project, it's very useful when you hav
  └ 📜 tsconfig.json
 ```
 
-### Migrations folder
-`out` param lets you define folder for your migrations, it's optional and `drizzle` by default.  
-It's very useful since you can have many separate schemas for different databases in the same project 
-and have different migration folders for them.  
+### 迁移文件夹
+`out` 参数让你定义迁移的文件夹，它是可选的，默认值为 `drizzle`。  
+这非常有用，因为你可以在同一项目中为不同数据库拥有多个独立的 schema，
+并为它们设置不同的迁移文件夹。  
   
-Migration folder contains folders with `.sql` migration files which is used by `drizzle-kit`
+迁移文件夹包含由 `drizzle-kit` 使用的、存放 `.sql` 迁移文件的文件夹
 
 <Section>
 ```plaintext {3}
@@ -139,12 +139,12 @@ export default defineConfig({
 ### `dialect`
 <rem025/>
 
-Dialect of the database you're using 
+你正在使用的数据库方言
 |               |                                                 |
 | :------------ | :-----------------------------------            |
-| type        | <Dialects/>                                     |
-| default        | --                                     |
-| commands    | `generate`, `push`, `pull`, `studio`,  `migrate`, `up`, `export` |
+| 类型        | <Dialects/>                                     |
+| 默认值        | --                                     |
+| 命令    | `generate`, `push`, `pull`, `studio`,  `migrate`, `up`, `export` |
 
 <rem025/>
 ```ts {4}
@@ -159,13 +159,13 @@ export default defineConfig({
 ### `schema`
 <rem025/>
 
-[`glob`](https://www.digitalocean.com/community/tools/glob?comments=true&glob=/**/*.js&matches=false&tests=//%20This%20will%20match%20as%20it%20ends%20with%20'.js'&tests=/hello/world.js&tests=//%20This%20won't%20match!&tests=/test/some/globs)
- based path to drizzle schema file(s) or folder(s) contaning schema files.
+基于 [`glob`](https://www.digitalocean.com/community/tools/glob?comments=true&glob=/**/*.js&matches=false&tests=//%20This%20will%20match%20as%20it%20ends%20with%20'.js'&tests=/hello/world.js&tests=//%20This%20won't%20match!&tests=/test/some/globs)
+的 drizzle schema 文件或包含 schema 文件的文件夹的路径。
 |               |                      |
 | :------------ | :-----------------   |
-| type          | `string` `string[]` |
-| default        | --                    |
-| commands      | `generate`, `push`, `export`, `studio`  |
+| 类型          | `string` `string[]` |
+| 默认值        | --                    |
+| 命令      | `generate`, `push`, `export`, `studio`  |
 
 <rem025/>
 <SchemaFilePaths />
@@ -174,12 +174,12 @@ export default defineConfig({
 ### `out`
 <rem025/>
 
-Defines output folder of your SQL migration files, json snapshots of your schema and `schema.ts` from `drizzle-kit pull` command.
+定义你的 SQL 迁移文件、schema 的 json 快照以及来自 `drizzle-kit pull` 命令的 `schema.ts` 的输出文件夹。
 |               |                      |
 | :------------ | :-----------------   |
-| type          | `string` `string[]` |
-| default        | `drizzle`                    |
-| commands      | `generate`, `pull`, `migrate`, `check`, `up` |
+| 类型          | `string` `string[]` |
+| 默认值        | `drizzle`                    |
+| 命令      | `generate`, `pull`, `migrate`, `check`, `up` |
 
 <rem025/>
 ```ts {4}
@@ -195,18 +195,18 @@ export default defineConfig({
 ### `dbCredentials`
 <rem025/>
 
-Database connection credentials in a form of `url`, 
-`user:password@host:port/db` params or exceptions drivers(<Drivers/>) specific connection options.
+数据库连接凭据，形式为 `url`、
+`user:password@host:port/db` 参数，或特定驱动（<Drivers/>）的例外连接选项。
 
 |               |                      |
 | :------------ | :-----------------   |
-| type          | <Dialects/> |
-| default       | --                    |
-| commands      | `push`, `pull`, `migrate`, `studio` |
+| 类型          | <Dialects/> |
+| 默认值       | --                    |
+| 命令      | `push`, `pull`, `migrate`, `studio` |
 
 <rem025/>
 
-<CodeTabs items={["Connection string", "Connection params"]}>
+<CodeTabs items={["连接字符串", "连接参数"]}>
 ```ts
 import { defineConfig } from 'drizzle-kit'
 
@@ -228,7 +228,7 @@ export default defineConfig({
     user: "user",
     password: "password",
     database: "dbname",
-    ssl: "...", // can be: string | SslOptions from mysql2
+    ssl: "...", // 可以是：string | SslOptions（来自 mysql2）
   }
 });
 ```
@@ -237,16 +237,16 @@ export default defineConfig({
 ### `migrations`
 <rem025/>
 
-When running `drizzle-kit migrate` - drizzle will records about 
-successfully applied migrations in your database in log table named `__drizzle_migrations`.
+运行 `drizzle-kit migrate` 时 - drizzle 会将成功应用的迁移记录保存在
+你数据库中名为 `__drizzle_migrations` 的日志表中。
 
-`migrations` config options lets you change both migrations log `table` name and `schema`.
+`migrations` 配置选项让你同时更改迁移日志的 `table` 名称和 `schema`。
 
 |               |                      |
 | :------------ | :-----------------   |
-| type          | `{ table: string }` |
-| default       | `{ table: "__drizzle_migrations" }`                    |
-| commands      | `migrate`, `push`, `pull` |
+| 类型          | `{ table: string }` |
+| 默认值       | `{ table: "__drizzle_migrations" }`                    |
+| 命令      | `migrate`, `push`, `pull` |
 
 <rem025/>
 
@@ -255,7 +255,7 @@ export default defineConfig({
   dialect: "mysql",
   schema: "./src/schema.ts",
   migrations: {
-    table: 'my-migrations-table', // `__drizzle_migrations` by default
+    table: 'my-migrations-table', // 默认为 `__drizzle_migrations`
   },
 });
 ```
@@ -263,15 +263,15 @@ export default defineConfig({
 ### `introspect`
 <rem025/>
 
-Configuration for `drizzle-kit pull` command.
+`drizzle-kit pull` 命令的配置。
 
-`casing` is responsible for in-code column keys casing
+`casing` 负责代码中列键的大小写风格
 
 |               |                      |
 | :------------ | :-----------------   |
-| type          | `{ casing: "preserve" \| "camel" }` |
-| default       | `{ casing: "camel" }`                    |
-| commands      | `pull`   |
+| 类型          | `{ casing: "preserve" \| "camel" }` |
+| 默认值       | `{ casing: "camel" }`                    |
+| 命令      | `pull`   |
 
 <rem025/>
 
@@ -333,20 +333,20 @@ SHOW COLUMNS FROM users;
 
 ### `tablesFilter`
 <Callout>
-If you want to run multiple projects with one database - check out [our guide](/docs/mysql/goodies#multi-project-schema).
+如果你想用一个数据库运行多个项目 - 请查看[我们的指南](/docs/mysql/goodies#多项目-schema)。
 </Callout>
 <rem025/>
-`drizzle-kit push` and `drizzle-kit pull` will manage all tables by default.
-You can configure the list of tables via `tablesFilter`.
+`drizzle-kit push` 和 `drizzle-kit pull` 默认会管理所有表。
+你可以通过 `tablesFilter` 配置表列表。
 
-`tablesFilter` option lets you specify [`glob`](https://www.digitalocean.com/community/tools/glob?comments=true&glob=/**/*.js&matches=false&tests=//%20This%20will%20match%20as%20it%20ends%20with%20'.js'&tests=/hello/world.js&tests=//%20This%20won't%20match!&tests=/test/some/globs) 
-based table names filter, e.g. `["users", "user_info"]` or `"user*"`
+`tablesFilter` 选项让你指定基于 [`glob`](https://www.digitalocean.com/community/tools/glob?comments=true&glob=/**/*.js&matches=false&tests=//%20This%20will%20match%20as%20it%20ends%20with%20'.js'&tests=/hello/world.js&tests=//%20This%20won't%20match!&tests=/test/some/globs)
+的表名过滤器，例如 `["users", "user_info"]` 或 `"user*"`
 
 |               |                      |
 | :------------ | :-----------------   |
-| type          | `string` `string[]` |
-| default       | --                    |
-| commands      | `push` `pull`  |
+| 类型          | `string` `string[]` |
+| 默认值        | --                    |
+| 命令      | `push` `pull`  |
 
 <rem025/>
 ```ts
@@ -363,13 +363,13 @@ export default defineConfig({
 ### `verbose`
 <rem025/>
 
-Print all SQL statements during `drizzle-kit push` command.
+在执行 `drizzle-kit push` 命令期间打印所有 SQL 语句。
 
 |               |                      |
 | :------------ | :-----------------   |
-| type          | `boolean` |
-| default       | `false`                    |
-| commands      | `pull`   |
+| 类型          | `boolean` |
+| 默认值        | `false`                    |
+| 命令      | `pull`   |
 
 <rem025/>
 
@@ -383,16 +383,16 @@ export default defineConfig({
 ### `breakpoints`
 <rem025/>
 
-Drizzle Kit will automatically embed `--> statement-breakpoint` into generated SQL migration files, 
-that's necessary for databases that do not support multiple DDL alternation statements in one transaction(MySQL and SQLite).
+Drizzle Kit 会自动将 `--> statement-breakpoint` 嵌入到生成的 SQL 迁移文件中，
+这对于不支持在一个事务中执行多条 DDL 变更语句的数据库（MySQL 和 SQLite）是必需的。
 
-`breakpoints` option flag lets you switch it on and off
+`breakpoints` 选项标志让你开启或关闭它
 
 |               |                      |
 | :------------ | :-----------------   |
-| type          | `boolean` |
-| default       | `true`                    |
-| commands      | `generate` `pull`   |
+| 类型          | `boolean` |
+| 默认值        | `true`                    |
+| 命令      | `generate` `pull`   |
 
 <rem025/>
 

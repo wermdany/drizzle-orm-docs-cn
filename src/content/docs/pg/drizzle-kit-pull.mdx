@@ -13,20 +13,20 @@ import Npx from "@mdx/Npx.astro"
 # `drizzle-kit pull`
 
 <Prerequisites>
-- Get started with Drizzle and `drizzle-kit` - [read here](/docs/get-started)
-- Drizzle schema fundamentals - [read here](/docs/sql-schema-declaration) 
-- Database connection basics - [read here](/docs/connect-overview) 
-- Drizzle migrations fundamentals - [read here](/docs/migrations) 
-- Drizzle Kit [overview](/docs/kit-overview) and [config file](/docs/drizzle-config-file) docs
+- Drizzle 与 `drizzle-kit` 入门 - [阅读文档](/docs/get-started)
+- Drizzle schema 基础 - [阅读文档](/docs/sql-schema-declaration) 
+- 数据库连接基础 - [阅读文档](/docs/connect-overview) 
+- Drizzle 迁移基础 - [阅读文档](/docs/migrations) 
+- Drizzle Kit [概览](/docs/kit-overview) 与 [配置文件](/docs/drizzle-config-file) 文档
 </Prerequisites>
 
-`drizzle-kit pull` lets you literally pull(introspect) your existing database schema and generate `schema.ts` drizzle schema file, 
-it is designed to cover [database first](/docs/migrations) approach of Drizzle migrations.
+`drizzle-kit pull` 让你可以真正地拉取（内省）你现有的数据库 schema，并生成 `schema.ts` drizzle schema 文件，
+它旨在覆盖 Drizzle 迁移的 [数据库优先](/docs/migrations) 方式。
 
-<Callout collapsed="How it works under the hood?">
-When you run Drizzle Kit `pull` command it will:
-1. Pull database schema(DDL) from your existing database
-2. Generate `schema.ts` drizzle schema file and save it to `out` folder
+<Callout collapsed="底层是如何工作的？">
+当你运行 Drizzle Kit 的 `pull` 命令时，它会：
+1. 从你现有的数据库中拉取数据库 schema（DDL）
+2. 生成 `schema.ts` drizzle schema 文件并保存到 `out` 文件夹
 
 <Section>
 ```
@@ -54,18 +54,18 @@ export const users = p.pgTable("users", {
 </Section>
 </Callout>
 
-It is a great approach if you need to manage database schema outside of your TypeScript project or 
-you're using database, which is managed by somebody else.
+如果你需要在 TypeScript 项目之外管理数据库 schema，或者
+你使用的数据库由他人管理，那么这是一个很好的方式。
 
 <br/>
 <hr/>
 <br/>
 
-`drizzle-kit pull` requires you to specify `dialect` and either
-database connection `url` or `user:password@host:port/db` params, you can provide them
-either via [drizzle.config.ts](/docs/drizzle-config-file) config file or via CLI options:
+`drizzle-kit pull` 要求你指定 `dialect` 以及
+数据库连接 `url` 或 `user:password@host:port/db` 参数，你可以
+通过 [drizzle.config.ts](/docs/drizzle-config-file) 配置文件提供，也可以通过 CLI 选项提供：
 
-<CodeTabs items={["With config file", "With CLI options"]}>
+<CodeTabs items={["使用配置文件", "使用 CLI 选项"]}>
 <Section>
 ```ts
 // drizzle.config.ts
@@ -88,9 +88,9 @@ npx drizzle-kit pull --dialect=postgresql --url=postgresql://user:password@host:
 ```
 </CodeTabs>
 
-### Multiple configuration files in one project
+### 单个项目中的多个配置文件
 
-You can have multiple config files in the project, it's very useful when you have multiple database stages or multiple databases or different databases on the same project:
+你可以在项目中拥有多个配置文件，当你存在多个数据库环境、多个数据库或同一项目下的不同数据库时，这非常有用：
 
 <Npx>
   drizzle-kit pull --config=drizzle-dev.config.ts
@@ -107,12 +107,12 @@ You can have multiple config files in the project, it's very useful when you hav
  └ 📜 tsconfig.json
 ```
 
-### Specifying database driver
-Drizzle Kit does not come with a pre-bundled database driver, 
-it will automatically pick available database driver from your current project based on the `dialect` - [see discussion](https://github.com/drizzle-team/drizzle-orm/discussions/2203).
+### 指定数据库驱动
+Drizzle Kit 不自带预捆绑的数据库驱动，
+它会根据 `dialect` 从你当前项目中自动挑选可用的数据库驱动 - [参见讨论](https://github.com/drizzle-team/drizzle-orm/discussions/2203)。
 
-Mostly all drivers of the same dialect share the same set of connection params, 
-as for exceptions like `aws-data-api`, `pglite` and `d1-http` - you will have to explicitely specify `driver` param.
+同一方言的几乎所有驱动都共享同一组连接参数，
+但对于 `aws-data-api`、`pglite` 和 `d1-http` 这类例外情况，你必须显式指定 `driver` 参数。
 
 <CodeTabs items={["AWS Data API", "PGLite", "Cloudflare D1 HTTP"]}>
 ```ts {6}
@@ -135,10 +135,10 @@ export default defineConfig({
   dialect: "postgresql",
   driver: "pglite",
   dbCredentials: {
-    // inmemory
+    // 内存中
     url: ":memory:"
     
-    // or database folder
+    // 或数据库文件夹
     url: "./database/"
   },
 });
@@ -158,29 +158,29 @@ export default defineConfig({
 ```
 </CodeTabs>
 
-### Initial pull
+### 初始 pull
 
-You can use the `--init` flag to mark the pulled schema as an applied migration in your database, 
-so that all subsequent migrations are diffed against the initial one
+你可以使用 `--init` 标志将拉取的 schema 标记为数据库中已应用的迁移，
+这样后续所有迁移都会以初始迁移为基准进行差异比对
 
 ```shell
 npx drizzle-kit pull --init
 ```
 
-### Including tables, schemas and extensions
-`drizzle-kit pull` will by default manage all tables in all schemas.
-You can configure list of tables, schemas and extensions via `tablesFilters`, `schemaFilter` and `extensionFilters` options.
+### 包含表、schema 和扩展
+`drizzle-kit pull` 默认会管理所有 schema 中的所有表。
+你可以通过 `tablesFilters`、`schemaFilter` 和 `extensionFilters` 选项配置表、schema 和扩展的列表。
 
 |                     |                                                                                               |
 | :------------------ | :-------------------------------------------------------------------------------------------- |
-| `tablesFilter`      | `glob` based table names filter, e.g. `["users", "user_info"]` or `"user*"`. Default is `"*"` |
-| `schemaFilter`      | `glob` based schema names filter, e.g. `["public", "drizzle"]` or `"drizzle*"`. Default is `"*"`                     |
-| `extensionsFilters` | List of installed database extensions, e.g. `["postgis"]`. Default is `[]`                    |
+| `tablesFilter`      | 基于 `glob` 的表名过滤器，例如 `["users", "user_info"]` 或 `"user*"`。默认值为 `"*"`          |
+| `schemaFilter`      | 基于 `glob` 的 schema 名称过滤器，例如 `["public", "drizzle"]` 或 `"drizzle*"`。默认值为 `"*"`  |
+| `extensionsFilters` | 已安装的数据库扩展列表，例如 `["postgis"]`。默认值为 `[]`                                     |
 <br/>
 
-Let's configure drizzle-kit to only operate with **all tables** in **public** schema
-and let drizzle-kit know that there's a **postgis** extension installed, 
-which creates it's own tables in public schema, so drizzle can ignore them.
+让我们配置 drizzle-kit，使其只操作 **public** schema 中的 **所有表**，
+并告知 drizzle-kit 已安装 **postgis** 扩展，
+该扩展会在 public schema 中创建自己的表，因此 drizzle 可以忽略它们。
 
 <Section>
 ```ts filename="drizzle.config.ts" {9-11}
@@ -202,26 +202,26 @@ npx drizzle-kit pull
 ```
 </Section>
 
-### Extended list of configurations
-We recommend configuring `drizzle-kit` through [drizzle.config.ts](/docs/drizzle-config-file) file, 
-yet you can provide all configuration options through CLI if necessary, e.g. in CI/CD pipelines, etc.
+### 扩展配置列表
+我们推荐通过 [drizzle.config.ts](/docs/drizzle-config-file) 文件来配置 `drizzle-kit`，
+但如果需要（例如在 CI/CD 流水线等场景中），你也可以通过 CLI 提供所有配置选项。
 
 |                     |            |                                                                           |
 | :------------------ | :--------- | :------------------------------------------------------------------------ |
-| `dialect`           | `required` | Database dialect, one of <Dialects/>                                      |
-| `driver`            |            | Drivers exceptions <Drivers/>                                             |
-| `out`               |            | Migrations output folder path, default is `./drizzle`                     |
-| `url`               |            | Database connection string                                                |
-| `user`              |            | Database user                                                             |
-| `password`          |            | Database password                                                         |
-| `host`              |            | Host                                                                      |
-| `port`              |            | Port                                                                      |
-| `database`          |            | Database name                                                             |
-| `config`            |            | Configuration file path, default is `drizzle.config.ts`                          |
-| `introspect-casing` |            | Strategy for JS keys creation in columns, tables, etc. `preserve` `camel` |
-| `tablesFilter`      |            | Table name filter                                                         |
-| `schemaFilter`      |            | Schema name filter. Default: `["*"]`                                 |
-| `extensionsFilters` |            | Database extensions internal database filters                             |
+| `dialect`           | `required` | 数据库方言，取值为 <Dialects/> 之一                                       |
+| `driver`            |            | 驱动例外 <Drivers/>                                                       |
+| `out`               |            | 迁移输出文件夹路径，默认为 `./drizzle`                                     |
+| `url`               |            | 数据库连接字符串                                                          |
+| `user`              |            | 数据库用户                                                                |
+| `password`          |            | 数据库密码                                                                |
+| `host`              |            | 主机                                                                      |
+| `port`              |            | 端口                                                                      |
+| `database`          |            | 数据库名称                                                                |
+| `config`            |            | 配置文件路径，默认为 `drizzle.config.ts`                                   |
+| `introspect-casing` |            | 列、表等 JS 键的生成策略。`preserve` `camel`                              |
+| `tablesFilter`      |            | 表名过滤器                                                                |
+| `schemaFilter`      |            | schema 名称过滤器。默认：`["*"]`                                          |
+| `extensionsFilters` |            | 数据库扩展的内部数据库过滤器                                              |
 
 <Npx>
 drizzle-kit pull --dialect=postgresql --url=postgresql://user:password@host:port/dbname

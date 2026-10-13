@@ -1,5 +1,5 @@
 ---
-title: Seeding using 'with' option
+title: 使用 'with' 选项进行种子数据填充
 ---
 
 import IsSupportedChipGroup from "@mdx/IsSupportedChipGroup.astro";
@@ -12,15 +12,15 @@ import Section from "@mdx/Section.astro";
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach)
-- Get familiar with [One-to-many Relation](/docs/relations#one-to-many)
-- Get familiar with [Drizzle Seed](/docs/seed-overview)
+- 从 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach) 开始
+- 熟悉[一对多关系](/docs/relations#一对多)
+- 熟悉 [Drizzle Seed](/docs/seed-overview)
 </Prerequisites>
 
 <Callout title='Warning'>
-Using `with` implies tables to have a one-to-many relationship.
+使用 `with` 意味着表之间具有一对多关系。
 
-Therefore, if `one` user has `many` posts, you can use `with` as follows:
+因此，如果 `one` 个 user 拥有 `many` 个 posts，你可以像下面这样使用 `with`：
 ```ts
 users: {
     count: 2,
@@ -31,7 +31,7 @@ users: {
 ```
 </Callout>
 
-## Example 1
+## 示例 1
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
 ```ts
@@ -71,7 +71,7 @@ export const posts = pgTable('posts', {
 </CodeTab>
 </CodeTabs>
 
-Running the seeding script above will cause an error.
+运行上面的填充脚本会导致错误。
 
 ```
 Error: "posts" table doesn't have a reference to "users" table or
@@ -79,8 +79,8 @@ you didn't include your one-to-many relation in the seed function schema.
 You can't specify "posts" as parameter in users.with object.
 ```
 
-You will have several options to resolve an error:
-- You can add reference to the `authorId` column in `posts` table in your schema
+你有几种解决该错误的方案：
+- 你可以在 schema 中为 `posts` 表的 `authorId` 列添加引用
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
 <Section>
@@ -100,7 +100,7 @@ async function main() {
 }
 main();
 
-// Running the seeding script above will fill you database with values shown below
+// 运行上面的填充脚本会将你的数据库填充为如下所示的值
 ```
 
 ```mdx
@@ -142,7 +142,7 @@ export const posts = pgTable('posts', {
 </CodeTab>
 </CodeTabs>
 
-- You can add one-to-many relation to your schema and include it in the seed function schema
+- 你可以向 schema 添加一对多关系，并将其包含在 seed 函数 schema 中
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
 <Section>
@@ -162,7 +162,7 @@ async function main() {
 }
 main();
 
-// Running the seeding script above will fill you database with values shown below
+// 运行上面的填充脚本会将你的数据库填充为如下所示的值
 ```
 
 ```mdx
@@ -214,7 +214,7 @@ export const postsRelations = relations(posts, ({ one }) => ({
 </CodeTabs>
 
 
-## Example 2
+## 示例 2
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
 ```ts
@@ -254,7 +254,7 @@ export const posts = pgTable('posts', {
 </CodeTab>
 </CodeTabs>
 
-Running the seeding script above will cause an error.
+运行上面的填充脚本会导致错误。
 
 ```
 Error: "posts" table doesn't have a reference to "users" table or
@@ -263,7 +263,7 @@ You can't specify "posts" as parameter in users.with object.
 ```
 
 <Callout title='Why?'>
-You have a `posts` table referencing a `users` table in your schema, 
+你的 schema 中有一个 `posts` 表引用了 `users` 表，
 ```ts copy{7}
 .
 .
@@ -274,9 +274,9 @@ export const posts = pgTable('posts', {
 	authorId: integer('author_id').notNull().references(() => users.id),
 });
 ```
-or in other words, you have one-to-many relation where `one` user can have `many` posts.
+换言之，你有一个一对多关系，其中一个 user 可以拥有多个 posts。
 
-However, in your seeding script, you're attempting to generate 3 (`many`) users for `one` post.
+然而，在你的填充脚本中，你试图为一个 post 生成 3 个（`many`）users。
 ```ts
 posts: {
     count: 2,
@@ -287,7 +287,7 @@ posts: {
 ```
 </Callout>
 
-To resolve the error, you can modify your seeding script as follows:
+要解决该错误，你可以按如下方式修改填充脚本：
 <Section>
 ```ts copy{6-9}
 import { users, posts, postsRelations } from './schema.ts';
@@ -305,7 +305,7 @@ async function main() {
 }
 main();
 
-// Running the seeding script above will fill you database with values shown below
+// 运行上面的填充脚本会将你的数据库填充为如下所示的值
 ```
 
 ```mdx
@@ -329,7 +329,7 @@ main();
 ```
 </Section>
 
-## Example 3
+## 示例 3
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
@@ -366,7 +366,7 @@ export const users = pgTable('users', {
 </CodeTab>
 </CodeTabs>
 
-Running the seeding script above will cause an error.
+运行上面的填充脚本会导致错误。
 
 ```
 Error: "users" table has self reference.
@@ -374,7 +374,7 @@ You can't specify "users" as parameter in users.with object.
 ```
 
 <Callout title='Why?'>
-You have a `users` table referencing a `users` table in your schema, 
+你的 schema 中有一个 `users` 表引用了 `users` 表，
 ```ts copy{7}
 .
 .
@@ -385,9 +385,9 @@ export const users = pgTable('users', {
     reportsTo: integer('reports_to').references((): AnyPgColumn => users.id),
 });
 ```
-or in other words, you have one-to-one relation where `one` user can have only `one` user.
+换言之，你有一个一对一关系，其中一个 user 只能拥有一个 user。
 
-However, in your seeding script, you're attempting to generate 3 (`many`) users for `one` user, which is impossible.
+然而，在你的填充脚本中，你试图为一个 user 生成 3 个（`many`）users，这是不可能的。
 ```ts
 users: {
     count: 2,

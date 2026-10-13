@@ -1,20 +1,20 @@
 import Tab from '@mdx/Tab.astro';
 import Tabs from '@mdx/Tabs.astro';
 
-# Batch API
+# 批量 API
 
-Drizzle supports running SQL statements in a batch with SQLite-compatible libSQL and Cloudflare D1 drivers.
+Drizzle 支持使用兼容 SQLite 的 libSQL 和 Cloudflare D1 驱动批量执行 SQL 语句。
 
-**LibSQL Batch API explanation**:
-_[source](https://docs.turso.tech/sdk/ts/reference#batch-transactions)_
+**LibSQL 批量 API 说明**：
+_[来源](https://docs.turso.tech/sdk/ts/reference#batch-transactions)_
 
-> With the libSQL client library, a batch is one or more SQL statements executed in order in an implicit transaction.
-> If all statements are successful, the transaction is committed. If any statement fails, the transaction is rolled back.
+> 使用 libSQL 客户端库时，一个 batch 是指在一个隐式事务中按顺序执行的一条或多条 SQL 语句。
+> 如果所有语句都执行成功，则提交该事务。如果任何语句失败，则回滚该事务。
 
-**D1 Batch API explanation**:
-_[source](https://developers.cloudflare.com/d1/worker-api/d1-database/#batch)_
+**D1 批量 API 说明**：
+_[来源](https://developers.cloudflare.com/d1/worker-api/d1-database/#batch)_
 
-> Batching sends multiple SQL statements inside a single call to the database. This can reduce latency from network round trips to D1.
+> 批量处理会在对数据库的单次调用中发送多条 SQL 语句。这可以减少往返 D1 的网络延迟。
 
 ```ts
 const batchResponse = await db.batch([
@@ -51,7 +51,7 @@ type BatchResponse = [
 </Tab>
 </Tabs>
 
-All possible builders that can be used inside `db.batch`:
+所有可用于 `db.batch` 内部的构建器：
 
 ```ts
 db.all(),

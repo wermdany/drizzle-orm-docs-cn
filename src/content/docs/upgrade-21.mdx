@@ -1,63 +1,63 @@
 import Callout from '@mdx/Callout.astro';
 
-## How to migrate to `0.21.0`
+## 如何迁移到 `0.21.0`
 
-#### 1. Remove all `:dialect` prefixes from your drizzle-kit commands.
-Example: Change `drizzle-kit push:mysql` to `drizzle-kit push`.
+#### 1. 从你的 drizzle-kit 命令中移除所有 `:dialect` 前缀。
+示例：将 `drizzle-kit push:mysql` 改为 `drizzle-kit push`。
 
-#### 2. Update your `drizzle.config.ts` file:
- - Add `dialect` to `drizzle.config.ts`. It is now mandatory and can be `postgresql`, `mysql`, or `sqlite`.
- - Add `driver` to `drizzle.config.ts` ONLY if you are using `aws-data-api`, `turso`, `d1-http`(WIP), or `expo`. Otherwise, you can remove the `driver` from `drizzle.config.ts`.
- - If you were using `connectionString` or `uri` in `dbCredentials`, you should now use `url`.
+#### 2. 更新你的 `drizzle.config.ts` 文件：
+ - 向 `drizzle.config.ts` 添加 `dialect`。它现在是必填项，可以是 `postgresql`、`mysql` 或 `sqlite`。
+ - 仅在使用了 `aws-data-api`、`turso`、`d1-http`（开发中）或 `expo` 时，才向 `drizzle.config.ts` 添加 `driver`。否则，你可以从 `drizzle.config.ts` 中移除 `driver`。
+ - 如果你之前在 `dbCredentials` 中使用了 `connectionString` 或 `uri`，现在应改用 `url`。
     
 ```ts
 import { defineConfig } from "drizzle-kit"
 
 export default defineConfig({
     dialect: "sqlite", // "postgresql" | "mysql"
-    driver: "turso", // optional and used only if `aws-data-api`, `turso`, `d1-http`(WIP) or `expo` are used
+    driver: "turso", // 可选，仅在使用了 `aws-data-api`、`turso`、`d1-http`（开发中）或 `expo` 时使用
     dbCredentials: {
         url: ""
     }
 })
 ```
 
-#### 3. If you are using PostgreSQL or SQLite and had migrations generated in your project, please run `drizzle-kit up` so Drizzle can upgrade all the snapshots to version 6.
+#### 3. 如果你使用 PostgreSQL 或 SQLite，并且项目中已生成迁移，请运行 `drizzle-kit up`，以便 Drizzle 将所有快照升级到版本 6。
 
 <Callout>
-  You can check everything that was changed in `0.21.0` in details here
+  你可以在此处查看 `0.21.0` 中所有变更的详细信息
 </Callout>
 
-## Changelog
+## 更新日志
 
 **❗ Snapshots Upgrade**
 
-All PostgreSQL and SQLite-generated snapshots will be upgraded to version 6. You will be prompted to upgrade them by running `drizzle-kit up`
+所有 PostgreSQL 和 SQLite 生成的快照都会升级到版本 6。系统会提示你通过运行 `drizzle-kit up` 来升级它们
 
 **❗ Removing :dialect from `drizzle-kit` cli commands**
 
-You can now just use commands, like:
+现在你只需使用命令即可，例如：
 
 - `drizzle-kit generate`
 - `drizzle-kit push`
-- etc.
+- 等等。
 
-without specifying dialect. This param is moved to `drizzle.config.ts`
+无需指定 dialect。该参数已移到 `drizzle.config.ts`
 
 **❗ `drizzle.config` update**
 
-- `dialect` is now mandatory; specify which database dialect you are connecting to. Options include `mysql`, `postgresql`, or `sqlite`.
-- `driver` has become optional and will have a specific driver, each with a different configuration of `dbCredentials`. Available drivers are:
+- `dialect` 现在是必填项；指定你要连接的数据库方言。可选值包括 `mysql`、`postgresql` 或 `sqlite`。
+- `driver` 变为可选，且会指定一个具体的驱动，每个驱动都有不同的 `dbCredentials` 配置。可用的驱动有：
   - `aws-data-api`
   - `turso`
-  - `d1-http` - currently WIP
+  - `d1-http` —— 目前开发中
   - `expo`
-- `url` - a unified parameter for the previously existing `connectionString` and `uri`.
-- `migrations` - a new object parameter to specify a custom table and schema for the migrate command:
-  - `table` - the custom table where drizzle will store migrations.
-  - `schema` - the custom schema where drizzle will store migrations (Postgres only).
+- `url` —— 一个统一参数，取代此前存在的 `connectionString` 和 `uri`。
+- `migrations` —— 一个新的对象参数，用于为 migrate 命令指定自定义表和 schema：
+  - `table` —— drizzle 存储迁移所用的自定义表。
+  - `schema` —— drizzle 存储迁移所用的自定义 schema（仅限 Postgres）。
 
-Usage examples for all new and updated commands
+所有新增和更新命令的用法示例
 ```ts
 import { defineConfig } from "drizzle-kit"
 
@@ -74,61 +74,61 @@ export default defineConfig({
 })
 ```
 
-Drizzle driver selection follows the current strategy:
+Drizzle 的驱动选择遵循当前策略：
 
-If a `driver` is specified, use this driver for querying.
+如果指定了 `driver`，则使用该驱动进行查询。
 
-If no driver is specified:
+如果未指定驱动：
 
-- For `postgresql` dialect, Drizzle will:
-  - Check if the `pg` driver is installed and use it.
-  - If not, try to find the `postgres` driver and use it.
-  - If still not found, try to find `@vercel/postgres`.
-  - Then try `@neondatabase/serverless`.
-  - If nothing is found, an error will be thrown.
+- 对于 `postgresql` 方言，Drizzle 会：
+  - 检查是否安装了 `pg` 驱动并使用它。
+  - 如果没有，则尝试查找 `postgres` 驱动并使用它。
+  - 如果仍未找到，则尝试查找 `@vercel/postgres`。
+  - 然后尝试 `@neondatabase/serverless`。
+  - 如果什么都没找到，将抛出错误。
 
-- For `mysql` dialect, Drizzle will:
-  - Check if the `mysql2` driver is installed and use it.
-  - If not, try to find `@planetscale/database` and use it.
-  - If nothing is found, an error will be thrown.
+- 对于 `mysql` 方言，Drizzle 会：
+  - 检查是否安装了 `mysql2` 驱动并使用它。
+  - 如果没有，则尝试查找 `@planetscale/database` 并使用它。
+  - 如果什么都没找到，将抛出错误。
 
-- For `sqlite` dialect, Drizzle will:
-  - Check if the `@libsql/client` driver is installed and use it.
-  - If not, try to find `better-sqlite3` and use it.
-  - If nothing is found, an error will be thrown
+- 对于 `sqlite` 方言，Drizzle 会：
+  - 检查是否安装了 `@libsql/client` 驱动并使用它。
+  - 如果没有，则尝试查找 `better-sqlite3` 并使用它。
+  - 如果什么都没找到，将抛出错误
 
 **❗ MySQL schemas/database are no longer supported by drizzle-kit**
 
-Drizzle Kit won't handle any schema changes for additional schemas/databases in your drizzle schema file
+Drizzle Kit 将不再处理你的 drizzle schema 文件中针对额外 schema/数据库的任何 schema 变更
 
-# New Features
+# 新特性
 
 **🎉 Pull relations**
 
-Drizzle will now pull `relations` from the database by extracting foreign key information and translating it into a `relations` object. You can view the `relations.ts` file in the `out` folder after introspection is complete
+Drizzle 现在会从数据库中拉取 `relations`：它会提取外键信息并将其转换为一个 `relations` 对象。内省完成后，你可以在 `out` 文件夹中查看 `relations.ts` 文件
 
-For more info about relations, please check [the docs](/docs/rqb#declaring-relations)
+关于 relations 的更多信息，请查看[文档](/docs/rqb#declaring-relations)
 
 
 **🎉 Custom name for generated migrations**
 
-To specify a name for your migration you should use `--name <name>`
+要为迁移指定名称，你应使用 `--name <name>`
 
-Usage
+用法
 ```
 drizzle-kit generate --name init_db
 ```
 
 **🎉 New command `migrate`**
 
-You can now apply generated migrations to your database directly from `drizzle-kit`
+现在你可以直接从 `drizzle-kit` 将生成的迁移应用到数据库
 
-Usage
+用法
 ```
 drizzle-kit migrate
 ```
 
-By default, drizzle-kit will store migration data entries in the `__drizzle_migrations` table and, in the case of PostgreSQL, in a `drizzle` schema. If you want to change this, you will need to specify the modifications in `drizzle.config.ts`.
+默认情况下，drizzle-kit 会将迁移数据条目存储在 `__drizzle_migrations` 表中，对于 PostgreSQL 则存储在 `drizzle` schema 中。如果你想更改这一点，需要在 `drizzle.config.ts` 中指定修改。
 
 ```ts
 import { defineConfig } from "drizzle-kit"

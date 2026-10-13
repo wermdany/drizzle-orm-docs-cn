@@ -12,30 +12,30 @@ import Dialects from "@mdx/Dialects.mdx"
 # `drizzle-kit export` 
 
 <Prerequisites>
-- Get started with Drizzle and `drizzle-kit` - [read here](/docs/mysql/get-started)
-- Drizzle schema fundamentals - [read here](/docs/mysql/sql-schema-declaration)
-- Database connection basics - [read here](/docs/mysql/connect-overview)
-- Drizzle migrations fundamentals - [read here](/docs/mysql/migrations)
-- Drizzle Kit [overview](/docs/mysql/kit-overview) and [config file](/docs/mysql/drizzle-config-file)
+- Drizzle 和 `drizzle-kit` 入门 - [阅读此处](/docs/mysql/get-started)
+- Drizzle schema 基础 - [阅读此处](/docs/mysql/sql-schema-declaration)
+- 数据库连接基础 - [阅读此处](/docs/mysql/connect-overview)
+- Drizzle 迁移基础 - [阅读此处](/docs/mysql/migrations)
+- Drizzle Kit [概览](/docs/mysql/kit-overview) 和 [配置文件](/docs/mysql/drizzle-config-file)
 </Prerequisites>
 
 
 <br/>
 
-`drizzle-kit export` lets you export SQL representation of Drizzle schema and print in console SQL DDL representation on it.
-<Callout collapsed="How it works under the hood?">
-Drizzle Kit `export` command triggers a sequence of events:
-1. It will read through your Drizzle schema file(s) and compose a json snapshot of your schema
-2. Based on the current json snapshot it will generate SQL DDL statements
-3. Output SQL DDL statements to console
+`drizzle-kit export` 让你导出 Drizzle schema 的 SQL 表示，并在控制台打印其 SQL DDL 表示。
+<Callout collapsed="底层是如何工作的？">
+Drizzle Kit `export` 命令会触发一系列事件：
+1. 它会读取你的 Drizzle schema 文件，并组合出你的 schema 的 json 快照
+2. 基于当前的 json 快照，它会生成 SQL DDL 语句
+3. 将 SQL DDL 语句输出到控制台
 </Callout>
 
-It's designed to cover [codebase first](/docs/mysql/migrations) approach of managing Drizzle migrations. 
-You can export the SQL representation of the Drizzle schema, allowing external tools like Atlas to handle all the migrations for you
+它旨在覆盖 [以代码库优先](/docs/mysql/migrations) 的 Drizzle 迁移管理方式。
+你可以导出 Drizzle schema 的 SQL 表示，让 Atlas 等外部工具为你处理所有迁移
 
-`drizzle-kit export` command requires you to provide both `dialect` and `schema` path options, 
-you can set them either via [drizzle.config.ts](/docs/mysql/drizzle-config-file) config file or via CLI options
-<CodeTabs items={["With config file", "As CLI options"]}>
+`drizzle-kit export` 命令要求你同时提供 `dialect` 和 `schema` 路径选项，
+你可以通过 [drizzle.config.ts](/docs/mysql/drizzle-config-file) 配置文件或 CLI 选项设置它们
+<CodeTabs items={["使用配置文件", "作为 CLI 选项"]}>
 <Section>
 ```ts
 // drizzle.config.ts
@@ -56,14 +56,14 @@ npx drizzle-kit export --dialect=mysql --schema=./src/schema.ts
 ```
 </CodeTabs>
 
-### Schema files path
-You can have a single `schema.ts` file or as many schema files as you want spread out across the project. 
-Drizzle Kit requires you to specify path(s) to them as a [glob](https://www.digitalocean.com/community/tools/glob?comments=true&glob=/**/*.js&matches=false&tests=//%20This%20will%20match%20as%20it%20ends%20with%20'.js'&tests=/hello/world.js&tests=//%20This%20won't%20match!&tests=/test/some/globs) via `schema` configuration option.
+### schema 文件路径
+你可以只有一个 `schema.ts` 文件，也可以在项目中分散放置任意多个 schema 文件。
+Drizzle Kit 要求你通过 `schema` 配置选项以 [glob](https://www.digitalocean.com/community/tools/glob?comments=true&glob=/**/*.js&matches=false&tests=//%20This%20will%20match%20as%20it%20ends%20with%20'.js'&tests=/hello/world.js&tests=//%20This%20won't%20match!&tests=/test/some/globs) 的形式指定它们的路径。
 
 <SchemaFilePaths/>
 
-### Multiple configuration files in one project
-You can have multiple config files in the project, it's very useful when you have multiple database stages or multiple databases or different databases on the same project:
+### 一个项目中的多个配置文件
+你可以在项目中拥有多个配置文件，当你存在多个数据库阶段、多个数据库，或同一项目中有不同数据库时，这非常有用：
 <Npx>
   drizzle-kit export --config=drizzle-dev.config.ts
   drizzle-kit export --config=drizzle-prod.config.ts
@@ -79,16 +79,16 @@ You can have multiple config files in the project, it's very useful when you hav
  └ 📜 tsconfig.json
 ```
 
-### Extended list of available configurations
-`drizzle-kit export` has a list of cli-only options
+### 可用配置的扩展列表
+`drizzle-kit export` 有一系列仅限 CLI 的选项
 
 <rem025/>
 
 |               |                                                      |
 | :--------     | :--------------------------------------------------- |
-| `--sql`       | generating SQL representation of Drizzle Schema               |
+| `--sql`       | 生成 Drizzle Schema 的 SQL 表示               |
 
-By default, Drizzle Kit outputs SQL files, but in the future, we want to support different formats
+默认情况下，Drizzle Kit 输出 SQL 文件，但未来我们希望支持不同的格式
 
 <rem025/>
 
@@ -99,21 +99,21 @@ drizzle-kit export --sql=true
 <br/>
 <hr/>
 <br/>
-We recommend configuring `drizzle-kit` through [drizzle.config.ts](/docs/mysql/drizzle-config-file) file, 
-yet you can provide all configuration options through CLI if necessary, e.g. in CI/CD pipelines, etc.
+我们推荐通过 [drizzle.config.ts](/docs/mysql/drizzle-config-file) 文件配置 `drizzle-kit`，
+不过如有必要，你也可以通过 CLI 提供所有配置选项，例如在 CI/CD 流水线中等。
 
 |               |            |                                                                            |
 | :------------ | :-------   | :----------------------------------------------------------------------    |
-| `dialect`     | `required` | Database dialect, one of <Dialects/>                                       |
-| `schema`      | `required` | Path to typescript schema file(s) or folder(s) with multiple schema files  |
-| `config`      |            | Configuration file path, default is `drizzle.config.ts`                    |
+| `dialect`     | `required` | 数据库方言，为 <Dialects/> 之一                                       |
+| `schema`      | `required` | typescript schema 文件或包含多个 schema 文件的文件夹的路径  |
+| `config`      |            | 配置文件路径，默认为 `drizzle.config.ts`                    |
 
-### Example
-Example of how to export drizzle schema to console with Drizzle schema located in `./src/schema.ts`
+### 示例
+如何将位于 `./src/schema.ts` 的 Drizzle schema 导出到控制台的示例
 
-We will also place drizzle config file in the `configs` folder.
+我们还会将 drizzle 配置文件放在 `configs` 文件夹中。
 
-Let's create config file:
+让我们创建配置文件：
 
 ```plaintext {4}
 📦 <project root>
@@ -142,11 +142,11 @@ export const users = mysqlTable('users', {
 });
 ```
 
-Now let's run
+现在运行
 ```shell
 npx drizzle-kit export --config=./configs/drizzle.config.ts
 ```
-And it will successfully output SQL representation of drizzle schema
+它就会成功输出 drizzle schema 的 SQL 表示
 ```bash
 CREATE TABLE "users" (
         `id` int AUTO_INCREMENT PRIMARY KEY,

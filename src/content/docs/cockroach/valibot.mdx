@@ -3,7 +3,7 @@ import Callout from '@mdx/Callout.astro';
 
 # valibot
 
-### Install the dependencies
+### 安装依赖
 
 <Npm>
 drizzle-orm@rc valibot
@@ -11,7 +11,7 @@ drizzle-orm@rc valibot
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询的数据的形状 —— 可用于校验 API 响应。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -27,13 +27,13 @@ const users = cockroachTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = parse(userSelectSchema, rows[0]); // Error: `age` is not returned in the above query
+const parsed: { id: number; name: string; age: number } = parse(userSelectSchema, rows[0]); // 错误：上述查询中未返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = parse(userSelectSchema, rows[0]); // Will parse successfully
+const parsed: { id: number; name: string; age: number } = parse(userSelectSchema, rows[0]); // 将成功解析
 ```
 
-Views and enums are also supported.
+也支持视图和枚举。
 
 ```ts copy
 import { cockroachEnum, cockroachView } from 'drizzle-orm/cockroach-core';
@@ -51,7 +51,7 @@ const parsed: { id: number; name: string; age: number } = parse(usersViewSchema,
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据的形状 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -67,16 +67,16 @@ const users = cockroachTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: { name: string, age: number } = parse(userInsertSchema, user); // Error: `age` is not defined
+const parsed: { name: string, age: number } = parse(userInsertSchema, user); // 错误：`age` 未定义
 
 const user = { name: 'Jane', age: 30 };
-const parsed: { name: string, age: number } = parse(userInsertSchema, user); // Will parse successfully
+const parsed: { name: string, age: number } = parse(userInsertSchema, user); // 将成功解析
 await db.insert(users).values(parsed);
 ```
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据的形状 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -92,13 +92,13 @@ const users = cockroachTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { age: 35 };
-const parsed: { name?: string | undefined, age?: number | undefined } = parse(userUpdateSchema, user); // Will parse successfully
+const parsed: { name?: string | undefined, age?: number | undefined } = parse(userUpdateSchema, user); // 将成功解析
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a Valibot schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，用于扩展、修改或完全覆盖字段的 schema。定义回调函数会扩展或修改，而提供 Valibot schema 会覆盖它。
 
 ```ts copy
 import { int4, jsonb, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -113,9 +113,9 @@ const users = cockroachTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => pipe(schema, maxLength(20)), // Extends schema
-  bio: (schema) => pipe(schema, maxLength(1000)), // Extends schema before becoming nullable/optional
-  preferences: object({ theme: string() }) // Overwrites the field, including its nullability
+  name: (schema) => pipe(schema, maxLength(20)), // 扩展 schema
+  bio: (schema) => pipe(schema, maxLength(1000)), // 在变为可空/可选之前扩展 schema
+  preferences: object({ theme: string() }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: {
@@ -128,6 +128,6 @@ const parsed: {
 } = parse(userSelectSchema, ...);
 ```
 
-### Data type reference
+### 数据类型参考
 
-CockroachDB data type mappings follow the CockroachDB column builders. See the [CockroachDB data types](/docs/cockroach/column-types) page for the full column reference.
+CockroachDB 数据类型映射遵循 CockroachDB 列构建器。完整的列参考请参见 [CockroachDB 数据类型](/docs/cockroach/column-types) 页面。

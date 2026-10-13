@@ -23,10 +23,10 @@ export default defineConfig({
   schema: "./src/schema.ts",
   driver: "pglite",
   dbCredentials: {
-    // inmemory
+    // 内存中
     url: ":memory:"
     
-    // or database folder
+    // 或数据库文件夹
     url: "./database/"
   },
 });

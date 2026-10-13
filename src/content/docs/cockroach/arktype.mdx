@@ -3,7 +3,7 @@ import Callout from '@mdx/Callout.astro';
 
 # arktype
 
-### Install the dependencies
+### 安装依赖
 
 <Npm>
 arktype
@@ -11,7 +11,7 @@ arktype
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询出的数据形状 —— 可用于校验 API 响应。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -27,13 +27,13 @@ const users = cockroachTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // Error: `age` is not returned in the above query
+const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // 错误：上面的查询没有返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // Will parse successfully
+const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // 将成功解析
 ```
 
-Views and enums are also supported.
+也支持视图和枚举。
 
 ```ts copy
 import { cockroachEnum, cockroachView } from 'drizzle-orm/cockroach-core';
@@ -52,7 +52,7 @@ const parsed: ArkErrors | { id: number; name: string; age: number } = usersViewS
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据形状 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -68,10 +68,10 @@ const users = cockroachTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // Error: `age` is not defined
+const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // 错误：`age` 未定义
 
 const user = { name: 'Jane', age: 30 };
-const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // Will parse successfully
+const parsed: ArkErrors | { name: string, age: number } = userInsertSchema(user); // 将成功解析
 
 if (parsed instanceof ArkErrors) {
   console.error(parsed.summary);
@@ -83,7 +83,7 @@ await db.insert(users).values(parsed);
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据形状 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -100,7 +100,7 @@ const users = cockroachTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { age: 35 };
-const parsed: ArkErrors | { name?: string | undefined, age?: number | undefined } = userUpdateSchema(user); // Will parse successfully
+const parsed: ArkErrors | { name?: string | undefined, age?: number | undefined } = userUpdateSchema(user); // 将成功解析
 
 if (parsed instanceof ArkErrors) {
   console.error(parsed.summary);
@@ -110,9 +110,9 @@ if (parsed instanceof ArkErrors) {
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a arktype schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，你可以用它来扩展、修改或完全覆盖某个字段的 schema。定义回调函数会扩展或修改，而提供一个 arktype schema 则会覆盖它。
 
 ```ts copy
 import { int4, jsonb, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -127,9 +127,9 @@ const users = cockroachTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => schema.atMostLength(20), // Extends schema
-  bio: () => type.string.atMostLength(2000), // Extends schema before becoming nullable/optional
-  preferences: type({ theme: 'string' }) // Overwrites the field, including its nullability
+  name: (schema) => schema.atMostLength(20), // 扩展 schema
+  bio: () => type.string.atMostLength(2000), // 在变为可空/可选之前扩展 schema
+  preferences: type({ theme: 'string' }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: ArkErrors | {
@@ -142,6 +142,6 @@ const parsed: ArkErrors | {
 } = userSelectSchema(...);
 ```
 
-### Data type reference
+### 数据类型参考
 
-CockroachDB data type mappings follow the CockroachDB column builders. See the [CockroachDB data types](/docs/cockroach/column-types) page for the full column reference.
+CockroachDB 数据类型映射与 CockroachDB 列构建器保持一致。完整的列参考请参见 [CockroachDB 数据类型](/docs/cockroach/column-types) 页面。

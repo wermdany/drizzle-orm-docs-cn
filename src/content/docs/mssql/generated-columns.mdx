@@ -2,21 +2,21 @@ import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 import Callout from '@mdx/Callout.astro';
 
-# Generated Columns
+# 生成列
 
-MSSQL supports computed columns. A computed column is calculated from an expression that can reference other columns in the same table.
+MSSQL 支持计算列。计算列由一个可以引用同一表中其他列的表达式计算得出。
 
-1. Virtual computed columns are calculated when queried and do not occupy storage space.
+1. 虚拟计算列在查询时计算，不占用存储空间。
 
-2. Persisted computed columns store the computed value on disk and can be indexed when the expression is deterministic.
+2. 持久化计算列将计算值存储在磁盘上，并且当表达式具有确定性时可以建立索引。
 
-For more info, see the Microsoft docs for [computed columns](https://learn.microsoft.com/en-us/sql/relational-databases/tables/specify-computed-columns-in-a-table).
+如需更多信息，请参阅 Microsoft 关于[计算列](https://learn.microsoft.com/en-us/sql/relational-databases/tables/specify-computed-columns-in-a-table)的文档。
 
-#### Drizzle Side
+#### Drizzle 侧
 
-In Drizzle you can specify `.generatedAlwaysAs()` on a column and pass a SQL expression.
+在 Drizzle 中，你可以在列上指定 `.generatedAlwaysAs()` 并传入一个 SQL 表达式。
 
-#### Virtual Computed Column
+#### 虚拟计算列
 
 <CodeTab>
 ```ts
@@ -41,9 +41,9 @@ CREATE TABLE [users] (
 ```
 </CodeTab>
 
-#### Persisted Computed Column
+#### 持久化计算列
 
-Use `{ mode: "persisted" }` when you want SQL Server to persist the computed value.
+当你希望 SQL Server 持久化计算值时，使用 `{ mode: "persisted" }`。
 
 <CodeTabs items={["schema.ts", "SQL"]}>
 <CodeTab>
@@ -72,8 +72,8 @@ CREATE TABLE [orders] (
 </CodeTab>
 </CodeTabs>
 
-#### Limitations
+#### 限制
 
-Drizzle Kit will also have limitations for `push` command:
-1. You can't change the generated constraint expression using `push`. Drizzle-kit will ignore this change. To make it work, you would need to `drop the column`, `push`, and then `add a column with a new expression`. This was done due to the complex mapping from the database side, where the schema expression will be modified on the database side and, on introspection, we will get a different string. We can't be sure if you changed this expression or if it was changed and formatted by the database. As long as these are generated columns and `push` is mostly used for prototyping on a local database, it should be fast to `drop` and `create` generated columns. Since these columns are `generated`, all the data will be restored
-2. `generate` should have no limitations
+Drizzle Kit 对 `push` 命令也会有限制：
+1. 你无法通过 `push` 更改生成约束表达式。Drizzle-kit 会忽略此更改。要使其生效，你需要 `删除该列`、`push`，然后再 `添加一个具有新表达式的列`。之所以这样做，是因为数据库端的映射很复杂，schema 表达式会在数据库端被修改，而在内省时我们会得到不同的字符串。我们无法确定是你修改了这个表达式，还是它被数据库修改并格式化了。只要这些是生成列，并且 `push` 主要用于在本地数据库上进行原型开发，那么 `删除` 并 `创建` 生成列应该很快。由于这些列是 `generated`（生成的），所有数据都会被恢复
+2. `generate` 应该没有限制

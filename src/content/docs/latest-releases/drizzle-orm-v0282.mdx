@@ -1,22 +1,22 @@
 ---
-title: DrizzleORM v0.28.2 release
+title: DrizzleORM v0.28.2 发布
 pubDate: 2023-08-10
-description: Added a set of tests for d1, fixed issues in internal documentation, resolved the issue of truncating timestamp milliseconds for MySQL, corrected the type of the '.get()' method for sqlite-based dialects, rectified the sqlite-proxy bug that caused the query to execute twice. Added a support for Typebox package.
+description: 为 d1 添加了一组测试，修复了内部文档中的问题，解决了 MySQL 截断 timestamp 毫秒的问题，修正了基于 sqlite 的方言中 '.get()' 方法的类型，修复了导致查询执行两次的 sqlite-proxy bug。新增对 Typebox 包的支持。
 ---
 
-## The community contributions release 🎉
+## 社区贡献版本 🎉
 
-### Internal Features and Changes
-- Added a set of tests for d1
-- Fixed issues in internal documentation
+### 内部功能与变更
+- 为 d1 添加了一组测试
+- 修复了内部文档中的问题
 
-### Fixes
-- Resolved the issue of truncating timestamp milliseconds for MySQL
-- Corrected the type of the `.get()` method for sqlite-based dialects ([#565](https://github.com/drizzle-team/drizzle-orm/issues/565))
-- Rectified the sqlite-proxy bug that caused the query to execute twice
+### 修复
+- 解决了 MySQL 截断 timestamp 毫秒的问题
+- 修正了基于 sqlite 的方言中 `.get()` 方法的类型（[#565](https://github.com/drizzle-team/drizzle-orm/issues/565)）
+- 修复了导致查询执行两次的 sqlite-proxy bug
 
-### New packages 🎉
+### 新包 🎉
 
-Added a support for [Typebox](https://github.com/sinclairzx81/typebox) in [drizzle-typebox](/docs/typebox) package.
+在 [drizzle-typebox](/docs/typebox) 包中新增了对 [Typebox](https://github.com/sinclairzx81/typebox) 的支持。
 
-Please check documentation page for more usage examples: /docs/typebox
+请查看文档页面以获取更多用法示例：/docs/typebox

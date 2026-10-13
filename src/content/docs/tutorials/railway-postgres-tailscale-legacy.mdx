@@ -1,5 +1,5 @@
 ---
-title: "Connect Drizzle Kit to a private Railway database with Tailscale [OUTDATED]"
+title: "使用 Tailscale 将 Drizzle Kit 连接到私有 Railway 数据库 [OUTDATED]"
 date: "2026-08-27"
 ---
 
@@ -34,84 +34,84 @@ import diagramDark from "@/assets/images/tutorials/railway-postgres-tailscale-di
 
 <ExternalLinkArrows />
 
-<Callout type="error" title="Outdated guide" highlighted>
-Drizzle now has a Railway template that includes its own Tailscale forwarder, which makes the setup simpler. Follow the latest version of this guide: [Run Drizzle Kit against a private Railway database over Tailscale](/docs/tutorials/railway-postgres-tailscale).
+<Callout type="error" title="已过时的指南" highlighted>
+Drizzle 现在有一个包含其自带 Tailscale forwarder 的 Railway 模板，这使得设置更简单。请遵循本指南的最新版本：[Run Drizzle Kit against a private Railway database over Tailscale](/docs/tutorials/railway-postgres-tailscale)。
 </Callout>
 
-This tutorial runs a PostgreSQL database on [Railway](https://driz.link/railway) with public access turned off, and connects `drizzle-kit` to it from your machine.
+本教程在 [Railway](https://driz.link/railway) 上运行一个关闭了公共访问的 PostgreSQL 数据库，并从你的机器将 `drizzle-kit` 连接到它。
 
-A [Tailscale](https://tailscale.com/) Forwarder joins your tailnet and forwards the database port into Railway's private network. Nothing is exposed to the public internet, and every device on your tailnet can run migrations against the database.
+一个 [Tailscale](https://tailscale.com/) Forwarder 加入你的 tailnet，并将数据库端口转发到 Railway 的私有网络中。没有任何内容暴露到公共互联网，并且你 tailnet 上的每台设备都可以针对该数据库运行迁移。
 
-<Prerequisites title="This guide assumes the following:">
-  - You have a [Railway](https://driz.link/railway) account.
+<Prerequisites title="本指南假设以下条件：">
+  - 你拥有一个 [Railway](https://driz.link/railway) 账户。
 
-  - You have a [Tailscale](https://tailscale.com/) account.
+  - 你拥有一个 [Tailscale](https://tailscale.com/) 账户。
 
-  - You have the Tailscale client installed on the machine you work from, and that machine is signed in to your tailnet. You can find the downloads on the [Tailscale website](https://tailscale.com/download).
+  - 你在自己的工作机器上安装了 Tailscale 客户端，并且该机器已登录你的 tailnet。你可以在 [Tailscale 网站](https://tailscale.com/download)上找到下载项。
 
-  - You have installed Drizzle ORM and [Drizzle Kit](/docs/kit-overview).
+  - 你已安装 Drizzle ORM 和 [Drizzle Kit](/docs/kit-overview)。
   <Npm>
       drizzle-orm@rc
       -D drizzle-kit@rc
   </Npm>
 </Prerequisites>
 
-## How it works
+## 工作原理
 
-Railway gives every service a private domain that ends in `.railway.internal`. Those domains resolve only inside the project, so `drizzle-kit` on your machine cannot use them.
+Railway 为每个服务分配一个以 `.railway.internal` 结尾的私有域名。这些域名只在项目内部可解析，因此你机器上的 `drizzle-kit` 无法使用它们。
 
-The Tailscale Forwarder solves that from both sides. It runs as a service in the same Railway project, so it resolves the private domains. It also joins your tailnet as a machine, so your own devices reach it by its tailnet name. Traffic goes from `drizzle-kit` over the tailnet to the forwarder, and from the forwarder to the database over Railway's private network.
+Tailscale Forwarder 从两端解决了这个问题。它作为同一 Railway 项目中的一个服务运行，因此可以解析这些私有域名。它同时作为一台机器加入你的 tailnet，因此你自己的设备可以通过其 tailnet 名称访问它。流量从 `drizzle-kit` 经由 tailnet 到达 forwarder，再从 forwarder 经由 Railway 的私有网络到达数据库。
 
 <Image class="tailscale-diagram-light" src={diagramLight} alt="" />
 <Image class="tailscale-diagram-dark" src={diagramDark} alt="" />
 
-## Set up the Railway project
+## 设置 Railway 项目
 
 <Steps>
-#### Create a Railway project
+#### 创建 Railway 项目
 
-Log in to your [Railway dashboard](https://railway.app/dashboard) and click the `New Project` button.
+登录你的 [Railway 控制面板](https://railway.app/dashboard)并点击 `New Project` 按钮。
 
 ![](@/assets/images/tutorials/railway-create-service-menu.png)
 
-#### Provision a PostgreSQL database
+#### 配置 PostgreSQL 数据库
 
-On the project canvas, click the `New` button in the top right corner and select `Database` → `PostgreSQL`. You can also use the command palette (<Shortcut mac="⌘ K" other="Ctrl K" />) and search for PostgreSQL.
+在项目画布上，点击右上角的 `New` 按钮，然后选择 `Database` → `PostgreSQL`。你也可以使用命令面板（<Shortcut mac="⌘ K" other="Ctrl K" />）并搜索 PostgreSQL。
 
 ![](@/assets/images/tutorials/railway-select-postgres.png)
 
-#### Keep the database on the private network
+#### 让数据库保持在私有网络
 
-Click on the PostgreSQL service, go to the `Settings` tab, and find the `Networking` section. Verify that public access is disabled. Under `Private Networking` you will see the private domain of the service, for example `postgres.railway.internal`. The forwarder will use that domain.
+点击 PostgreSQL 服务，进入 `Settings` 选项卡，找到 `Networking` 部分。确认公共访问已禁用。在 `Private Networking` 下你将看到该服务的私有域名，例如 `postgres.railway.internal`。forwarder 将使用该域名。
 
 ![](@/assets/images/tutorials/railway-postgres-private-networking.png)
 
 </Steps>
 
-## Add the database to your tailnet
+## 将数据库添加到你的 tailnet
 
 <Steps>
-#### Check MagicDNS and HTTPS certificates
+#### 检查 MagicDNS 和 HTTPS 证书
 
-Open the [DNS page](https://login.tailscale.com/admin/dns) in the Tailscale admin console. Both **MagicDNS** and **HTTPS Certificates** must be enabled. Each section offers the opposite action, so a button that reads `Disable MagicDNS...` means MagicDNS is already on.
+在 Tailscale 管理控制台中打开 [DNS 页面](https://login.tailscale.com/admin/dns)。**MagicDNS** 和 **HTTPS Certificates** 都必须启用。每个部分都会提供相反的操作，因此一个显示为 `Disable MagicDNS...` 的按钮意味着 MagicDNS 已经开启。
 
-MagicDNS gives the forwarder a stable machine name, which the database connection needs. HTTPS certificates are not needed for the database connection, but they are needed to open a database UI over the forwarder, and both settings live on this page.
+MagicDNS 为 forwarder 提供一个稳定的机器名，数据库连接需要它。HTTPS 证书不是数据库连接所必需的，但要通过 forwarder 打开数据库 UI 则需要它们，而这两个设置都位于此页面上。
 
 ![](@/assets/images/tutorials/tailscale-dns-magicdns-https.png)
 
-#### Create a reusable auth key
+#### 创建可复用的认证密钥
 
-Go to the [Keys page](https://login.tailscale.com/admin/settings/keys) in the settings menu and click `Generate auth key`. Add a description and turn on `Reusable`. Leave the other settings as they are. A reusable key lets the forwarder register itself again when it starts without existing state.
+在设置菜单中进入 [Keys 页面](https://login.tailscale.com/admin/settings/keys)并点击 `Generate auth key`。添加一个描述并开启 `Reusable`。其余设置保持原样。可复用的密钥让 forwarder 在没有现存状态时可以重新注册自己。
 
 ![](@/assets/images/tutorials/tailscale-generate-auth-key.png)
 
-Click `Generate key`. Copy the key now, because the admin console shows it only once.
+点击 `Generate key`。现在就复制该密钥，因为管理控制台只会显示它一次。
 
 ![](@/assets/images/tutorials/tailscale-auth-key-created.png)
 
-#### Deploy the Tailscale Forwarder
+#### 部署 Tailscale Forwarder
 
-The Tailscale Forwarder is a small TCP proxy. It joins your tailnet as a machine and forwards ports on that machine to services on the Railway private network. Railway publishes the template, and it runs the `brody192/tailscale-forwarder` image.
+Tailscale Forwarder 是一个小型的 TCP 代理。它作为一台机器加入你的 tailnet，并将该机器上的端口转发到 Railway 私有网络上的服务。Railway 发布了该模板，它运行 `brody192/tailscale-forwarder` 镜像。
 
 <a
   href="https://railway.com/deploy/tailscale-forwarder"
@@ -119,77 +119,77 @@ The Tailscale Forwarder is a small TCP proxy. It joins your tailnet as a machine
   rel="nofollow noreferrer"
   style="display: inline-block; margin: 16px 0;"
 >
-  <img src="https://railway.com/button.svg" alt="Deploy on Railway" width="183" height="40" />
+  <img src="https://railway.com/button.svg" alt="部署到 Railway" width="183" height="40" />
 </a>
 
-Open the `Deploy to` dropdown and select the project that holds your database. Both services must be in the same project, otherwise the forwarder won't be able to reach the database over the private network, since it will be placed on a different private network.
+打开 `Deploy to` 下拉菜单，选择存放你的数据库的项目。两个服务必须位于同一个项目中，否则 forwarder 将无法通过私有网络访问数据库，因为它会被放置在不同的私有网络上。
 
-Paste your auth key into `TS_AUTHKEY`. Then set `CONNECTION_MAPPING_01` to the database mapping. The format is `[https:]<source port>:<target host>:<target port>`.
+将你的 auth key 粘贴到 `TS_AUTHKEY` 中。然后将 `CONNECTION_MAPPING_01` 设置为数据库映射。格式为 `[https:]<source port>:<target host>:<target port>`。
 
 ```plaintext copy
 5432:${{Postgres.RAILWAY_PRIVATE_DOMAIN}}:${{Postgres.PGPORT}}
 ```
 
-This forwards port `5432` on the forwarder to your database.
+这会将 forwarder 上的端口 `5432` 转发到你的数据库。
 
 ![](@/assets/images/tutorials/railway-tailscale-forwarder-template-config.png)
 
 <Callout type="info">
-The template setup screen shows only the variables the template declares, and you cannot add new ones there. `CONNECTION_MAPPING_01` is the only mapping you can set now. You add further mappings on the service itself, after it exists.
+模板设置界面只显示模板声明的变量，你无法在那里添加新变量。`CONNECTION_MAPPING_01` 是你现在唯一可以设置的映射。在服务存在之后，你可以在服务本身上添加更多映射。
 </Callout>
 
-#### Deploy and check the logs
+#### 部署并检查日志
 
-Click `Deploy`. The template attaches a volume and sets `TS_EPHEMERAL=false`, so the machine keeps the same identity across redeploys instead of registering a duplicate.
+点击 `Deploy`。该模板会附加一个卷并设置 `TS_EPHEMERAL=false`，因此该机器在多次重新部署之间保持相同的身份，而不会注册成重复的机器。
 
-Open the `Deployments` tab and read the deploy logs. Three lines tell you the forwarder started correctly:
+打开 `Deployments` 选项卡并阅读部署日志。有三行表明 forwarder 正确启动：
 
-- `tsnet starting with hostname "..."` gives the machine name on your tailnet. You need it in a later step.
-- `Starting tailscale_fwdr` lists what it parsed, including `ts-ephemeral: false` and the source port, target address and target port of each mapping.
-- `listening for connections` confirms the forwarder accepts traffic on that source port.
+- `tsnet starting with hostname "..."` 给出了它在你的 tailnet 上的机器名。你在后续步骤中需要它。
+- `Starting tailscale_fwdr` 列出了它解析到的内容，包括 `ts-ephemeral: false` 以及每个映射的源端口、目标地址和目标端口。
+- `listening for connections` 确认 forwarder 在该源端口上接受流量。
 
 ![](@/assets/images/tutorials/railway-tailscale-forwarder-logs.png)
 
-#### Copy the forwarder domain
+#### 复制转发器域名
 
-`TS_HOSTNAME` defaults to your project name, environment name and service name joined by dashes, for example `my-project-production-tailscale-forwarder`. The deploy log prints it on the `tsnet starting with hostname` line.
+`TS_HOSTNAME` 默认由你的项目名、环境名和服务名用短横线连接而成，例如 `my-project-production-tailscale-forwarder`。部署日志会在 `tsnet starting with hostname` 这一行打印它。
 
-Open the [Machines page](https://login.tailscale.com/admin/machines) in the Tailscale admin console. The forwarder appears there on its own once it starts with a valid auth key.
+在 Tailscale 管理控制台中打开 [Machines 页面](https://login.tailscale.com/admin/machines)。forwarder 在使用有效的 auth key 启动后会自行出现在那里。
 
 ![](@/assets/images/tutorials/tailscale-machines-forwarder.png)
 
-Click the machine to open its page. Under `Machine Details`, copy the `Full domain` value. That is the host you connect to from your machine.
+点击该机器以打开其页面。在 `Machine Details` 下，复制 `Full domain` 值。这就是你从自己的机器连接的主机。
 
 ![](@/assets/images/tutorials/tailscale-machine-full-domain.png)
 
 </Steps>
 
-## Connect Drizzle Kit from your machine
+## 从你的机器连接 Drizzle Kit
 
 <Callout type="warning">
-The machine you run `drizzle-kit` on must be signed in to the same tailnet as the forwarder, because the database connection is routed through it.
+运行 `drizzle-kit` 的机器必须登录与 forwarder 相同的 tailnet，因为数据库连接是通过它进行路由的。
 </Callout>
 
 <Steps>
-#### Set the connection string
+#### 设置连接字符串
 
-Open the PostgreSQL service in Railway, go to the `Variables` tab, and copy `DATABASE_URL`.
+在 Railway 中打开 PostgreSQL 服务，进入 `Variables` 选项卡，然后复制 `DATABASE_URL`。
 
 ![](@/assets/images/tutorials/railway-postgres-database-url.png)
 
-Replace the `***.railway.internal` host with the [Tailscale forwarder's domain](#copy-the-forwarder-domain) and keep the rest of the string. `railway.internal` cannot be resolved on a machine outside Railway, so you need to connect through the Tailscale forwarder. Put the result in a `.env` file.
+将 `***.railway.internal` 主机替换为 [Tailscale forwarder 的域名](#复制转发器域名)并保留字符串的其余部分。`railway.internal` 无法在 Railway 之外的机器上解析，因此你需要通过 Tailscale forwarder 连接。将结果放入 `.env` 文件。
 
 ```plaintext copy
 DATABASE_URL=postgresql://postgres:password@<full-domain>:5432/railway
 ```
 
 <Callout type="info">
-Tailscale encrypts the connection between your machine and the forwarder, and Railway encrypts the hop between the forwarder and the database. Railway's PostgreSQL also accepts TLS through the forwarder, so most clients connect with their default settings.
+Tailscale 会加密你的机器与 forwarder 之间的连接，Railway 会加密 forwarder 与数据库之间的一段。Railway 的 PostgreSQL 也通过 forwarder 接受 TLS，因此大多数客户端使用默认设置即可连接。
 </Callout>
 
-#### Set up the Drizzle config file
+#### 设置 Drizzle 配置文件
 
-Create a `drizzle.config.ts` file in the root of your project:
+在你的项目根目录下创建一个 `drizzle.config.ts` 文件：
 
 ```typescript copy filename="drizzle.config.ts"
 import { defineConfig } from "drizzle-kit";
@@ -204,9 +204,9 @@ export default defineConfig({
 });
 ```
 
-#### Apply your schema
+#### 应用你的 schema
 
-Generate migrations and apply them:
+生成迁移并应用它们：
 
 ```bash copy
 npx drizzle-kit generate
@@ -216,46 +216,46 @@ npx drizzle-kit generate
 npx drizzle-kit migrate
 ```
 
-For rapid prototyping you can push the schema directly with [drizzle-kit push](/docs/kit-overview#prototyping-with-db-push). For production deployments, prefer the `generate` and `migrate` workflow, so you keep a versioned history of schema changes. See the [Drizzle migrations fundamentals](/docs/migrations) page for details.
+对于快速原型设计，你可以使用 [drizzle-kit push](/docs/kit-overview#prototyping-with-db-push) 直接推送 schema。对于生产部署，请优先使用 `generate` 和 `migrate` 工作流，以保留 schema 变更的版本化历史。详情请参阅 [Drizzle 迁移基础](/docs/migrations)页面。
 
-#### Check the result
+#### 检查结果
 
-Open the database in [Drizzle Studio](/docs/drizzle-kit-studio):
+在 [Drizzle Studio](/docs/drizzle-kit-studio) 中打开数据库：
 
 ```bash copy
 npx drizzle-kit studio
 ```
 
-It runs on your machine and reads the same `DATABASE_URL`, so it reaches the database through the forwarder. Your new tables are there.
+它运行在你的机器上并读取相同的 `DATABASE_URL`，因此它会通过 forwarder 到达数据库。你的新表就在那里。
 
 ![](@/assets/images/tutorials/drizzle-studio-posts-table.png)
 
 </Steps>
 
 <Callout type="info">
-For occasional access you do not need Tailscale at all. The Railway CLI opens a temporary tunnel to a private database with `railway connect Postgres --tunnel-only`. A forwarder is the right tool when you need a permanent route, or access from every device on your tailnet.
+对于偶尔的访问，你完全不需要 Tailscale。Railway CLI 通过 `railway connect Postgres --tunnel-only` 打开到一个私有数据库的临时隧道。当你需要一条永久路由，或需要从 tailnet 上的每台设备访问时，forwarder 才是合适的工具。
 </Callout>
 
-## Next steps
+## 后续步骤
 
-The forwarder can carry more than one port. ["Drizzle Studio and Gateway on Railway behind Tailscale"](/docs/tutorials/railway-studio-tailscale-legacy) tutorial deploys a database UI into the same Railway project and adds a second mapping for it, so you browse your tables from your tailnet without a public domain. That tutorial starts from an empty project, so with the forwarder already running you can go straight to the template deployment and the second mapping.
+forwarder 可以承载多个端口。["Drizzle Studio and Gateway on Railway behind Tailscale"](/docs/tutorials/railway-studio-tailscale-legacy) 教程将数据库 UI 部署到同一个 Railway 项目中，并为其添加第二个映射，这样你就可以从你的 tailnet 浏览表，而无需公共域名。该教程从一个空项目开始，因此在 forwarder 已经运行的情况下，你可以直接跳到模板部署和第二个映射。
 
-## Troubleshooting
-
-<Callout>
-<Fragment slot="collapsed-title">The forwarder is not in the Machines list</Fragment>
-
-The auth key expired, or a key that was not reusable had already been used. Generate a new reusable key, update `TS_AUTHKEY` on the forwarder service, and redeploy.
-</Callout>
+## 故障排查
 
 <Callout>
-<Fragment slot="collapsed-title">`drizzle-kit` cannot connect</Fragment>
+<Fragment slot="collapsed-title">forwarder 不在 Machines 列表中</Fragment>
 
-Run `tailscale status` and check that your device is signed in to the same tailnet. Check that the port in your connection string matches the source port in `CONNECTION_MAPPING_01`. Railway's PostgreSQL accepts TLS through the forwarder, so you do not need to disable SSL.
+auth key 已过期，或者某个不可复用的密钥已经被使用过。生成一个新的可复用密钥，更新 forwarder 服务上的 `TS_AUTHKEY`，然后重新部署。
 </Callout>
 
 <Callout>
-<Fragment slot="collapsed-title">The mapping variable is ignored</Fragment>
+<Fragment slot="collapsed-title">`drizzle-kit` 无法连接</Fragment>
 
-Confirm the exact variable name on the forwarder service. The template declares `CONNECTION_MAPPING_01`, with a leading zero. Some older guides write `CONNECTION_MAPPING_1`. Use the form the config panel shows you, and keep the numbers unique.
+运行 `tailscale status` 并检查你的设备是否登录了相同的 tailnet。检查你连接字符串中的端口是否与 `CONNECTION_MAPPING_01` 中的源端口匹配。Railway 的 PostgreSQL 通过 forwarder 接受 TLS，因此你无需禁用 SSL。
+</Callout>
+
+<Callout>
+<Fragment slot="collapsed-title">映射变量被忽略</Fragment>
+
+在 forwarder 服务上确认确切的变量名。该模板声明的是 `CONNECTION_MAPPING_01`，带一个前导零。一些较早的指南写的是 `CONNECTION_MAPPING_1`。使用配置面板显示给你的形式，并保持数字唯一。
 </Callout>

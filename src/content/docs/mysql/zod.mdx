@@ -3,7 +3,7 @@ import Callout from '@mdx/Callout.astro';
 
 # zod
 
-### Install the dependencies
+### 安装依赖
 
 <Npm>
 drizzle-orm@rc zod
@@ -11,7 +11,7 @@ drizzle-orm@rc zod
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询到的数据形状 - 可用于校验 API 响应。
 
 ```ts copy
 import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -26,13 +26,13 @@ const users = mysqlTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // Error: `age` is not returned in the above query
+const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // 错误：上述查询未返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // Will parse successfully
+const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // 将成功解析
 ```
 
-Views are also supported.
+视图也受支持。
 
 ```ts copy
 import { mysqlView } from 'drizzle-orm/mysql-core';
@@ -46,7 +46,7 @@ const parsed: { id: number; name: string; age: number } = usersViewSchema.parse(
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入到数据库的数据形状 - 可用于校验 API 请求。
 
 ```ts copy
 import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -61,16 +61,16 @@ const users = mysqlTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: { id?: number | undefined, name: string, age: number } = userInsertSchema.parse(user); // Error: `age` is not defined
+const parsed: { id?: number | undefined, name: string, age: number } = userInsertSchema.parse(user); // 错误：`age` 未定义
 
 const user = { name: 'Jane', age: 30 };
-const parsed: { id?: number | undefined, name: string, age: number } = userInsertSchema.parse(user); // Will parse successfully
+const parsed: { id?: number | undefined, name: string, age: number } = userInsertSchema.parse(user); // 将成功解析
 await db.insert(users).values(parsed);
 ```
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据形状 - 可用于校验 API 请求。
 
 ```ts copy
 import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -91,14 +91,14 @@ const parsed:
 		id?: number | undefined; 
 		name?: string | undefined; 
 		age?: number | undefined 
-	} = userUpdateSchema.parse(user); // Will parse successfully
+	} = userUpdateSchema.parse(user); // 将成功解析
 
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a Zod schema will overwrite it.
+每个创建 schema 的函数都接受一个额外的可选参数，你可以用它来扩展、修改或完全覆盖某个字段的 schema。定义回调函数会扩展或修改，而提供 Zod schema 则会将其覆盖。
 
 ```ts copy
 import { int, json, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -113,9 +113,9 @@ const users = mysqlTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => schema.max(20), // Extends schema
-  bio: (schema) => schema.max(1000), // Extends schema before becoming nullable/optional
-  preferences: z.object({ theme: z.string() }) // Overwrites the field, including its nullability
+  name: (schema) => schema.max(20), // 扩展 schema
+  bio: (schema) => schema.max(1000), // 在变为可空/可选之前扩展 schema
+  preferences: z.object({ theme: z.string() }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: {
@@ -128,16 +128,16 @@ const parsed: {
 } = userSelectSchema.parse(...);
 ```
 
-### Factory functions
+### 工厂函数
 
-For more advanced use cases, you can use the `createSchemaFactory` function.
+对于更高级的用例，你可以使用 `createSchemaFactory` 函数。
 
-**Use case: Using an extended Zod instance**
+**用例：使用扩展的 Zod 实例**
 
 ```ts copy
 import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
 import { createSchemaFactory } from 'drizzle-orm/zod';
-import { z } from '@hono/zod-openapi'; // Extended Zod instance
+import { z } from '@hono/zod-openapi'; // 扩展的 Zod 实例
 
 const users = mysqlTable('users', {
   id: int().primaryKey().autoincrement(),
@@ -148,12 +148,12 @@ const users = mysqlTable('users', {
 const { createInsertSchema } = createSchemaFactory({ zodInstance: z });
 
 const userInsertSchema = createInsertSchema(users, {
-  // We can now use the extended instance
+  // 我们现在可以使用扩展的实例
   name: (schema) => schema.openapi({ example: 'John' })
 });
 ```
 
-**Use case: Type coercion**
+**用例：类型强制转换**
 
 ```ts copy
 import { mysqlTable, timestamp } from 'drizzle-orm/mysql-core';
@@ -166,21 +166,21 @@ const users = mysqlTable('users', {
 });
 
 const { createInsertSchema } = createSchemaFactory({
-  // This configuration will only coerce dates. Set `coerce` to `true` to coerce all data types or specify others
+  // 此配置仅会强制转换日期。将 `coerce` 设为 `true` 可强制转换所有数据类型，或指定其它类型
   coerce: {
     date: true
   }
 });
 
 const userInsertSchema = createInsertSchema(users);
-// The above is the same as this:
+// 上面的写法等同于：
 const userInsertSchema = z.object({
   ...,
   createdAt: z.coerce.date()
 });
 ```
 
-### Data type reference
+### 数据类型参考
 
 ```ts
 mysql.boolean();
@@ -318,70 +318,70 @@ z.enum(enum);
 mysql.tinyint();
 
 // Schema
-z.number().min(-128).max(127).int(); // 8-bit integer lower and upper limit
+z.number().min(-128).max(127).int(); // 8 位整数的下限和上限
 ```
 
 ```ts
 mysql.tinyint({ unsigned: true });
 
 // Schema
-z.number().min(0).max(255).int(); // unsigned 8-bit integer lower and upper limit
+z.number().min(0).max(255).int(); // 无符号 8 位整数的下限和上限
 ```
 
 ```ts
 mysql.smallint();
 
 // Schema
-z.number().min(-32_768).max(32_767).int(); // 16-bit integer lower and upper limit
+z.number().min(-32_768).max(32_767).int(); // 16 位整数的下限和上限
 ```
 
 ```ts
 mysql.smallint({ unsigned: true });
 
 // Schema
-z.number().min(0).max(65_535).int(); // unsigned 16-bit integer lower and upper limit
+z.number().min(0).max(65_535).int(); // 无符号 16 位整数的下限和上限
 ```
 
 ```ts
 mysql.float();
 
 // Schema
-z.number().min(-8_388_608).max(8_388_607); // 24-bit integer lower and upper limit
+z.number().min(-8_388_608).max(8_388_607); // 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.mediumint();
 
 // Schema
-z.number().min(-8_388_608).max(8_388_607).int(); // 24-bit integer lower and upper limit
+z.number().min(-8_388_608).max(8_388_607).int(); // 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.float({ unsigned: true });
 
 // Schema
-z.number().min(0).max(16_777_215); // unsigned 24-bit integer lower and upper limit
+z.number().min(0).max(16_777_215); // 无符号 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.mediumint({ unsigned: true });
 
 // Schema
-z.number().min(0).max(16_777_215).int(); // unsigned 24-bit integer lower and upper limit
+z.number().min(0).max(16_777_215).int(); // 无符号 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.int();
 
 // Schema
-z.number().min(-2_147_483_648).max(2_147_483_647).int(); // 32-bit integer lower and upper limit
+z.number().min(-2_147_483_648).max(2_147_483_647).int(); // 32 位整数的下限和上限
 ```
 
 ```ts
 mysql.int({ unsigned: true });
 
 // Schema
-z.number().min(0).max(4_294_967_295).int(); // unsgined 32-bit integer lower and upper limit
+z.number().min(0).max(4_294_967_295).int(); // 无符号 32 位整数的下限和上限
 ```
 
 ```ts
@@ -389,14 +389,14 @@ mysql.double();
 mysql.real();
 
 // Schema
-z.number().min(-140_737_488_355_328).max(140_737_488_355_327); // 48-bit integer lower and upper limit
+z.number().min(-140_737_488_355_328).max(140_737_488_355_327); // 48 位整数的下限和上限
 ```
 
 ```ts
 mysql.double({ unsigned: true });
 
 // Schema
-z.number().min(0).max(281_474_976_710_655); // unsigned 48-bit integer lower and upper limit
+z.number().min(0).max(281_474_976_710_655); // 无符号 48 位整数的下限和上限
 ```
 
 ```ts
@@ -431,14 +431,14 @@ z.bigint().min(0).max(18_446_744_073_709_551_615n);
 mysql.bigint({ mode: 'number' });
 
 // Schema
-z.number().min(-9_007_199_254_740_991).max(9_007_199_254_740_991).int(); // Javascript min. and max. safe integers
+z.number().min(-9_007_199_254_740_991).max(9_007_199_254_740_991).int(); // JavaScript 最小和最大安全整数
 ```
 
 ```ts
 mysql.bigint({ mode: 'number', unsigned: true });
 
 // Schema
-z.number().min(0).max(9_007_199_254_740_991).int(); // Javascript max safe integer
+z.number().min(0).max(9_007_199_254_740_991).int(); // JavaScript 最大安全整数
 ```
 
 ```ts
@@ -463,21 +463,21 @@ z.string().regex(/^\d+$/).transform(BigInt).pipe(
 mysql.bigint({ mode: 'bigint' });
 
 // Schema
-z.bigint().min(-9_223_372_036_854_775_808n).max(9_223_372_036_854_775_807n); // 64-bit integer lower and upper limit
+z.bigint().min(-9_223_372_036_854_775_808n).max(9_223_372_036_854_775_807n); // 64 位整数的下限和上限
 ```
 
 ```ts
 mysql.bigint({ mode: 'bigint', unsigned: true });
 
 // Schema
-z.bigint().min(0).max(18_446_744_073_709_551_615n); // unsigned 64-bit integer lower and upper limit
+z.bigint().min(0).max(18_446_744_073_709_551_615n); // 无符号 64 位整数的下限和上限
 ```
 
 ```ts
 mysql.serial();
 
 // Schema
-z.number().min(0).max(9_007_199_254_740_991).int(); // Javascript max. safe integer
+z.number().min(0).max(9_007_199_254_740_991).int(); // JavaScript 最大安全整数
 ```
 
 

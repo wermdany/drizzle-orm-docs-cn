@@ -1,17 +1,17 @@
 ---
-title: DrizzleORM v0.29.0 release
+title: DrizzleORM v0.29.0 发布
 pubDate: 2023-11-09
-description: Added new features like unsigned option for bigint in MySQL, improved query builder types, added possibility to specify name for primary keys and foreign keys, read replicas support, set operators support, new MySQL and PostgreSQL proxy drivers, D1 Batch API support.
+description: 添加了新特性，例如 MySQL 中 bigint 的 unsigned 选项，改进了查询构建器类型，新增为主键和外键指定名称的能力，读副本支持，集合操作符支持，新的 MySQL 和 PostgreSQL 代理驱动，D1 Batch API 支持。
 ---
 import Section from "@mdx/Section.astro";
 
-> Drizzle ORM version `0.29.0` will require a minimum Drizzle Kit version of `0.20.0`, and vice versa. Therefore, when upgrading to a newer version of Drizzle ORM, you will also need to upgrade Drizzle Kit. This may result in some breaking changes throughout the versions, especially if you need to upgrade Drizzle Kit and your Drizzle ORM version is older than `<0.28.0`
+> Drizzle ORM 版本 `0.29.0` 将要求 Drizzle Kit 最低版本为 `0.20.0`，反之亦然。因此，当升级到更新版本的 Drizzle ORM 时，你还需要升级 Drizzle Kit。这可能会在各版本之间带来一些破坏性变更，尤其是当你需要升级 Drizzle Kit 而你的 Drizzle ORM 版本早于 `<0.28.0` 时
 
-## New Features
+## 新功能
 
-### 🎉 MySQL `unsigned` option for bigint
+### 🎉 MySQL bigint 的 `unsigned` 选项
 
-You can now specify `bigint unsigned` type
+你现在可以指定 `bigint unsigned` 类型
 
 ```ts copy {2}
 const table = mysqlTable('table', {
@@ -19,23 +19,23 @@ const table = mysqlTable('table', {
 });
 ```
 
-Read more in [docs](/docs/mysql/column-types#bigint)
+在 [文档](/docs/mysql/column-types#bigint) 中阅读更多内容
 
-### 🎉 Improved query builder types
+### 🎉 改进的查询构建器类型
 
-Starting from `0.29.0` by default, as all the query builders in Drizzle try to conform to SQL as much as possible, you can only invoke most of the methods once. For example, in a SELECT statement there might only be one WHERE clause, so you can only invoke .where() once:
+从 `0.29.0` 开始，默认情况下，由于 Drizzle 中的所有查询构建器都尽可能遵循 SQL，你只能调用大多数方法一次。例如，在 SELECT 语句中可能只有一个 WHERE 子句，因此你只能调用 .where() 一次：
 
 ```ts copy {5}
 const query = db
   .select()
   .from(users)
   .where(eq(users.id, 1))
-  .where(eq(users.name, 'John')); // ❌ Type error - where() can only be invoked once
+  .where(eq(users.name, 'John')); // ❌ 类型错误 - where() 只能被调用一次
 ```
 
-This behavior is useful for conventional query building, i.e. when you create the whole query at once. However, it becomes a problem when you want to build a query dynamically, i.e. if you have a shared function that takes a query builder and enhances it. To solve this problem, Drizzle provides a special 'dynamic' mode for query builders, which removes the restriction of invoking methods only once. To enable it, you need to call .$dynamic() on a query builder.
+这种行为对于常规的查询构建很有用，即当你一次性创建整个查询时。然而，当你想要动态构建查询时会成为一个问题，即如果你有一个接收查询构建器并对其进行增强的共享函数。为了解决这个问题，Drizzle 为查询构建器提供了一个特殊的 'dynamic' 模式，它移除了只能调用一次方法的限制。要启用它，你需要在查询构建器上调用 .$dynamic()。
 
-Let's see how it works by implementing a simple withPagination function that adds LIMIT and OFFSET clauses to a query based on the provided page number and an optional page size:
+让我们通过实现一个简单的 withPagination 函数来看看它是如何工作的，该函数根据提供的页码和可选的页大小向查询添加 LIMIT 和 OFFSET 子句：
 
 ```ts copy {12,13}
 function withPagination<T extends PgSelect>(
@@ -47,13 +47,13 @@ function withPagination<T extends PgSelect>(
 }
 
 const query = db.select().from(users).where(eq(users.id, 1));
-withPagination(query, 1); // ❌ Type error - the query builder is not in dynamic mode
+withPagination(query, 1); // ❌ 类型错误 - 查询构建器未处于 dynamic 模式
 
 const dynamicQuery = query.$dynamic();
 withPagination(dynamicQuery, 1); // ✅ OK
 ```
 
-Note that the withPagination function is generic, which allows you to modify the result type of the query builder inside it, for example by adding a join:
+请注意，withPagination 函数是泛型的，这允许你在其中修改查询构建器的结果类型，例如通过添加 join：
 
 ```ts copy {2}
 function withFriends<T extends PgSelect>(qb: T) {
@@ -64,11 +64,11 @@ let query = db.select().from(users).where(eq(users.id, 1)).$dynamic();
 query = withFriends(query);
 ```
 
-Read more in [docs](/docs/dynamic-query-building)
+在 [文档](/docs/dynamic-query-building) 中阅读更多内容
 
-### 🎉 Possibility to specify name for primary keys and foreign keys
+### 🎉 可为主键和外键指定名称
 
-There is an issue when constraint names exceed the 64-character limit of the database. This causes the database engine to truncate the name, potentially leading to issues. Starting from `0.29.0`, you have the option to specify custom names for both `primaryKey()` and `foreignKey()`. We have also deprecated the old `primaryKey()` syntax, which can still be used but will be removed in future releases
+当约束名称超过数据库 64 字符限制时会存在问题。这会导致数据库引擎截断名称，可能引发问题。从 `0.29.0` 开始，你可以为 `primaryKey()` 和 `foreignKey()` 指定自定义名称。我们还弃用了旧的 `primaryKey()` 语法，它仍然可以使用，但将在未来的版本中移除
 
 ```ts copy {5,7}
 const table = pgTable('table', {
@@ -84,11 +84,11 @@ const table = pgTable('table', {
 }));
 ```
 
-Read more in [docs](/docs/indexes-constraints#composite-primary-key)
+在 [文档](/docs/indexes-constraints#composite-primary-key) 中阅读更多内容
 
-### 🎉 Read Replicas Support
+### 🎉 支持只读副本
 
-You can now use the Drizzle `withReplica` function to specify different database connections for read replicas and the main instance for write operations. By default, `withReplicas` will use a random read replica for read operations and the main instance for all other data modification operations. You can also specify custom logic for choosing which read replica connection to use. You have the freedom to make any weighted, custom decision for that. Here are some usage examples:
+你现在可以使用 Drizzle 的 `withReplica` 函数为读副本和用于写操作的主实例指定不同的数据库连接。默认情况下，`withReplicas` 将为读操作使用一个随机的读副本，为所有其它数据修改操作使用主实例。你还可以指定自定义逻辑来选择使用哪个读副本连接。你可以自由地为此做出任何加权、自定义的决策。以下是一些用法示例：
 
 ```ts copy {5}
 const primaryDb = drizzle({ client });
@@ -97,17 +97,17 @@ const read2 = drizzle({ client });
 
 const db = withReplicas(primaryDb, [read1, read2]);
 
-// read from primary
+// 从主库读取
 db.$primary.select().from(usersTable);
 
-// read from either read1 connection or read2 connection
+// 从 read1 连接或 read2 连接读取
 db.select().from(usersTable)
 
-// use primary database for delete operation
+// 对 delete 操作使用主数据库
 db.delete(usersTable).where(eq(usersTable.id, 1))
 ```
 
-Implementation example of custom logic for selecting read replicas, where the first replica has a 70% chance of being chosen, and the second replica has a 30% chance of being chosen. Note that you can implement any type of random selection for read replicas
+选择读副本的自定义逻辑实现示例，其中第一个副本有 70% 的概率被选中，第二个副本有 30% 的概率被选中。请注意，你可以为读副本实现任何类型的随机选择
 
 ```ts copy
 const db = withReplicas(primaryDb, [read1, read2], (replicas) => {
@@ -123,20 +123,20 @@ const db = withReplicas(primaryDb, [read1, read2], (replicas) => {
 });
 ```
 
-`withReplicas` function is available for all dialects in Drizzle ORM
+`withReplicas` 函数在 Drizzle ORM 的所有方言中都可用
 
-Read more in [docs](/docs/read-replicas)
+在 [文档](/docs/read-replicas) 中阅读更多内容
 
-### 🎉 Set operators support (UNION, UNION ALL, INTERSECT, INTERSECT ALL, EXCEPT, EXCEPT ALL)
+### 🎉 支持集合运算 (UNION, UNION ALL, INTERSECT, INTERSECT ALL, EXCEPT, EXCEPT ALL)
 
-Huge thanks to @Angelelz for the significant contribution he made, from API discussions to proper type checks and runtime logic, along with an extensive set of tests. This greatly assisted us in delivering this feature in this release
+非常感谢 @Angelelz 做出的重大贡献，从 API 讨论到恰当的类型检查和运行时逻辑，以及一套广泛的测试。这极大地帮助我们在本版本中交付了这一特性
 
-Usage examples:
-All set operators can be used in a two ways: `import approach` or `builder approach`
+用法示例：
+所有集合操作符都可以通过两种方式使用：`导入方式` 或 `构建器方式`
 
 <Section>
 ```ts copy {2,7}
-// Import approach
+// 导入方式
 import { union } from 'drizzle-orm/pg-core'
 
 const allUsersQuery = db.select().from(users);
@@ -146,23 +146,23 @@ const result = await union(allUsersQuery, allCustomersQuery)
 ```
 
 ```ts copy {2}
-// Builder approach
+// 构建器方式
 const result = await db.select().from(users).union(db.select().from(customers));
 ```
 </Section>
 
-Read more in [docs](/docs/set-operations)
+在 [文档](/docs/set-operations) 中阅读更多内容
 
-### 🎉 New MySQL Proxy Driver
+### 🎉 新的 MySQL Proxy 驱动
 
-A new driver has been released, allowing you to create your own implementation for an HTTP driver using a MySQL database. You can find usage examples in the `./examples/mysql-proxy` folder
+我们发布了一个新驱动，允许你使用 MySQL 数据库为 HTTP 驱动创建自己的实现。你可以在 `./examples/mysql-proxy` 文件夹中找到用法示例
 
-You need to implement two endpoints on your server that will be used for queries and migrations(Migrate endpoint is optional and only if you want to use drizzle migrations). Both the server and driver implementation are up to you, so you are not restricted in any way. You can add custom mappings, logging, and much more
+你需要在服务器上实现两个端点，分别用于查询和迁移（Migrate 端点是可选的，仅当你想要使用 drizzle 迁移时才需要）。服务器和驱动的实现都由你决定，因此你在任何方面都不受限制。你可以添加自定义映射、日志记录以及更多内容
 
-You can find both server and driver implementation examples in the `./examples/mysql-proxy` folder
+你可以在 `./examples/mysql-proxy` 文件夹中找到服务器和驱动的实现示例
 
 ```ts copy {4,9}
-// Driver
+// 驱动
 import axios from 'axios';
 import { eq } from 'drizzle-orm/expressions';
 import { drizzle } from 'drizzle-orm/mysql-proxy';
@@ -210,15 +210,15 @@ async function main() {
 }
 ```
 
-Read more in [docs](/docs/mysql/get-started-mysql#http-proxy)
+在 [文档](/docs/mysql/get-started-mysql#http-proxy) 中阅读更多内容
 
-### 🎉 New PostgreSQL Proxy Driver
+### 🎉 新的 PostgreSQL Proxy 驱动
 
-Same as MySQL you can now implement your own http driver for PostgreSQL database. You can find usage examples in the `./examples/pg-proxy` folder
+与 MySQL 相同，你现在可以为 PostgreSQL 数据库实现自己的 http 驱动。你可以在 `./examples/pg-proxy` 文件夹中找到用法示例
 
-You need to implement two endpoints on your server that will be used for queries and migrations (Migrate endpoint is optional and only if you want to use drizzle migrations). Both the server and driver implementation are up to you, so you are not restricted in any way. You can add custom mappings, logging, and much more
+你需要在服务器上实现两个端点，分别用于查询和迁移（Migrate 端点是可选的，仅当你想要使用 drizzle 迁移时才需要）。服务器和驱动的实现都由你决定，因此你在任何方面都不受限制。你可以添加自定义映射、日志记录以及更多内容
 
-You can find both server and driver implementation examples in the `./examples/pg-proxy` folder
+你可以在 `./examples/pg-proxy` 文件夹中找到服务器和驱动的实现示例
 
 ```ts copy {3,8}
 import axios from 'axios';
@@ -254,13 +254,13 @@ async function main() {
 }
 ```
 
-Read more in [docs](/docs/get-started-postgresql#http-proxy)
+在 [文档](/docs/get-started-postgresql#http-proxy) 中阅读更多内容
 
-### 🎉 `D1` Batch API support
+### 🎉 `D1` Batch API 支持
 
-Reference: https://developers.cloudflare.com/d1/platform/client-api/#dbbatch
+参考：https://developers.cloudflare.com/d1/platform/client-api/#dbbatch
 
-Batch API usage example:
+Batch API 用法示例：
 
 <Section>
 ```ts copy {1}
@@ -303,7 +303,7 @@ type BatchResponse = [
 ```
 </Section>
 
-All possible builders that can be used inside `db.batch`:
+所有可以在 `db.batch` 内使用的构建器：
 
 ```ts
 `db.all()`,
@@ -318,17 +318,17 @@ All possible builders that can be used inside `db.batch`:
 `db.insert()...`,
 ```
 
-More usage examples here: [integration-tests/tests/d1-batch.test.ts](https://github.com/drizzle-team/drizzle-orm/blob/beta/integration-tests/tests/d1-batch.test.ts) and in [docs](/docs/batch-api)
+更多用法示例见：[integration-tests/tests/d1-batch.test.ts](https://github.com/drizzle-team/drizzle-orm/blob/beta/integration-tests/tests/d1-batch.test.ts) 以及 [文档](/docs/batch-api)
 
 ---
 ## Drizzle Kit 0.20.0
 
-1. New way to define drizzle.config using `defineConfig` function
-2. Possibility to access Cloudflare D1 with Drizzle Studio using wrangler.toml file
-3. Drizzle Studio is migrating to https://local.drizzle.studio/
-4. `bigint unsigned` support
-5. `primaryKeys` and `foreignKeys` now can have custom names
-6. Environment variables are now automatically fetched 
-7. Some bug fixes and improvements
+1. 使用 `defineConfig` 函数定义 drizzle.config 的新方式
+2. 可以通过 wrangler.toml 文件使用 Drizzle Studio 访问 Cloudflare D1
+3. Drizzle Studio 正在迁移到 https://local.drizzle.studio/
+4. `bigint unsigned` 支持
+5. `primaryKeys` 和 `foreignKeys` 现在可以拥有自定义名称
+6. 环境变量现在会被自动获取 
+7. 一些 bug 修复和改进
 
-You can read more about drizzle-kit updates [here](https://github.com/drizzle-team/drizzle-kit-mirror/releases/tag/v0.20.0)
+你可以[在这里](https://github.com/drizzle-team/drizzle-kit-mirror/releases/tag/v0.20.0)阅读更多关于 drizzle-kit 更新的内容

@@ -19,53 +19,53 @@ import ConnectNode from '@mdx/get-started/sqlite/ConnectNode.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and Node:SQLite
+# 使用 Drizzle 和 Node:SQLite 快速上手
 
 <Prerequisites>
-  - **node v22.5.0+** - JavaScript runtime - [read here](https://nodejs.org/)
-  - **node:sqlite** - native implementation of a high-performance SQLite3 driver - [read here](https://nodejs.org/api/sqlite.html)
+  - **node v22.5.0+** - JavaScript 运行时 - [阅读文档](https://nodejs.org/)
+  - **node:sqlite** - 高性能 SQLite3 驱动的原生实现 - [阅读文档](https://nodejs.org/api/sqlite.html)
 </Prerequisites>
 
 <FileStructure />
 
-#### Step 1 - Install required packages
+#### 步骤 1 - 安装所需包
 
 <Npm>
     drizzle-orm@rc dotenv
     -D drizzle-kit@rc tsx
 </Npm>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 配置连接变量
 
 <SetupEnv env_variable='DB_FILE_NAME' />
 
-<Callout type='info' title='important'>
-For example, if you want to create an SQLite database file in the root of your project for testing purposes, you can use this example:
+<Callout type='info' title='重要'>
+例如，如果你出于测试目的想在项目根目录下创建一个 SQLite 数据库文件，可以使用这个示例：
 ```plaintext copy
 DB_FILE_NAME=mydb.sqlite
 ```
 </Callout>
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 步骤 3 - 将 Drizzle ORM 连接到数据库
 
 <ConnectNode/>
 
-#### Step 4 - Create a table
+#### 步骤 4 - 创建表
 
 <CreateTable/>
 
-#### Step 5 - Setup Drizzle config file
+#### 步骤 5 - 配置 Drizzle 配置文件
 
 <SetupConfig dialect='sqlite' env_variable='DB_FILE_NAME'/>
 
-#### Step 6 - Applying changes to the database
+#### 步骤 6 - 将变更应用到数据库
 
 <ApplyChanges />
 
-#### Step 7 - Seed and Query the database
+#### 步骤 7 - 填充数据并查询数据库
 
 <QueryDatabase dialect='node-sqlite' env_variable='DB_FILE_NAME'/>
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>

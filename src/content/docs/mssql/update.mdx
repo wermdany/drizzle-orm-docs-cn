@@ -4,21 +4,21 @@ import Section from '@mdx/Section.astro';
 # SQL Update
 
 <Callout type='info'>
-All the values provided to `.set()`are parameterized automatically.
-For example, this query:
+传递给 `.set()` 的所有值都会自动参数化。
+例如，这个查询：
 ```ts
 await db.update(users).set({ name: "Mr. Dan" }).where(eq(users.name, "Dan"));
 ```
-will be translated to:
+会被转换为：
 ```sql
-update [users] set [name] = @par0 where [users].[name] = @par1; -- params: ['Mr. Dan', 'Dan']
+update [users] set [name] = @par0 where [users].[name] = @par1; -- 参数: ['Mr. Dan', 'Dan']
 ```
 </Callout>
 
 <br/>
 
-The object that you pass to `update` should have keys that match column names in your database schema.
-Values of `undefined` are ignored in the object: to set a column to `null`, pass `null`.
+你传递给 `update` 的对象，其键名应与数据库 schema 中的列名相匹配。
+对象中值为 `undefined` 的项会被忽略：若要把某列设置为 `null`，请传入 `null`。
 
 ```typescript copy
 await db.update(users)
@@ -31,7 +31,7 @@ await db.update(users)
   .where(eq(users.name, 'Dan'));
 ```
 
-You can pass SQL as a value to be used in the update object, like this:
+你可以将 SQL 作为值传入，用在更新对象中，像这样：
 
 ```typescript copy
 await db.update(users)
@@ -41,30 +41,30 @@ await db.update(users)
 
 ### Output
 
-This method allows you to return values from the rows affected by the query. MSSQL supports returning inserted (new row values) and deleted (old row values) values.
+此方法允许你从查询影响的行中返回数据。MSSQL 支持返回插入值（新行值）和删除值（旧行值）。
 
-If no fields are specified, all inserted values will be returned by default.
+如果未指定任何字段，默认会返回所有插入值。
 
 ```ts
-// Update cars and return all new values
+// 更新 cars 并返回所有新值
 const updatedCars: Car[] = await db.update(cars)
   .set({ color: 'red' })
   .output()
   .where(eq(cars.color, 'green'));
 
-// Update cars and return all new values
+// 更新 cars 并返回所有新值
 const updatedCars: Car[] = await db.update(cars)
   .set({ color: 'red' })
   .output({ inserted: true })
   .where(eq(cars.color, 'green'));
 
-// Update cars and return all old values
+// 更新 cars 并返回所有旧值
 const updatedCarsIds: { deleted: Car }[] = await db.update(cars)
   .set({ color: 'red' })
   .output({ deleted: true })
   .where(eq(cars.color, 'green'));
 
-// Update cars and return partial old and new values
+// 更新 cars 并返回部分旧值和新值
 const beforeAndAfter: { deleted: { oldColor: string }, inserted: { newColor: string } }[] = await db.update(cars)
   .set({ color: 'red' })
   .output({

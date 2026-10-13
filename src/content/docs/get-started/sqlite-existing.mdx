@@ -20,64 +20,64 @@ import UpdateSchema from '@mdx/get-started/sqlite/UpdateSchema.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and SQLite in existing project
+# 在现有项目中使用 Drizzle 与 SQLite 入门
 
 <Prerequisites>  
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **libsql** - a fork of SQLite optimized for low query latency, making it suitable for global applications - [read here](https://docs.turso.tech/libsql)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **libsql** - SQLite 的一个分支，针对低查询延迟进行了优化，适合全球化应用 - [阅读文档](https://docs.turso.tech/libsql)
 </Prerequisites>
 
 <FileStructure />
 
-#### Step 1 - Install required packages
+#### 步骤 1 - 安装所需的包
 
 <InstallPackages lib='@libsql/client'/>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 设置连接变量
 
 <SetupEnv env_variable='DB_FILE_NAME' />
 
-<Callout type='info' title='important'>
-For example, if you want to create an SQLite database file in the root of your project for testing purposes, you need to use `file:` before the actual filename, as this is the format required by `LibSQL`, like this:
+<Callout type='info' title='重要'>
+例如，如果你出于测试目的想在项目根目录创建一个 SQLite 数据库文件，你需要在实际文件名前使用 `file:`，因为这是 `LibSQL` 要求的格式，如下所示：
 ```plaintext copy
 DB_FILE_NAME=file:local.db
 ```
-You can check the **[LibSQL docs](https://docs.turso.tech/sdk/ts/reference#local-development)** for more info.
+你可以查看 **[LibSQL 文档](https://docs.turso.tech/sdk/ts/reference#local-development)** 了解更多信息。
 </Callout>
 
-#### Step 3 - Setup Drizzle config file
+#### 步骤 3 - 设置 Drizzle 配置文件
 
 <SetupConfig dialect='sqlite' env_variable='DB_FILE_NAME'/>
 
-#### Step 4 - Introspect your database
+#### 步骤 4 - 内省数据库
 
 <IntrospectSqlite/>
 
-#### Step 5 - Transfer code to your actual schema file
+#### 步骤 5 - 将代码转移到实际的 schema 文件
 
 <TransferCode/>
 
-#### Step 6 - Connect Drizzle ORM to the database
+#### 步骤 6 - 将 Drizzle ORM 连接到数据库
 
 <ConnectLibsql/>
 
-#### Step 7 - Query the database
+#### 步骤 7 - 查询数据库
 
 <QueryDatabase dialect='libsql' env_variable='DB_FILE_NAME' />
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>
 
-#### Step 9 - Update your table schema (optional)
+#### 步骤 9 - 更新表 schema（可选）
 
 <UpdateSchema/>
 
-#### Step 9 - Applying changes to the database (optional)
+#### 步骤 9 - 将变更应用到数据库（可选）
 
 <ApplyChanges/>
 
-#### Step 10 - Query the database with a new field (optional)
+#### 步骤 10 - 使用新字段查询数据库（可选）
 
 <QueryDatabaseUpdated dialect='libsql' env_variable='DB_FILE_NAME' />

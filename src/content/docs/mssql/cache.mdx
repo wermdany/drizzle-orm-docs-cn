@@ -1,20 +1,20 @@
 import Callout from '@mdx/Callout.astro';
 import Npm from '@mdx/Npm.astro';
 
-# Cache
+# 缓存
 
-Drizzle sends every query straight to your database by default. There are no hidden actions, no automatic caching 
-or invalidation - you'll always see exactly what runs. If you want caching, you must opt in.
+默认情况下，Drizzle 会把每个查询直接发送到你的数据库。没有隐藏操作，没有自动缓存
+或失效 —— 你总能确切地看到实际执行了什么。如果你想要缓存，必须主动开启。
 
-By default, Drizzle uses a `explicit` caching strategy (i.e. `global: false`), so nothing is ever cached unless you ask. 
-This prevents surprises or hidden performance traps in your application. 
-Alternatively, you can flip on `all` caching (`global: true`) so that every select will look in cache first.
+默认情况下，Drizzle 使用 `explicit` 缓存策略（即 `global: false`），因此除非你主动要求，否则不会有任何缓存。
+这可以避免应用中出现意外或隐藏的性能陷阱。
+或者，你可以开启 `all` 缓存（`global: true`），这样每个 select 都会先查找缓存。
 
-## Quickstart
+## 快速开始
 
-### Upstash integration
+### Upstash 集成
 
-Drizzle provides an `upstashCache()` helper out of the box. By default, this uses Upstash Redis with automatic configuration if environment variables are set.
+Drizzle 开箱即用地提供了一个 `upstashCache()` 辅助函数。默认情况下，如果设置了环境变量，它会自动配置并使用 Upstash Redis。
 
 ```ts
 import { upstashCache } from "drizzle-orm/cache/upstash";
@@ -25,7 +25,7 @@ const db = drizzle(process.env.DB_URL!, {
 });
 ```
 
-You can also explicitly define your Upstash credentials, enable global caching for all queries by default or pass custom caching options:
+你也可以显式定义 Upstash 凭据、默认对所有查询启用全局缓存，或传入自定义缓存选项：
 
 ```ts
 import { upstashCache } from "drizzle-orm/cache/upstash";
@@ -33,95 +33,95 @@ import { drizzle } from "drizzle-orm/node-mssql";
 
 const db = drizzle(process.env.DB_URL!, {
   cache: upstashCache({
-    // 👇 Redis credentials (optional — can also be pulled from env vars)
+    // 👇 Redis 凭据（可选 —— 也可以从环境变量中读取）
     url: '<UPSTASH_URL>',
     token: '<UPSTASH_TOKEN>',
 
-    // 👇 Enable caching for all queries by default (optional)
+    // 👇 默认对所有查询启用缓存（可选）
     global: true,
 
-    // 👇 Default cache behavior (optional)
+    // 👇 默认缓存行为（可选）
     config: { ex: 60 }
   })
 });
 ```
 
-## Cache config reference
+## 缓存配置参考
 
-Drizzle supports the following cache config options for Upstash:
+Drizzle 为 Upstash 支持以下缓存配置选项：
 
 ```ts
 export type CacheConfig = {
   /**
-   * Expiration in seconds (positive integer)
+   * 过期时间，单位秒（正整数）
    */
   ex?: number;
   /**
-   * Set an expiration (TTL or time to live) on one or more fields of a given hash key.
-   * Used for HEXPIRE command
+   * 为指定哈希键的一个或多个字段设置过期时间（TTL 或 time to live）。
+   * 用于 HEXPIRE 命令
    */
   hexOptions?: "NX" | "nx" | "XX" | "xx" | "GT" | "gt" | "LT" | "lt";
 };
 ```
 
-## Cache usage examples
+## 缓存使用示例
 
-Once you've configured caching, here's how the cache behaves:
+配置好缓存后，缓存的行为如下：
 
-**Case 1: Drizzle with `global: false` (default, opt-in caching)**
+**情形 1：Drizzle 使用 `global: false`（默认，选择加入缓存）**
 
 ```ts
 import { upstashCache } from "drizzle-orm/cache/upstash";
 import { drizzle } from "drizzle-orm/node-mssql";
 
 const db = drizzle(process.env.DB_URL!, {
-  // 👇 `global: true` is not passed, false by default
+  // 👇 未传入 `global: true`，默认为 false
   cache: upstashCache({ url: "", token: "" }),
 });
 ```
 
-In this case, the following query won't read from cache
+在这种情况下，下面的查询不会从缓存中读取
 
 ```ts
 const res = await db.select().from(users);
 
-// Any mutate operation will still trigger the cache's onMutate handler
-// and attempt to invalidate any cached queries that involved the affected tables
+// 任何变更操作仍会触发缓存的 onMutate 处理器
+// 并尝试使涉及受影响表的任何缓存查询失效
 await db.insert(users).value({ email: "cacheman@upstash.com" });
 ```
 
-To make this query read from the cache, call `.$withCache()`
+要让该查询从缓存中读取，请调用 `.$withCache()`
 
 ```ts
 const res = await db.select().from(users).$withCache();
 ```
 
-`.$withCache` has a set of options you can use to manage and configure this specific query strategy
+`.$withCache` 有一组选项，你可以用来管理并配置这个特定查询的策略
 
 ```ts
-// rewrite the config for this specific query
+// 为这个特定查询重写配置
 .$withCache({ config: {} })
 
-// give this query a custom cache key (instead of hashing query+params under the hood)
+// 为该查询指定自定义缓存键（而不是在底层对查询+参数进行哈希）
 .$withCache({ tag: 'custom_key' })
 
-// turn off auto-invalidation for this query
-// note: this leads to eventual consistency (explained below)
+// 关闭该查询的自动失效
+// 注意：这会导致最终一致性（见下文说明）
 .$withCache({ autoInvalidate: false })
 ```
 
 <Callout>
-**Eventual consistency example**
+**最终一致性示例**
 
-This example is only relevant if you manually set `autoInvalidate: false`. By default, `autoInvalidate` is enabled. 
+该示例仅在你手动设置 `autoInvalidate: false` 时才相关。默认情况下，`autoInvalidate` 是启用的。
 
-You might want to turn off `autoInvalidate` if:
-- your data doesn't change often, and slight staleness is acceptable (e.g. product listings, blog posts)
-- you handle cache invalidation manually
+在以下情况下，你可能想要关闭 `autoInvalidate`：
+- 你的数据不经常变化，轻微的数据陈旧是可以接受的（例如商品列表、博客文章）
+- 你手动处理缓存失效
 
-In those cases, turning it off can reduce unnecessary cache invalidation. However, in most cases, we recommend keeping the default enabled.
+在这些情况下，关闭它可以减少不必要的缓存失效。不过，在大多数情况下，我们建议保持默认启用。
 
-Example: Imagine you cache the following query on `usersTable` with a 3-second TTL:
+示例：假设你用 3 秒 TTL 缓存了对 `usersTable` 的以下查询：
 
 ``` ts
 const recent = await db
@@ -129,10 +129,10 @@ const recent = await db
   .$withCache({ config: { ex: 3 }, autoInvalidate: false });
 ```
 
-If someone runs `db.insert(usersTable)...` the cache won't be invalidated immediately. For up to 3 seconds, you'll keep seeing the old data until it eventually becomes consistent.
+如果有人执行 `db.insert(usersTable)...`，缓存不会立即失效。在最长 3 秒内，你会一直看到旧数据，直到它最终变为一致。
 </Callout>
 
-**Case 2: Drizzle with `global: true` option**
+**情形 2：Drizzle 使用 `global: true` 选项**
 
 ```ts
 import { upstashCache } from "drizzle-orm/cache/upstash";
@@ -143,56 +143,56 @@ const db = drizzle(process.env.DB_URL!, {
 });
 ```
 
-In this case, the following query will read from cache
+在这种情况下，下面的查询会从缓存中读取
 
 ```ts
 const res = await db.select().from(users);
 ```
 
-If you want to disable cache for this specific query, call `.$withCache(false)`
+如果你想为该特定查询禁用缓存，请调用 `.$withCache(false)`
 
 ```ts
-// disable cache for this query
+// 禁用该查询的缓存
 const res = await db.select().from(users).$withCache(false);
 ```
 
-You can also use cache instance from a `db` to invalidate specific tables or tags
+你也可以使用 `db` 上的缓存实例来使特定表或标签失效
 
 ```ts
-// Invalidate all queries that use the `users` table. You can do this with the Drizzle instance.
+// 使所有使用 `users` 表的查询失效。你可以使用 Drizzle 实例来做到这一点。
 await db.$cache.invalidate({ tables: users });
-// or
+// 或者
 await db.$cache.invalidate({ tables: [users, posts] });
 
-// Invalidate all queries that use the `usersTable`. You can do this by using just the table name.
+// 使所有使用 `usersTable` 的查询失效。你可以仅使用表名来做到这一点。
 await db.$cache.invalidate({ tables: "usersTable" });
-// or
+// 或者
 await db.$cache.invalidate({ tables: ["usersTable", "postsTable"] });
 
-// You can also invalidate custom tags defined in any previously executed select queries.
+// 你也可以使在任何先前执行的 select 查询中定义的自定义标签失效。
 await db.$cache.invalidate({ tags: "custom_key" });
-// or
+// 或者
 await db.$cache.invalidate({ tags: ["custom_key", "custom_key1"] });
 ```
 
-## Custom cache
+## 自定义缓存
 
-This example shows how to plug in a custom `cache` in Drizzle: you provide functions to fetch data from the cache, store results back into cache, and invalidate entries whenever a mutation runs.
+这个示例展示了如何在 Drizzle 中接入自定义 `cache`：你提供从缓存获取数据、将结果存回缓存，以及在执行变更时使条目失效的函数。
 
-Cache extension provides this set of config options
+缓存扩展提供了这组配置选项
 ```ts
 export type CacheConfig = {
-  /** expire time, in seconds */
+  /** 过期时间，单位秒 */
   ex?: number;
-  /** expire time, in milliseconds */
+  /** 过期时间，单位毫秒 */
   px?: number;
-  /** Unix time (sec) at which the key will expire */
+  /** 键过期的 Unix 时间（秒） */
   exat?: number;
-  /** Unix time (ms) at which the key will expire */
+  /** 键过期的 Unix 时间（毫秒） */
   pxat?: number;
-  /** retain existing TTL when updating a key */
+  /** 更新键时保留现有 TTL */
   keepTtl?: boolean;
-  /** options for HEXPIRE (hash-field TTL) */
+  /** HEXPIRE（哈希字段 TTL）的选项 */
   hexOptions?: 'NX' | 'XX' | 'GT' | 'LT' | 'nx' | 'xx' | 'gt' | 'lt';
 };
 ```
@@ -206,41 +206,41 @@ import Keyv from "keyv";
 
 export class TestGlobalCache extends Cache {
   private globalTtl: number = 1000;
-  // This object will be used to store which query keys were used
-  // for a specific table, so we can later use it for invalidation.
+  // 该对象将用于存储特定表使用了哪些查询键，
+  // 以便我们后续用它来失效缓存。
   private usedTablesPerKey: Record<string, string[]> = {};
 
   constructor(private kv: Keyv = new Keyv()) {
     super();
   }
 
-  // For the strategy, we have two options:
-  // - 'explicit': The cache is used only when .$withCache() is added to a query.
-  // - 'all': All queries are cached globally.
-  // The default behavior is 'explicit'.
+  // 对于策略，我们有两个选项：
+  // - 'explicit'：仅当查询添加了 .$withCache() 时才使用缓存。
+  // - 'all'：所有查询都在全局范围内缓存。
+  // 默认行为是 'explicit'。
   override strategy(): "explicit" | "all" {
     return "all";
   }
 
-  // This function accepts query and parameters that cached into key param,
-  // allowing you to retrieve response values for this query from the cache.
+  // 该函数接收缓存到 key 参数中的查询和参数，
+  // 让你可以从缓存中获取该查询的响应值。
   override async get(key: string): Promise<any[] | undefined> {
     const res = (await this.kv.get(key)) ?? undefined;
     return res;
   }
 
-  // This function accepts several options to define how cached data will be stored:
-  // - 'key': A hashed query and parameters.
-  // - 'response': An array of values returned by Drizzle from the database.
-  // - 'tables': An array of tables involved in the select queries. This information is needed for cache invalidation.
-  // - 'isTag': A boolean flag indicating whether this cache entry represents a tag-based query.
-  //    When true, the entry is associated with a specific tag rather than table-level invalidation,
-  //    allowing you to invalidate cached queries by tag name. See the UpstashCache:
-  //    https://github.com/drizzle-team/drizzle-orm/blob/beta/drizzle-orm/src/cache/upstash/cache.ts for an example
+  // 该函数接收若干选项，用于定义缓存数据将如何存储：
+  // - 'key'：经过哈希的查询和参数。
+  // - 'response'：Drizzle 从数据库返回的值数组。
+  // - 'tables'：select 查询中涉及的表数组。缓存失效需要此信息。
+  // - 'isTag'：一个布尔标志，表示该缓存条目是否代表基于标签的查询。
+  //    当为 true 时，该条目关联到特定标签而非表级失效，
+  //    让你可以按标签名使缓存查询失效。参见 UpstashCache：
+  //    https://github.com/drizzle-team/drizzle-orm/blob/beta/drizzle-orm/src/cache/upstash/cache.ts 作为示例
   //
-  // For example, if a query uses the "users" and "posts" tables, you can store this information. Later, when the app executes
-  // any mutation statements on these tables, you can remove the corresponding key from the cache.
-  // If you're okay with eventual consistency for your queries, you can skip this option.
+  // 例如，如果一个查询使用了 "users" 和 "posts" 表，你可以存储此信息。之后，当应用对这些表执行
+  // 任何变更语句时，你可以从缓存中移除对应的键。
+  // 如果你可以接受查询的最终一致性，可以跳过此选项。
   override async put(
     key: string,
     response: any,
@@ -262,13 +262,13 @@ export class TestGlobalCache extends Cache {
     }
   }
 
-  // This function is called when insert, update, or delete statements are executed.
-  // You can either skip this step or invalidate queries that used the affected tables.
+  // 当执行 insert、update 或 delete 语句时会调用该函数。
+  // 你可以跳过此步骤，或使使用了受影响表的查询失效。
   //
-  // The function receives an object with two keys:
-  // - 'tags': Used for queries labeled with a specific tag, allowing you to invalidate by that tag.
-  // - 'tables': The actual tables affected by the insert, update, or delete statements,
-  //   helping you track which tables have changed since the last cache update.
+  // 该函数接收一个包含两个键的对象：
+  // - 'tags'：用于标记了特定标签的查询，让你可以按该标签使缓存失效。
+  // - 'tables'：实际受 insert、update 或 delete 语句影响的表，
+  //   帮助你追踪自上次缓存更新以来哪些表发生了变化。
   override async onMutate(params: {
     tags: string | string[];
     tables: string | string[] | Table<any> | Table<any>[];
@@ -313,18 +313,18 @@ export class TestGlobalCache extends Cache {
 }
 ```
 
-## Limitations
+## 限制
 
-#### Queries that won't be handled by the `cache` extension:
+#### `cache` 扩展不会处理的查询：
 
-- Using cache with raw queries, such as:
+- 在原始查询中使用缓存，例如：
 
 ```ts
 db.execute(sql`select 1`);
 ```
 
 ```
-- Using cache in transactions
+- 在事务中使用缓存
 ```ts
 await db.transaction(async (tx) => {
   await tx.update(accounts).set(...).where(...);
@@ -332,11 +332,11 @@ await db.transaction(async (tx) => {
 });
 ```
 
-#### Limitations that are temporary and will be handled soon:
+#### 暂时的限制，很快会处理：
 
-- Using cache with Drizzle Relational Queries
+- 在 Drizzle 关系查询中使用缓存
 ```ts
 await db.query.users.findMany();
 ```
 
-- Using cache with views
+- 在视图中使用缓存

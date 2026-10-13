@@ -4,9 +4,9 @@ import Tab from '@mdx/Tab.astro';
 import Tabs from '@mdx/Tabs.astro';
 
 # SQL Insert
-Drizzle ORM provides you the most SQL-like way to insert rows into the database tables.
+Drizzle ORM 为你提供了最接近 SQL 的方式，将行插入数据库表中。
 
-Inserting data with Drizzle is extremely straightforward and sql-like. See for yourself:
+使用 Drizzle 插入数据极其直观且贴近 SQL。你自己看：
 
 <Section>
 ```typescript copy 
@@ -17,7 +17,7 @@ insert into `users` (`name`) values ('Andrew');
 ```
 </Section>
 
-If you need insert type for a particular table you can use `typeof usersTable.$inferInsert` syntax. 
+如果你需要某张表的插入类型，可以使用 `typeof usersTable.$inferInsert` 语法。
 ```typescript copy 
 type NewUser = typeof users.$inferInsert;
 
@@ -30,7 +30,7 @@ await insertUser(newUser);
 ```
 
 ## $returningId
-SingleStore doesn't have native support for `RETURNING` after using `INSERT`. There is only one way to do it for `primary keys` with `autoincrement` (or `serial`) types, where you can access `insertId` and `affectedRows` fields. We've prepared an automatic way for you to handle such cases with Drizzle and automatically receive all inserted IDs as separate objects
+SingleStore 在 `INSERT` 之后不原生支持 `RETURNING`。对于 `autoincrement`（或 `serial`）类型的 `primary keys`，只有一种方式可以实现，即访问 `insertId` 和 `affectedRows` 字段。我们为你准备了一种自动化的方式，用 Drizzle 处理这类场景，并自动将所有插入的 ID 作为独立对象接收
 
 ```ts
 import { boolean, int, text, singlestoreTable } from 'drizzle-orm/singlestore-core';
@@ -46,7 +46,7 @@ const result = await db.insert(usersTable).values([{ name: 'John' }, { name: 'Jo
 //    ^? { id: number }[]
 ```
 
-Also with Drizzle, you can specify a `primary key` with `$default` function that will generate custom primary keys at runtime. We will also return those generated keys for you in the `$returningId()` call
+此外，使用 Drizzle 时，你可以为 `primary key` 指定 `$default` 函数，在运行时生成自定义主键。我们也会在 `$returningId()` 调用中为你返回这些生成的键
 
 ```ts
 import { varchar, text, singlestoreTable } from 'drizzle-orm/singlestore-core';
@@ -62,29 +62,29 @@ const result = await db.insert(usersTableDefFn).values([{ name: 'John' }, { name
 //  ^? { customId: string }[]
 ```
 
-> If there is no primary keys -> type will be `{}[]` for such queries
+> 如果没有主键 -> 这类查询的类型将是 `{}[]`
 
-## Insert multiple rows
+## 插入多行
 ```typescript copy
 await db.insert(users).values([{ name: 'Andrew' }, { name: 'Dan' }]);
 ```
 
-## Upserts and conflicts
-Drizzle ORM provides simple interfaces for handling upserts and conflicts.
+## Upsert 与冲突
+Drizzle ORM 为处理 upsert 和冲突提供了简单的接口。
 
 ### On duplicate key update
-SingleStore supports [`ON DUPLICATE KEY UPDATE`](https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html) instead of `ON CONFLICT` clauses. SingleStore will automatically determine the conflict target based on the primary key and unique indexes, and will update the row if *any* unique index conflicts.
+SingleStore 支持 [`ON DUPLICATE KEY UPDATE`](https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html) 而不是 `ON CONFLICT` 子句。SingleStore 会根据主键和唯一索引自动确定冲突目标，并在*任意*唯一索引冲突时更新该行。
 
-Drizzle supports this through the `onDuplicateKeyUpdate` method:
+Drizzle 通过 `onDuplicateKeyUpdate` 方法支持这一点：
 
 ```typescript
-// Note that SingleStore automatically determines targets based on the primary key and unique indexes
+// 注意，SingleStore 会根据主键和唯一索引自动确定目标
 await db.insert(users)
   .values({ id: 1, name: 'John' })
   .onDuplicateKeyUpdate({ set: { name: 'John' } });
 ```
 
-While SingleStore does not directly support doing nothing on conflict, you can perform a no-op by setting any column's value to itself and achieve the same effect:
+虽然 SingleStore 不直接支持在冲突时什么都不做，但你可以通过将任意列的值设为它自身来做空操作，从而达到相同的效果：
 
 ```typescript
 import { sql } from 'drizzle-orm';
@@ -96,21 +96,20 @@ await db.insert(users)
 
 ## Insert into ... select
 
-As the SingleStore documentation follows MySQL-compatible `INSERT ... SELECT` behavior:
+由于 SingleStore 文档遵循 MySQL 兼容的 `INSERT ... SELECT` 行为：
 
 <Callout>
-With INSERT ... SELECT, you can quickly insert many rows into a table from the result of a SELECT statement, which can select from one or many tables
+使用 INSERT ... SELECT，你可以从 SELECT 语句的结果中快速将多行插入到一张表中，而该 SELECT 可以从一张或多张表中选择数据
 </Callout>
 
-Drizzle supports the current syntax for all dialects, and all of them share the same syntax. Let's review some common scenarios and API usage. 
-There are several ways to use select inside insert statements, allowing you to choose your preferred approach:
+Drizzle 为所有方言支持当前语法，并且它们共享相同的语法。让我们看一些常见场景和 API 用法。
+在 insert 语句中使用 select 有几种方式，你可以选择自己偏好的方法：
 
-- You can pass a query builder inside the select function.
-- You can use a query builder inside a callback.
-- You can pass an SQL template tag with any custom select query you want to use
+- 你可以在 select 函数中传入一个查询构建器。
+- 你可以在回调函数中使用查询构建器。
+- 你可以传入一个带有任意自定义 select 查询的 SQL 模板标签
 
-
-<Tabs items={["Query Builder", "Callback", "SQL template tag"]}>
+<Tabs items={["查询构建器", "回调", "SQL 模板标签"]}>
 <Tab>
 <Section>
 ```ts

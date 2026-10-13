@@ -1,5 +1,5 @@
 ---
-title: CockroachDB column types
+title: CockroachDB 列类型
 ---
 
 import Section from '@mdx/Section.astro';
@@ -7,7 +7,7 @@ import Callout from '@mdx/Callout.astro';
 import Npm from '@mdx/Npm.astro';
 
 <Callout type='error'>
-This page explains concepts available on drizzle versions `1.0.0-beta.2` and higher.
+本页介绍 drizzle 版本 `1.0.0-beta.2` 及更高版本中可用的概念。
 </Callout>
 
 <Npm>
@@ -17,22 +17,22 @@ drizzle-kit@rc -D
 
 <br/>
 
-We have native support for all of them, yet if that's not enough for you, feel free to create **[custom types](/docs/custom-types)**.
+我们对它们都有原生支持，但如果这还不能满足你的需求，欢迎创建 **[自定义类型](/docs/custom-types)**。
 
-<Callout title='important' type='warning'>
-All examples in this part of the documentation do not use database column name aliases, and column names are generated from TypeScript keys. 
+<Callout title='重要' type='warning'>
+文档这一部分的所有示例都不使用数据库列名别名，列名由 TypeScript 键生成。 
 
-You can use database aliases in column names if you want, and you can also use the `casing` parameter to define a mapping strategy for Drizzle. 
+如果你愿意，可以在列名中使用数据库别名，也可以使用 `casing` 参数为 Drizzle 定义映射策略。 
 
-You can read more about it [here](/docs/sql-schema-declaration#shape-your-data-schema)
+你可以[在此处](/docs/sql-schema-declaration#设计你的数据-schema)阅读更多相关内容
 </Callout>
 
 ### bigint
 `int` `int8` `int64` `integer`
 
-Signed 8-byte integer     
+有符号 8 字节整数     
 
-If you're expecting values above 2^31 but below 2^53, you can utilize `mode: 'number'` and deal with javascript number as opposed to bigint.
+如果你预期值大于 2^31 但小于 2^53，可以使用 `mode: 'number'`，以 javascript number 而非 bigint 来处理。
 <Section>
 ```typescript
 import { bigint, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -41,10 +41,10 @@ export const table = cockroachTable('table', {
 	bigint: bigint({ mode: 'number' })
 });
 
-// will be inferred as `number`
+// 将被推断为 `number`
 bigint: bigint({ mode: 'number' })
 
-// will be inferred as `bigint`
+// 将被推断为 `bigint`
 bigint: bigint({ mode: 'bigint' })
 ```
 
@@ -76,7 +76,7 @@ CREATE TABLE "table" (
 
 ### smallint
 `smallint` `int2`  
-Small-range signed 2-byte integer   
+小范围有符号 2 字节整数   
 
 <Section>
 ```typescript
@@ -115,7 +115,7 @@ CREATE TABLE "table" (
 
 ### int4
 
-Signed 4-byte integer     
+有符号 4 字节整数     
 
 <Section>
 ```typescript
@@ -156,18 +156,18 @@ CREATE TABLE "table" (
 
 ### int8
 
-An alias of **[bigint.](#bigint)**
+**[bigint.](#bigint)** 的别名
 
 ### int2
 
-An alias of **[smallint.](#smallint)**
+**[smallint.](#smallint)** 的别名
 
 ### ---
 
 ### bool
-Cockroach provides the standard SQL type bool.
+Cockroach 提供标准 SQL 类型 bool。
 
-For more info please refer to the official Cockroach **[docs.](https://www.cockroachlabs.com/docs/stable/bool)**
+更多信息请参阅 Cockroach 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/bool)**
 
 <Section>
 ```typescript
@@ -191,29 +191,29 @@ CREATE TABLE "table" (
 ### string
 `text` `varchar`, `char`
 
-The `STRING` data type stores a string of Unicode characters.
+`STRING` 数据类型存储 Unicode 字符组成的字符串。
 
 <Callout>
-For PostgreSQL compatibility, CockroachDB supports the following STRING-related types and their aliases:
+为了与 PostgreSQL 兼容，CockroachDB 支持以下与 STRING 相关的类型及其别名：
 
-`VARCHAR` (and alias `CHARACTER VARYING`)
-`CHAR` (and alias `CHARACTER`)
+`VARCHAR`（以及别名 `CHARACTER VARYING`）
+`CHAR`（以及别名 `CHARACTER`）
 `NAME`
 </Callout>
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/string)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/string)**
   
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 <Section>
 ```typescript
 import { string, cockroachTable } from "drizzle-orm/cockroach-core";
 
 export const table = cockroachTable('table', {
-  stringColumn: string(), // equivalent to `text` PostgreSQL type
-  stringColumn1: string({ length: 256 }), // equivalent to `varchar(256)` PostgreSQL type
+  stringColumn: string(), // 等价于 PostgreSQL 的 `text` 类型
+  stringColumn1: string({ length: 256 }), // 等价于 PostgreSQL 的 `varchar(256)` 类型
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 stringColumn: string({ enum: ["value1", "value2"] })
 ```
 
@@ -227,11 +227,11 @@ CREATE TABLE "table" (
 
 ### text
 
-CockroachDB alias for `STRING`:
+CockroachDB 对 `STRING` 的别名：
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/string)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/string)**
   
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 <Section>
 ```typescript
 import { text, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -240,7 +240,7 @@ export const table = cockroachTable('table', {
   text: text()
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 text: text({ enum: ["value1", "value2"] })
 ```
 
@@ -254,13 +254,13 @@ CREATE TABLE "table" (
 ### varchar
 `character varying(n)` `varchar(n)`  
 
-`STRING` alias used to stay compatible with PostgreSQL
+为保持与 PostgreSQL 兼容而使用的 `STRING` 别名
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/string)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/string)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to PostgreSQL docs.
+根据 PostgreSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { varchar, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -270,7 +270,7 @@ export const table = cockroachTable('table', {
   varchar2: varchar({ length: 256 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 varchar: varchar({ enum: ["value1", "value2"] }),
 ```
 
@@ -285,13 +285,13 @@ CREATE TABLE "table" (
 ### char
 `character(n)` `char(n)`  
 
-`STRING` alias used to stay compatible with PostgreSQL
+为保持与 PostgreSQL 兼容而使用的 `STRING` 别名
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/string)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/string)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to PostgreSQL docs.
+根据 PostgreSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { char, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -301,7 +301,7 @@ export const table = cockroachTable('table', {
   char2: char({ length: 256 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 char: char({ enum: ["value1", "value2"] }),
 ```
 
@@ -320,9 +320,9 @@ https://www.cockroachlabs.com/docs/stable/float
 ### decimal
 
 `numeric` `decimal` `dec`
-The DECIMAL data type stores exact, fixed-point numbers. This type is used when it is important to preserve exact precision, for example, with monetary data.
+DECIMAL 数据类型存储精确的定点数。当需要保留精确精度时（例如货币数据），会使用该类型。
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/decimal)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/decimal)**
 
 <Section>
 ```typescript
@@ -349,12 +349,12 @@ CREATE TABLE "table" (
 </Section>
 
 ### numeric
-An alias of **[decimal.](#decimal)**
+**[decimal.](#decimal)** 的别名
 
 ### float
 `float` `float8` `double precision`  
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/float)**  
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/float)**  
 
 <Section>
 ```typescript
@@ -379,9 +379,9 @@ CREATE TABLE "table" (
 
 ### real
 `real` `float4`  
-Single precision floating-point number (4 bytes)
+单精度浮点数（4 字节）
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/float)**  
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/float)**  
 
 <Section>
 ```typescript
@@ -406,16 +406,16 @@ CREATE TABLE "table" (
 
 ### double precision
 
-An alias of **[float.](#float)**
+**[float.](#float)** 的别名
 
 ## ---
 
 ### jsonb
 `jsonb`  
 
-The JSONB data type stores JSON (JavaScript Object Notation) data as a binary representation of the JSONB value, which eliminates whitespace, duplicate keys, and key ordering
+JSONB 数据类型以 JSONB 值的二进制表示形式存储 JSON（JavaScript Object Notation）数据，从而消除空白、重复键和键顺序
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/jsonb)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/jsonb)**
 <Section>
 ```typescript
 import { jsonb, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -435,17 +435,17 @@ CREATE TABLE "table" (
 ```
 </Section>
 
-You can specify `.$type<..>()` for json object inference, it **won't** check runtime values. 
-It provides compile time protection for default values, insert and select schemas.
+你可以为 json 对象推断指定 `.$type<..>()`，它**不会**检查运行时值。 
+它为默认值、insert 和 select schema 提供编译期保护。
 
 ```typescript
-// will be inferred as { foo: string }
+// 将被推断为 { foo: string }
 jsonb: jsonb().$type<{ foo: string }>();
 
-// will be inferred as string[]
+// 将被推断为 string[]
 jsonb: jsonb().$type<string[]>();
 
-// won't compile
+// 无法编译
 jsonb: jsonb().$type<string[]>().default({});
 ```
 
@@ -454,22 +454,22 @@ jsonb: jsonb().$type<string[]>().default({});
 ### bit
 `bit`  
 
-The BIT data types store bit arrays. With BIT, the length is fixed.
+BIT 数据类型存储位数组。使用 BIT 时，长度是固定的。
 
 <br />
 
-**Size**
+**大小**
 
-The number of bits in a BIT value is determined as follows:
+BIT 值中的位数确定如下：
 
-| Type&nbsp;declaration		| Logical&nbsp;size	|
+| 类型&nbsp;声明		| 逻辑&nbsp;大小	|
 |:------------------		|:--------------	|
-| BIT						| 1 bit				|
-| BIT(N)					| N bits			|
+| BIT						| 1 位				|
+| BIT(N)					| N 位			|
 
 <br />
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/bit)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/bit)**
 <Section>
 ```typescript
 import { sql } from "drizzle-orm";
@@ -496,22 +496,22 @@ CREATE TABLE "table" (
 ### varbit
 `varbit`
 
-The VARBIT data types store bit arrays. With VARBIT, the length can be variable.
+VARBIT 数据类型存储位数组。使用 VARBIT 时，长度可以是可变的。
 
 <br />
 
-**Size**
+**大小**
 
-The number of bits in a VARBIT value is determined as follows:
+VARBIT 值中的位数确定如下：
 
-| Type&nbsp;declaration		| Logical&nbsp;size													|
+| 类型&nbsp;声明		| 逻辑&nbsp;大小													|
 |:------------------		|:--------------													|
-| VARBIT					| variable&nbsp;with&nbsp;no&nbsp;maximum							|
-| VARBIT(N)					| variable&nbsp;with&nbsp;a&nbsp;maximum&nbsp;of&nbsp;N&nbsp;bits	|
+| VARBIT					| 无上限，可变							|
+| VARBIT(N)					| 可变，最多 N 位	|
 
 <br />
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/bit)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/bit)**
 <Section>
 ```typescript
 import { sql } from "drizzle-orm";
@@ -540,9 +540,9 @@ CREATE TABLE "table" (
 ### uuid
 `uuid`
 
-The UUID (Universally Unique Identifier) data type stores a 128-bit value that is unique across both space and time.
+UUID（Universally Unique Identifier，通用唯一标识符）数据类型存储一个在空间和时间上都唯一的 128 位值。
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/uuid)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/uuid)**
 
 ```ts
 import { uuid, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -567,10 +567,10 @@ CREATE TABLE "table" (
 ### time
 `time` `timetz` `time with timezone` `time without timezone`  
 
-The `TIME` data type stores the time of day in UTC.
-The `TIMETZ` data type stores a time of day with a time zone offset from UTC.
+`TIME` 数据类型以 UTC 存储一天中的时间。
+`TIMETZ` 数据类型存储带有时区与 UTC 偏移的一天中的时间。
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/time)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/time)**
 
 <Section>
 ```typescript
@@ -597,9 +597,9 @@ CREATE TABLE "table" (
 ### timestamp
 `timestamp` `timestamptz` `timestamp with time zone` `timestamp without time zone`  
 
-The TIMESTAMP and TIMESTAMPTZ data types store a date and time pair in UTC.
+TIMESTAMP 和 TIMESTAMPTZ 数据类型以 UTC 存储日期和时间对。
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/timestamp)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/timestamp)**
 <Section>
 ```typescript
 import { sql } from "drizzle-orm";
@@ -622,28 +622,28 @@ CREATE TABLE "table" (
 ```
 </Section>
 
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 将推断为 date
 timestamp: timestamp({ mode: "date" }),
 
-// will infer as string
+// 将推断为 string
 timestamp: timestamp({ mode: "string" }),
 ```
 
-> The `string` mode does not perform any mappings for you. This mode was added to Drizzle ORM to provide developers
-with the possibility to handle dates and date mappings themselves, depending on their needs.
-Drizzle will pass raw dates as strings `to` and `from` the database, so the behavior should be as predictable as possible 
-and aligned 100% with the database behavior
+> `string` 模式不会为你执行任何映射。此模式被添加到 Drizzle ORM，是为了让开发者
+可以根据自身需求自行处理日期和日期映射。
+Drizzle 会以字符串形式将原始日期 `to` 和 `from` 数据库传递，因此其行为应尽可能可预测，
+并与数据库行为 100% 保持一致
 
-> The `date` mode is the regular way to work with dates. Drizzle will take care of all mappings between the database and the JS Date object
+> `date` 模式是处理日期的常规方式。Drizzle 会负责数据库与 JS Date 对象之间的所有映射
 
 ### date
 `date`  
 
-The DATE data type stores a year, month, and day.
+DATE 数据类型存储年、月、日。
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/date)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/date)**
 <Section>
 ```typescript
 import { date, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -659,20 +659,20 @@ CREATE TABLE "table" (
 );
 ```
 </Section>
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 将推断为 date
 date: date({ mode: "date" }),
 
-// will infer as string
+// 将推断为 string
 date: date({ mode: "string" }),
 ```
 ### interval
 `interval`  
 
-Stores a value that represents a span of time.
+存储表示一段时间跨度的值。
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/interval)** 
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/interval)** 
 
 <Section>
 ```typescript
@@ -699,11 +699,11 @@ CREATE TABLE "table" (
 
 ### enum 
 `enum` `enumerated types`  
-Enumerated (enum) types are data types that comprise a static, ordered set of values. 
-They are equivalent to the enum types supported in a number of programming languages. 
-An example of an enum type might be the days of the week, or a set of status values for a piece of data.
+枚举（enum）类型是由一组静态、有序的值组成的数据类型。 
+它们等价于许多编程语言中支持的 enum 类型。 
+枚举类型的一个示例可能是一周中的各天，或某个数据的一组状态值。
 
-For more info please refer to the official CockroachDB **[docs.](https://www.cockroachlabs.com/docs/stable/enum)**
+更多信息请参阅 CockroachDB 官方 **[文档。](https://www.cockroachlabs.com/docs/stable/enum)**
 <Section>
 ```typescript
 import { cockroachEnum, cockroachTable } from "drizzle-orm/cockroach-core";
@@ -726,10 +726,10 @@ CREATE TABLE "table" (
 
 ## ---
 
-### Customizing data type
-Every column builder has a `.$type()` method, which allows you to customize the data type of the column. 
+### 自定义数据类型
+每个列构建器都有一个 `.$type()` 方法，允许你自定义列的数据类型。 
 
-This is useful, for example, with unknown or branded types:
+例如，对于未知类型或品牌类型（branded types），这很有用：
 ```ts
 type UserId = number & { __brand: 'user_id' };
 type Data = {
@@ -743,19 +743,19 @@ const users = cockroachTable('users', {
 });
 ```
 
-### Identity Columns
+### 标识列
 
 <Callout type="info">
-To use this feature you would need to have `drizzle-orm@0.32.0` or higher and `drizzle-kit@0.23.0` or higher
+要使用此功能，你需要 `drizzle-orm@0.32.0` 或更高版本，以及 `drizzle-kit@0.23.0` 或更高版本
 </Callout>
 
-PostgreSQL and CockroachDB supports identity columns as a way to automatically generate unique integer values for a column. These values are generated using sequences and can be defined using the GENERATED AS IDENTITY clause.
+PostgreSQL 和 CockroachDB 支持标识列，用于为列自动生成唯一整数值。这些值通过序列生成，并可使用 GENERATED AS IDENTITY 子句定义。
 
-**Types of Identity Columns**
-- `GENERATED ALWAYS AS IDENTITY`: The database always generates a value for the column. Manual insertion or updates to this column are not allowed unless the OVERRIDING SYSTEM VALUE clause is used.
-- `GENERATED BY DEFAULT AS IDENTITY`: The database generates a value by default, but manual values can also be inserted or updated. If a manual value is provided, it will be used instead of the system-generated value.
+**标识列的类型**
+- `GENERATED ALWAYS AS IDENTITY`：数据库始终为该列生成值。除非使用 OVERRIDING SYSTEM VALUE 子句，否则不允许手动插入或更新该列。
+- `GENERATED BY DEFAULT AS IDENTITY`：数据库默认生成值，但也可以插入或更新手动值。如果提供了手动值，将使用该值而非系统生成的值。
 
-**Usage example**
+**用法示例**
 ```ts
 import { pgTable, integer, text } from 'drizzle-orm/pg-core' 
 
@@ -766,18 +766,17 @@ export const ingredients = pgTable("ingredients", {
 });
 ```
 
-You can specify all properties available for sequences in the `.generatedAlwaysAsIdentity()` function. Additionally, you can specify custom names for these sequences
+你可以在 `.generatedAlwaysAsIdentity()` 函数中指定序列可用的所有属性。此外，你还可以为这些序列指定自定义名称
 
-PostgreSQL docs [reference](https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-PARMS-GENERATED-IDENTITY).
+PostgreSQL 文档[参考](https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-PARMS-GENERATED-IDENTITY)。
 
-### Default value
-The `DEFAULT` clause specifies a default value to use for the column if no value
-is explicitly provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+### 默认值
+`DEFAULT` 子句指定当用户执行 `INSERT` 时未显式提供值时该列使用的默认值。
+如果列定义上没有附加显式的 `DEFAULT` 子句，
+则该列的默认值为 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以将默认值指定为 `NULL`、
+字符串常量、blob 常量、带符号数字，或任何括号内的常量表达式。
 
 <Section>
 ```typescript
@@ -802,13 +801,13 @@ CREATE TABLE IF NOT EXISTS "table" (
 ```
 </Section>
 
-When using `$default()` or `$defaultFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all insert queries. 
+当使用 `$default()` 或 `$defaultFn()`（它们只是同一函数的不同别名）时，
+你可以在运行时生成默认值，并在所有插入查询中使用这些值。 
 
-These functions can assist you in utilizing various implementations such as `uuid`, `cuid`, `cuid2`, and many more.
+这些函数可以帮助你使用各种实现，例如 `uuid`、`cuid`、`cuid2` 等等。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 的运行时使用
 </Callout>
 
 ```ts
@@ -820,16 +819,16 @@ const table = pgTable('table', {
 });
 ```
 
-When using `$onUpdate()` or `$onUpdateFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all update queries. 
+当使用 `$onUpdate()` 或 `$onUpdateFn()`（它们只是同一函数的不同别名）时，
+你可以在运行时生成默认值，并在所有更新查询中使用这些值。 
 
-Adds a dynamic update value to the column. The function will be called when the row is updated, 
-and the returned value will be used as the column value if none is provided.
-If no default (or $defaultFn) value is provided, the function will be called
-when the row is inserted as well, and the returned value will be used as the column value.
+为列添加动态更新值。当行被更新时会调用该函数，
+如果未提供列值，则将返回值用作列值。
+如果未提供默认值（或 $defaultFn）值，则在插入行时也会调用该函数，
+并将返回值用作列值。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 的运行时使用
 </Callout>
 
 ```ts
@@ -844,7 +843,7 @@ const table = pgTable('table', {
 
 
 ### Not null
-`NOT NULL` constraint dictates that the associated column may not contain a `NULL` value.
+`NOT NULL` 约束规定关联的列不能包含 `NULL` 值。
 
 <Section>
 ```typescript
@@ -863,9 +862,9 @@ CREATE TABLE IF NOT EXISTS "table" (
 </Section>
 
 
-### Primary key
-A primary key constraint indicates that a column, or group of columns, can be used as a unique identifier for rows in the table. 
-This requires that the values be both unique and not null.
+### 主键
+主键约束表示一个列或一组列可以作为表中行的唯一标识符。 
+这要求这些值既唯一又非空。
 <Section>
 ```typescript
 import { serial, pgTable } from "drizzle-orm/pg-core";

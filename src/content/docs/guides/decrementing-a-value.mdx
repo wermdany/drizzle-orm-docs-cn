@@ -1,5 +1,5 @@
 ---
-title: SQL Decrement value
+title: SQL 递减值
 ---
 import Section from "@mdx/Section.astro";
 import IsSupportedChipGroup from "@mdx/IsSupportedChipGroup.astro";
@@ -8,12 +8,12 @@ import Prerequisites from "@mdx/Prerequisites.astro";
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach)
-- [Update statement](/docs/update)
-- [Filters](/docs/operators) and [sql operator](/docs/sql)
+- 快速上手 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach)
+- [更新语句](/docs/update)
+- [过滤器](/docs/operators) 和 [sql 操作符](/docs/sql)
 </Prerequisites>
 
-To decrement a column value you can use `update().set()` method like below:
+要递减列的值，你可以像下面这样使用 `update().set()` 方法：
 
 <Section>
 ```ts copy {8}
@@ -34,7 +34,7 @@ update "table" set "counter" = "counter" - 1 where "id" = 1;
 ```
 </Section>
 
-Drizzle has simple and flexible API, which lets you easily create custom solutions. This is how you do custom decrement function:
+Drizzle 拥有简单且灵活的 API，让你可以轻松创建自定义解决方案。下面是你如何实现自定义递减函数：
 
 ```ts copy {4,10,11}
 import { AnyColumn } from 'drizzle-orm';

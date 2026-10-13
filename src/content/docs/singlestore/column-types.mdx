@@ -1,22 +1,22 @@
 ---
-title: SingleStore column types
+title: SingleStore 列类型
 ---
 import Section from '@mdx/Section.astro';
 import Callout from '@mdx/Callout.astro';
 
-We have native support for all of them, yet if that's not enough for you, feel free to create **[custom types](/docs/singlestore/custom-types)**.
+我们原生支持所有这些类型，但如果对你来说还不够，欢迎创建 **[自定义类型](/docs/singlestore/custom-types)**。
 
 <Callout title='important' type='warning'>
-All examples in this part of the documentation do not use database column name aliases, and column names are generated from TypeScript keys. 
+本文档这一部分中的所有示例都不使用数据库列名别名，列名由 TypeScript 键生成。
 
-You can use database aliases in column names if you want, and you can also use the `casing` parameter to define a mapping strategy for Drizzle. 
+如果你愿意，可以在列名中使用数据库别名，你也可以使用 `casing` 参数为 Drizzle 定义映射策略。
 
-You can read more about it [here](/docs/singlestore/sql-schema-declaration#shape-your-data-schema)
+你可以[在此](/docs/singlestore/sql-schema-declaration#构建你的数据-schema)阅读更多相关内容
 </Callout>
 
 ### integer
 
-A signed integer, stored in `0`, `1`, `2`, `3`, `4`, `6`, or `8` bytes depending on the magnitude of the value.
+一个有符号整数，根据值的大小存储在 `0`、`1`、`2`、`3`、`4`、`6` 或 `8` 字节中。
 
 <Section>
 ```typescript
@@ -101,7 +101,7 @@ const table = singlestoreTable('table', {
 
 bigint('...', { mode: 'number' | 'bigint' });
 
-// You can also specify unsigned option for bigint
+// 你也可以为 bigint 指定 unsigned 选项
 bigint('...', { mode: 'number' | 'bigint', unsigned: true })
 ```
 
@@ -113,7 +113,7 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-We've omitted config of `M` in `bigint(M)`, since it indicates the display width of the numeric type 
+我们省略了 `bigint(M)` 中的 `M` 配置，因为它表示该数值类型的显示宽度
 
 ## ---
 
@@ -253,7 +253,7 @@ CREATE TABLE `table` (
 
 <Section>
 
-`SERIAL` is an alias for `BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE`.
+`SERIAL` 是 `BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE` 的别名。
 
 ```typescript
 import { serial, singlestoreTable } from "drizzle-orm/singlestore-core";
@@ -329,7 +329,7 @@ CREATE TABLE `table` (
 </Section>
 
 ### varchar
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 <Section>
 ```typescript
 import { varchar, singlestoreTable } from "drizzle-orm/singlestore-core";
@@ -338,7 +338,7 @@ const table = singlestoreTable('table', {
 	varchar: varchar({ length: 2 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 varchar: varchar({ length: 6, enum: ["value1", "value2"] })
 ```
 
@@ -351,7 +351,7 @@ CREATE TABLE `table` (
 
 ### text
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
 <Section>
 ```typescript
@@ -361,7 +361,7 @@ const table = singlestoreTable('table', {
 	text: text(),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 text: text({ enum: ["value1", "value2"] });
 ```
 
@@ -525,16 +525,16 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-You can specify `.$type<..>()` for json object inference, it **won't** check runtime values. 
-It provides compile time protection for default values, insert and select schemas.
+你可以为 json 对象推断指定 `.$type<..>()`，它**不会**检查运行时值。
+它为默认值、insert 和 select schema 提供编译期保护。
 ```typescript
-// will be inferred as { foo: string }
+// 将被推断为 { foo: string }
 json: json().$type<{ foo: string }>();
 
-// will be inferred as string[]
+// 将被推断为 string[]
 json: json().$type<string[]>();
 
-// won't compile
+// 不会通过编译
 json: json().$type<string[]>().default({});
 ```
 
@@ -560,9 +560,9 @@ CREATE TABLE `table` (
 
 ## ---
 
-### Customizing data type
+### 自定义数据类型
 
-Every column builder has a `.$type()` method, which allows you to customize the data type of the column. This is useful, for example, with unknown or branded types.
+每个列构建器都有一个 `.$type()` 方法，它允许你自定义该列的数据类型。例如，这对于未知类型或 branded 类型很有用。
 
 ```ts
 type UserId = number & { __brand: 'user_id' };
@@ -578,7 +578,7 @@ const users = singlestoreTable('users', {
 ```
 
 ### Not null
-`NOT NULL` constraint dictates that the associated column may not contain a `NULL` value.
+`NOT NULL` 约束规定关联的列不能包含 `NULL` 值。
 
 <Section>
 ```typescript
@@ -598,13 +598,12 @@ CREATE TABLE `table` (
 
 ### Default value
 
-The `DEFAULT` clause specifies a default value to use for the column if no value
-is explicitly provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+`DEFAULT` 子句指定当用户在进行 `INSERT` 时未显式提供值时、该列要使用的默认值。
+如果列定义上没有附加显式的 `DEFAULT` 子句，
+那么该列的默认值就是 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以指定默认值为 `NULL`、
+字符串常量、blob 常量、带符号数字，或任何用括号括起来的常量表达式。
 
 <Section>
 ```typescript
@@ -622,12 +621,12 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-When using `$default()` or `$defaultFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all insert queries. 
-These functions can assist you in utilizing various implementations such as `uuid`, `cuid`, `cuid2`, and many more.
+当使用 `$default()` 或 `$defaultFn()`（它们只是同一个函数的不同别名）时，
+你可以在运行时生成默认值，并在所有 insert 查询中使用这些值。
+这些函数可以帮助你利用各种实现，例如 `uuid`、`cuid`、`cuid2` 等等。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不会影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 运行时使用
 </Callout>
 
 ```ts
@@ -639,16 +638,16 @@ const table = singlestoreTable('table', {
 });
 ```
 
-When using `$onUpdate()` or `$onUpdateFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all update queries. 
+当使用 `$onUpdate()` 或 `$onUpdateFn()`（它们只是同一个函数的不同别名）时，
+你可以在运行时生成默认值，并在所有 update 查询中使用这些值。
 
-Adds a dynamic update value to the column. The function will be called when the row is updated, 
-and the returned value will be used as the column value if none is provided.
-If no default (or $defaultFn) value is provided, the function will be called
-when the row is inserted as well, and the returned value will be used as the column value.
+为列添加一个动态更新值。该函数会在行被更新时被调用，
+如果没有提供值，则返回的值将作为列的值。
+如果没有提供默认值（或 $defaultFn）值，该函数也会在
+行被插入时被调用，返回的值将作为列的值。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不会影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 运行时使用
 </Callout>
 
 ```ts

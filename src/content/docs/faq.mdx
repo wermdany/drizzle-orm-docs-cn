@@ -1,48 +1,47 @@
 import Callout from '@mdx/Callout.astro';
 
-# FAQ & Troubleshooting
+# 常见问题与故障排查
 
-## **Should I use `generate` or `push`?**
+## **我应该使用 `generate` 还是 `push`？**
 
-Those are logically 2 different commands. `generate` is used to create an sql file together with additional
-information needed for `drizzle-kit` (or any other migration tool).
+从逻辑上讲，这是两个不同的命令。`generate` 用于创建一个 sql 文件，以及 `drizzle-kit`（或任何其他迁移工具）所需的附加信息。
 
-After generating those migrations, they won't be applied to a database. 
-You need to do it in the next step. You can read more about it **[here](/docs/migrations)**
+生成这些迁移后，它们不会自动应用到数据库。
+你需要在下一步手动应用。你可以在 **[这里](/docs/migrations)** 阅读更多内容
 
-On the other hand, `push` doesn't need any migrations to be generated. It will
-simply sync your schema with the database schema. Please be careful when using it;
-we recommend it only for local development and local databases. To read more about it, check out **[`drizzle-kit push`](/docs/drizzle-kit-push)**
+另一方面，`push` 不需要生成任何迁移。它
+只是将你的 schema 与数据库 schema 同步。使用时请务必小心；
+我们仅建议在本地开发和本地数据库中使用它。要了解更多内容，请查看 **[`drizzle-kit push`](/docs/drizzle-kit-push)**
 
-## How `push` and `generate` works for PostgreSQL indexes
+## `push` 和 `generate` 如何处理 PostgreSQL 索引
 
-### Limitations
+### 限制
 
-1. **You should specify a name for your index manually if you have an index on at least one expression**
+1. **如果索引建立在至少一个表达式上，你应该手动为索引指定名称**
 
-Example
+示例
 
 ```ts
-index().on(table.id, table.email) // will work well and name will be autogeneretaed
-index('my_name').on(table.id, table.email) // will work well
+index().on(table.id, table.email) // 可以正常工作，名称会自动生成
+index('my_name').on(table.id, table.email) // 可以正常工作
 
-// but
+// 但是
 
-index().on(sql`lower(${table.email})`) // error
-index('my_name').on(sql`lower(${table.email})`) // will work well
+index().on(sql`lower(${table.email})`) // 报错
+index('my_name').on(sql`lower(${table.email})`) // 可以正常工作
 ```
 
-2. **Push won't generate statements if these fields(list below) were changed in an existing index:**
+2. **如果以下字段（见下方列表）在现有索引中发生变化，push 不会生成语句：**
 
-- expressions inside `.on()` and `.using()`
-- `.where()` statements
-- operator classes `.op()` on columns
+- `.on()` 和 `.using()` 中的表达式
+- `.where()` 语句
+- 列上的运算符类 `.op()`
 
-If you are using `push` workflows and want to change these fields in the index, you would need to:
+如果你使用 `push` 工作流，并且想要修改索引中的这些字段，你需要：
 
-1. Comment out the index
-2. Push
-3. Uncomment the index and change those fields
-4. Push again
+1. 注释掉该索引
+2. 执行 push
+3. 取消注释该索引并修改这些字段
+4. 再次执行 push
 
-For the `generate` command, `drizzle-kit` will be triggered by any changes in the index for any property in the new drizzle indexes API, so there are no limitations here.
+对于 `generate` 命令，`drizzle-kit` 会被新的 drizzle 索引 API 中任意属性的任何变更所触发，因此这里没有限制。

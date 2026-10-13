@@ -1,31 +1,31 @@
 import Callout from '@mdx/Callout.astro';
 import Section from '@mdx/Section.astro';
 
-# Magical `sql` operator 🪄
+# 神奇的 `sql` 操作符 🪄
 
-When working with an ORM library, there may be cases where you find it challenging to write a
-specific query using the provided ORM syntax. In such situations, you can resort to using
-raw queries, which involve constructing a query as a raw string. However, raw queries often
-lack the benefits of type safety and query parameterization.
+在使用 ORM 库时，你可能会遇到一些情况：使用提供的 ORM 语法来编写某个
+特定查询很有挑战性。在这种情况下，你可以求助于使用
+原生查询，即以原始字符串的形式构造查询。然而，原生查询往往
+缺乏类型安全和查询参数化带来的好处。
 
-To address this, many libraries have introduced the concept of an `sql` template. This template 
-allows you to write more type-safe and parameterized queries, enhancing the overall safety and 
-flexibility of your code. Drizzle, being a powerful ORM library, also supports the sql template.
+为解决这个问题，许多库引入了 `sql` 模板的概念。这个模板
+让你能够编写更类型安全、更参数化的查询，从而增强代码整体的安全性和
+灵活性。Drizzle 作为一个强大的 ORM 库，同样支持 sql 模板。
 
-With Drizzle's `sql` template, you can go even further in crafting queries. If you encounter 
-difficulties in writing an entire query using the library's query builder, you can selectively
-use the `sql` template within specific sections of the Drizzle query. This flexibility enables you 
-to employ the sql template in partial SELECT statements, WHERE clauses, ORDER BY clauses, HAVING
-clauses, GROUP BY clauses, and even in relational query builders.
+使用 Drizzle 的 `sql` 模板，你可以在构造查询时走得更远。如果你在使用
+该库的查询构建器编写整个查询时遇到困难，你可以在 Drizzle 查询的特定部分
+有选择地使用 `sql` 模板。这种灵活性让你能够
+在部分 SELECT 语句、WHERE 子句、ORDER BY 子句、HAVING
+子句、GROUP BY 子句，甚至关系查询构建器中使用 sql 模板。
 
-By leveraging the capabilities of the sql template in Drizzle, you can maintain the advantages 
-of type safety and query parameterization while achieving the desired query structure and complexity.
-This empowers you to create more robust and maintainable code within your application.
+通过利用 Drizzle 中 sql 模板的能力，你可以在实现所需查询结构复杂度的同时，
+保持类型安全和查询参数化的优势。
+这使你能在应用中创建更健壮、更易维护的代码。
 
-## sql`` template
+## sql`` 模板
 
-One of the most common usages you may encounter in other ORMs as well 
-is the ability to use `sql` queries as-is for raw queries.
+你在其它 ORM 中可能遇到的最常见用法之一，
+是能够将 `sql` 查询原样用于原生查询。
 
 ```typescript copy
 import { sql } from 'drizzle-orm' 
@@ -34,39 +34,39 @@ const id = 69;
 await db.execute(sql`select * from ${usersTable} where ${usersTable.id} = ${id}`)
 ```
 
-It will generate the current query
+它将生成如下查询
 
 ```sql
 select * from "users" where "users"."id" = ?; --> [69]
 ```
 
-Any tables and columns provided to the sql parameter are automatically mapped to their corresponding SQL 
-syntax with escaped names for tables, and the escaped table names are appended to column names. 
+提供给 sql 参数的任何表和列都会被自动映射为对应的 SQL
+语法，其中表名会被转义，并且转义后的表名会被追加到列名之前。
 
-Additionally, any dynamic parameters such as `${id}` will be mapped to the `?` placeholder, 
-and the corresponding values will be moved to an array of values that are passed separately to the database. 
+此外，任何动态参数（例如 `${id}`）都会被映射为 `?` 占位符，
+相应的值会被移动到一个单独传递给数据库的值数组中。
 
-This approach effectively prevents any potential SQL Injection vulnerabilities.
+这种方法有效地防止了任何潜在的 SQL 注入漏洞。
 
 ## `sql<T>`
 
 <Callout type="info" emoji="ℹ️">
-    Please note that `sql<T>` does not perform any runtime mapping. The type you define using `sql<T>` is
-    purely a helper for Drizzle. It is important to understand that there is no feasible way to 
-    determine the exact type dynamically, as SQL queries can be highly versatile and customizable. 
+    请注意，`sql<T>` 不会执行任何运行时映射。你使用 `sql<T>` 定义的类型
+    纯粹是给 Drizzle 的辅助提示。重要的是要理解，不存在可行的方式
+    来动态确定确切的类型，因为 SQL 查询可以高度多样化和可定制。
 </Callout>
 
-You can define a custom type in Drizzle to be used in places where fields require a specific type other than `unknown`.
+你可以在 Drizzle 中定义自定义类型，用于那些字段需要特定类型（而非 `unknown`）的地方。
 
-This feature is particularly useful in partial select queries, ensuring consistent typing for selected fields:
+这个特性在部分选择查询中特别有用，能确保所选字段类型一致：
 
 ```typescript
-// without sql<T> type defined
+// 未定义 sql<T> 类型
 const response: { lowerName: unknown }[] = await db.select({
     lowerName: sql`lower(${usersTable.id})`
 }).from(usersTable);
 
-// with sql<T> type defined
+// 定义了 sql<T> 类型
 const response: { lowerName: string }[] = await db.select({
     lowerName: sql<string>`lower(${usersTable.id})`
 }).from(usersTable);
@@ -74,12 +74,12 @@ const response: { lowerName: string }[] = await db.select({
 
 ## `sql``.mapWith()`
 
-For the cases you need to make a runtime mapping for values passed from database driver to drizzle you can use `.mapWith()`
+对于需要为从数据库驱动传递到 drizzle 的值做运行时映射的情况，你可以使用 `.mapWith()`
 
-This function accepts different values, that will map response in runtime.
+该函数接受不同的值，这些值将在运行时映射响应。
 
-You can replicate a specific column mapping strategy as long as
-the interface inside mapWith is the same interface that is implemented by Column.
+只要 mapWith 内部的接口与 Column 所实现的接口相同，
+你就可以复刻某个特定的列映射策略。
 
 ```typescript
 import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
@@ -89,34 +89,34 @@ const usersTable = sqliteTable('users', {
     name: text().notNull(),
 });
 
-//  at runtime this values will be mapped same as `text` column is mapped in drizzle
+//  在运行时，这些值的映射方式将与 drizzle 中 `text` 列的映射方式相同
 sql`...`.mapWith(usersTable.name);
 ```
 
-You can also pass your own implementation for the `DriverValueDecoder` interface:
+你也可以为 `DriverValueDecoder` 接口传入你自己的实现：
 
 ```ts 
 sql``.mapWith({
 	mapFromDriverValue: (value: any) => {
 		const mappedValue = value;
-		// mapping you want to apply
+		// 你想应用的映射
 		return mappedValue;
 	},
 });
     
-// or
+// 或
 sql``.mapWith(Number);
 ```
 
 ## `sql``.as<T>()`
 
-In different cases, it can sometimes be challenging to determine how to name a custom field that you want to use.
-You may encounter situations where you need to explicitly specify an alias for a 
-field that will be selected. This can be particularly useful when dealing with complex queries. 
+在不同情况下，有时很难确定你想使用的自定义字段该如何命名。
+你可能会遇到需要为将被选择的字段
+显式指定别名的情况。在处理复杂查询时，这尤其有用。
 
-To address these scenarios, we have introduced a helpful `.as('alias_name')` helper, which allows 
-you to define an alias explicitly. By utilizing this feature, you can provide a clear and meaningful 
-name for the field, making your queries more intuitive and readable.
+为应对这些场景，我们引入了一个有用的 `.as('alias_name')` 辅助方法，它让你
+可以显式地定义别名。通过利用这个特性，你可以为字段提供清晰且有意义的
+名称，让你的查询更直观、更易读。
 
 <Section>
 ```typescript
@@ -129,12 +129,12 @@ sql`lower(usersTable.name)`.as('lower_name')
 
 ## `sql.raw()`
 
-There are cases where you may not need to create parameterized values from input or map tables/columns to escaped ones. 
-Instead, you might simply want to generate queries as they are. For such situations, we provide the `sql.raw()` function.
+有些情况下，你可能不需要根据输入创建参数化值，也不需要将表/列映射为转义后的形式。
+相反，你可能只是想按原样生成查询。对于这类情况，我们提供了 `sql.raw()` 函数。
 
-The `sql.raw()` function allows you to include raw SQL statements within your queries without any additional processing or escaping.
-This can be useful when you have pre-constructed SQL statements or when you need to incorporate complex or dynamic 
-SQL code directly into your queries.
+`sql.raw()` 函数让你可以在查询中包含原始 SQL 语句，而无需任何额外的处理或转义。
+当你已有预先构造好的 SQL 语句，或需要将复杂或动态的
+SQL 代码直接纳入查询时，这会很有用。
 
 <Section>
 ```typescript
@@ -149,12 +149,12 @@ select * from users where id = ?; --> [12]
 ```
 </Section>
 
-You can also utilize `sql.raw()` within the sql function, enabling you to include any raw string
-without escaping it through the main `sql` template function.
+你还可以在 sql 函数内部使用 `sql.raw()`，从而让你可以包含任何原始字符串，
+而无需经过主 `sql` 模板函数的转义。
 
-By using `sql.raw()` inside the `sql` function, you can incorporate unescaped raw strings 
-directly into your queries. This can be particularly useful when you have specific
-SQL code or expressions that should remain untouched by the template function's automatic escaping or modification.
+通过在 `sql` 函数内部使用 `sql.raw()`，你可以将未转义的原始字符串
+直接纳入查询。当你有特定的 SQL 代码或表达式不应被模板函数的
+自动转义或修改时，这会特别有用。
 
 <Section>
 ```typescript
@@ -171,16 +171,16 @@ select * from "users" where id = 12;
 
 ## sql.fromList()
 
-The `sql` template generates sql chunks, which are arrays of SQL parts that will be concatenated 
-into the query and params after applying the SQL to the database or query in Drizzle.
+`sql` 模板会生成 sql 块，这些块是 SQL 部分的数组，在将 SQL 应用到数据库或在 Drizzle 中执行查询后，
+它们会被拼接成查询和参数。
 
-In certain scenarios, you may need to aggregate these chunks into an array using custom business 
-logic and then concatenate them into a single SQL statement that can be passed to the database or query.
-For such cases, the fromList function can be quite useful.
+在某些场景中，你可能需要使用自定义业务逻辑
+将这些块聚合成一个数组，然后将它们拼接成可以传递给数据库或查询的单个 SQL 语句。
+对于这类情况，fromList 函数会非常有用。
 
-The fromList function allows you to combine multiple SQL chunks into a single SQL statement. 
-You can use it to aggregate and concatenate the individual SQL parts according to your specific 
-requirements and then obtain a unified SQL query that can be executed.
+fromList 函数让你可以将多个 SQL 块组合成单个 SQL 语句。
+你可以用它根据你的具体需求
+聚合和拼接各个 SQL 部分，然后获得一个可执行的统一 SQL 查询。
 
 <Section>
 ```typescript
@@ -188,11 +188,11 @@ const sqlChunks: SQL[] = [];
 
 sqlChunks.push(sql`select * from users`);
 
-// some logic
+// 一些逻辑
 
 sqlChunks.push(sql` where `);
 
-// some logic
+// 一些逻辑
 
 for (let i = 0; i < 5; i++) {
 	sqlChunks.push(sql`id = ${i}`);
@@ -210,16 +210,15 @@ select * from users where id = ? or id = ? or id = ? or id = ? or id = ?; --> [0
 
 ## sql.join()
 
-Indeed, the `sql.join` function serves a similar purpose to the fromList helper. 
-However, it provides additional flexibility when it comes to handling spaces between
-SQL chunks or specifying custom separators for concatenating the SQL chunks.
+确实，`sql.join` 函数的作用与 fromList 辅助函数类似。
+不过，在处理 SQL 块之间的空格，或为拼接 SQL 块指定自定义分隔符时，
+它提供了额外的灵活性。
 
-With `sql.join`, you can concatenate SQL chunks together using a specified separator. 
-This separator can be any string or character that you want to insert between the chunks. 
+使用 `sql.join`，你可以使用指定的分隔符将 SQL 块拼接在一起。
+这个分隔符可以是任何你想插入到各块之间的字符串或字符。
 
-This is particularly useful when you have specific requirements for formatting or delimiting 
-the SQL chunks. By specifying a custom separator, you can achieve the desired structure and formatting 
-in the final SQL query.
+当你有特定的格式化或分隔 SQL 块的需求时，这特别有用。
+通过指定自定义分隔符，你可以在最终 SQL 查询中实现所需的结构和格式。
 
 <Section>
 ```typescript
@@ -227,11 +226,11 @@ const sqlChunks: SQL[] = [];
 
 sqlChunks.push(sql`select * from users`);
 
-// some logic
+// 一些逻辑
 
 sqlChunks.push(sql`where`);
 
-// some logic
+// 一些逻辑
 
 for (let i = 0; i < 5; i++) {
 	sqlChunks.push(sql`id = ${i}`);
@@ -249,22 +248,22 @@ select * from users where id = ? or id = ? or id = ? or id = ? or id = ?; --> [0
 
 ## sql.append()
 
-If you have already generated SQL using the `sql` template, you can achieve the same behavior as `fromList`
-by using the append function to directly add a new chunk to the generated SQL.
+如果你已经使用 `sql` 模板生成了 SQL，你可以通过 append 函数直接向已生成的 SQL
+添加新的块，从而实现与 `fromList` 相同的行为。
 
-By using the append function, you can dynamically add additional SQL chunks to the existing SQL string,
-effectively concatenating them together. This allows you to incorporate custom logic or business 
-rules for aggregating the chunks into the final SQL query.
+通过使用 append 函数，你可以动态地向现有 SQL 字符串添加额外的 SQL 块，
+有效地将它们拼接在一起。这让你可以纳入自定义逻辑或业务
+规则，将各块聚合到最终 SQL 查询中。
 
 <Section>
 ```typescript 
 const finalSql = sql`select * from users`;
 
-// some logic
+// 一些逻辑
 
 finalSql.append(sql` where `);
 
-// some logic
+// 一些逻辑
 
 for (let i = 0; i < 5; i++) {
 	finalSql.append(sql`id = ${i}`);
@@ -280,25 +279,25 @@ select * from users where id = ? or id = ? or id = ? or id = ? or id = ?; --> [0
 
 ## sql.empty()
 
-By using sql.empty(), you can start with a blank SQL object and then dynamically append SQL chunks to it as needed. This allows you to construct the SQL query incrementally, applying custom logic or conditions to determine the contents of each chunk.
+通过使用 sql.empty()，你可以从一个空的 SQL 对象开始，然后按需动态地向它追加 SQL 块。这让你可以逐步构造 SQL 查询，应用自定义逻辑或条件来决定每个块的内容。
 
-Once you have initialized the SQL object using sql.empty(), you can take advantage of the full range
-of sql template features such as parameterization, composition, and escaping. 
-This empowers you to construct the SQL query in a flexible and controlled manner, 
-adapting it to your specific requirements.
+一旦你使用 sql.empty() 初始化了 SQL 对象，你就可以利用
+sql 模板的全部特性，例如参数化、组合和转义。
+这使你能够以灵活且可控的方式构造 SQL 查询，
+使其适配你的具体需求。
 
 ```typescript 
 const finalSql = sql.empty();
 
-// some logic
+// 一些逻辑
 
 finalSql.append(sql`select * from users`);
 
-// some logic
+// 一些逻辑
 
 finalSql.append(sql` where `);
 
-// some logic
+// 一些逻辑
 
 for (let i = 0; i < 5; i++) {
 	finalSql.append(sql`id = ${i}`);
@@ -311,18 +310,18 @@ for (let i = 0; i < 5; i++) {
 select * from users where id = ? or id = ? or id = ? or id = ? or id = ?; --> [0, 1, 2, 3, 4]
 ```
 
-## Convert `sql` to string and params
+## 将 `sql` 转换为字符串和参数
 
-In all the previous examples, you observed the usage of SQL template syntax in TypeScript along with 
-the generated SQL output.
+在前面所有示例中，你看到了在 TypeScript 中使用 SQL 模板语法
+以及生成的 SQL 输出。
 
-If you need to obtain the query string and corresponding parameters generated from the SQL template, 
-you must specify the database dialect you intend to generate the query for. Different databases have
-varying syntax for parameterization and escaping, so selecting the appropriate dialect is crucial.
+如果你需要获取由 SQL 模板生成的查询字符串和相应参数，
+你必须指定你想为其生成查询的数据库方言。不同的数据库在
+参数化和转义方面有不同的语法，因此选择恰当的方言至关重要。
 
-Once you have chosen the dialect, you can utilize the corresponding implementation's functionality
-to convert the SQL template into the desired query string and parameter format. This ensures 
-compatibility with the specific database system you are working with.
+一旦你选定了方言，你就可以利用相应实现的功能
+将 SQL 模板转换为所需的查询字符串和参数格式。这确保
+与你正在使用的具体数据库系统兼容。
 
 <Section>
 ```typescript copy
@@ -338,15 +337,15 @@ select * from "users" where "users"."id" = ?; --> [ 12 ]
 
 ## `sql` select
 
-You can use the sql functionality in partial select queries as well. Partial select queries allow you to 
-retrieve specific fields or columns from a table rather than fetching the entire row.
+你也可以在部分选择查询中使用 sql 功能。部分选择查询让你可以
+从表中检索特定字段或列，而不是获取整行。
 
-For more detailed information about partial select queries, you can refer to the Core API
-documentation available at **[Core API docs](/docs/sqlite/select#basic-and-partial-select)**.
+关于部分选择查询的更详细信息，你可以参考 Core API
+文档：**[Core API docs](/docs/sqlite/select#basic-and-partial-select)**。
 
-**Select different custom fields from table**
+**从表中选择不同的自定义字段**
 
-Here you can see a usage for **[`sql<T>`](/docs/sqlite/sql#sqlt)**, **[`sql``.mapWith()`](/docs/sqlite/sql#sqlmapwith)**, **[`sql``.as<T>()`](/docs/sqlite/sql#sqlast)**.
+这里你可以看到 **[`sql<T>`](/docs/sqlite/sql#sqlt)**、**[`sql``.mapWith()`](/docs/sqlite/sql#sqlmapwith)**、**[`sql``.as<T>()`](/docs/sqlite/sql#sqlast)** 的用法。
 
 <Section>
 ```typescript copy
@@ -365,22 +364,22 @@ select `id`, lower(`name`), lower(`name`) as `aliased_column`, count(*) from `us
 ```
 </Section>
 
-## `sql` in where
+## `where` 中的 `sql`
 
-Indeed, Drizzle provides a set of available expressions that you can use within the sql template. 
-However, it is true that databases often have a wider range of expressions available, 
-including those provided through extensions or other means.
+确实，Drizzle 提供了一组你可以在 sql 模板中使用的可用表达式。
+然而，数据库中通常有更广泛的表达式可用，
+包括通过扩展或其它方式提供的表达式。
 
-To ensure flexibility and enable you to utilize any expressions that are not natively
-supported by Drizzle, you have the freedom to write the SQL template
-directly using the sql function. This allows you to leverage the full power of
-SQL and incorporate any expressions or functionalities specific to your target database.
+为确保灵活性并让你能够使用 Drizzle 未原生支持的
+任何表达式，你可以自由地
+直接使用 sql 函数编写 SQL 模板。这让你能够利用
+SQL 的全部能力，并纳入特定于你的目标数据库的任何表达式或功能。
 
-By using the sql template, you are not restricted to only the predefined expressions in Drizzle. 
-Instead, you can express complex queries and incorporate any supported expressions that 
-the underlying database system provides.
+通过使用 sql 模板，你不限于仅使用 Drizzle 中预定义的表达式。
+相反，你可以表达复杂查询，并纳入底层数据库系统
+所提供的任何受支持的表达式。
 
-**Filtering by `id` but with sql**
+**按 `id` 过滤，但使用 sql**
 <Section>
 ```typescript copy
 import { sql } from 'drizzle-orm'
@@ -397,7 +396,7 @@ select * from "users" where "users"."id" = ?; --> [ 77 ]
 ```
 </Section>
 
-**Advanced fulltext search where statement**
+**高级全文搜索 where 语句**
 <Section>
 ```typescript copy
 import { sql } from 'drizzle-orm'
@@ -414,10 +413,10 @@ select * from "users" where lower("users"."name") like lower(?); --> [ "%Ale%" ]
 ```
 </Section>
 
-## `sql` in orderBy
+## `orderBy` 中的 `sql`
 
-The `sql` template can indeed be used in the ORDER BY clause when you need specific functionality for ordering that is not
-available in Drizzle, but you prefer not to resort to raw SQL.
+当你需要 Drizzle 中不提供的特定排序功能，但又不想求助于原生 SQL 时，
+`sql` 模板确实可以在 ORDER BY 子句中使用。
 
 <Section>
 ```typescript copy
@@ -431,10 +430,10 @@ select * from "users" order by "users"."id" desc nulls first;
 ```
 </Section>
 
-## `sql` in having and groupBy
+## `having` 和 `groupBy` 中的 `sql`
 
-The `sql` template can indeed be used in the HAVING and GROUP BY clauses when you need specific functionality for ordering that is not
-available in Drizzle, but you prefer not to resort to raw SQL.
+当你需要 Drizzle 中不提供的特定排序功能，但又不想求助于原生 SQL 时，
+`sql` 模板确实可以在 HAVING 和 GROUP BY 子句中使用。
 
 <Section>
 ```typescript copy

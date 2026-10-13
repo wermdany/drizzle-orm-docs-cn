@@ -2,38 +2,38 @@ import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 import Callout from '@mdx/Callout.astro';
 
-# Generated Columns
+# 生成的列
 
-1. Virtual (or non-persistent) Generated Columns: These columns are computed dynamically whenever they are queried. They do not occupy storage space in the database.
+1. Virtual（或非持久化）生成列：这些列在每次被查询时动态计算。它们不占用数据库中的存储空间。
 
-2. Stored (or persistent) Generated Columns: These columns are computed when a row is inserted or updated and their values are stored in the database. This allows them to be indexed and can improve query performance since the values do not need to be recomputed for each query.
+2. Stored（或持久化）生成列：这些列在插入或更新行时计算，其值会存储在数据库中。这使得它们可以被索引，并且能提升查询性能，因为每次查询时无需重新计算这些值。
 
-#### Database side
-    **Types**: `STORED`, `VIRTUAL`
+#### 数据库端
+    **类型**：`STORED`、`VIRTUAL`
 
-    **How It Works**
-    - Defined with an expression in the table schema.
-    - Virtual columns are computed during read operations.
-    - Stored columns are computed during write operations and stored.
+    **工作原理**
+    - 在表的 schema 中通过表达式定义。
+    - Virtual 列在读取操作期间计算。
+    - Stored 列在写入操作期间计算并存储。
 
-    **Capabilities**
-    - Used in SELECT, INSERT, UPDATE, and DELETE statements.
-    - Can be indexed, both virtual and stored.
-    - Can specify NOT NULL and other constraints.
+    **能力**
+    - 可用于 SELECT、INSERT、UPDATE 和 DELETE 语句。
+    - 可以被索引，virtual 和 stored 列皆可。
+    - 可以指定 NOT NULL 及其他约束。
     
-    **Limitations**
-    - Cannot directly insert or update values in a generated column 
+    **限制**
+    - 不能直接向生成列中插入或更新值
 
-    For more info, please check [SQLite](https://www.sqlite.org/gencol.html) docs 
+    更多信息，请查阅 [SQLite](https://www.sqlite.org/gencol.html) 文档
 
-    #### Drizzle side
-    In Drizzle you can specify `.generatedAlwaysAs()` function on any column type and add a supported sql query, 
-    that will generate this column data for you.
+    #### Drizzle 侧
+    在 Drizzle 中，你可以在任意列类型上指定 `.generatedAlwaysAs()` 函数，并添加一个受支持的 sql 查询，
+    它会为你生成该列的数据。
 
-    #### Features 
-    This function can accept generated expression in 2 ways:
+    #### 特性
+    该函数可以通过 2 种方式接受生成表达式：
 
-    **`sql`** tag - if you want drizzle to escape some values for you
+    **`sql`** 标签 - 如果你希望 drizzle 为你转义某些值
 
     ```ts
     export const test = sqliteTable("test", {
@@ -48,7 +48,7 @@ import Callout from '@mdx/Callout.astro';
     );
     ```
 
-    **`callback`** - if you need to reference columns from a table
+    **`callback`** - 如果你需要引用表中的列
 
     ```ts
     export const test = sqliteTable("test", {
@@ -65,11 +65,11 @@ import Callout from '@mdx/Callout.astro';
     );
     ```
 
-    #### Behavior in Drizzle Kit
-	`push` and `generate` command:
-    1. Changing the generated expression on a `stored` column in an existing table will cause table recreation. (Changing a `virtual` expression will cause column recreation).
-    2. Adding a `stored` generated expression to an existing column will cause table recreation. (Adding a `virtual` expression to an existing column will cause column recreation).
-    3. Changing the generated mode from `virtual` to `stored` will cause table recreation. (Switching from `stored` to `virtual` will cause column recreation).
+    #### 在 Drizzle Kit 中的行为
+	`push` 和 `generate` 命令：
+    1. 修改现有表中 `stored` 列的生成表达式会导致表重建。（修改 `virtual` 表达式会导致列重建）。
+    2. 为现有列添加 `stored` 生成表达式会导致表重建。（为现有列添加 `virtual` 表达式会导致列重建）。
+    3. 将生成模式从 `virtual` 改为 `stored` 会导致表重建。（从 `stored` 切换为 `virtual` 会导致列重建）。
 
   <CodeTabs items={["schema.ts"]}>
 	<CodeTab>

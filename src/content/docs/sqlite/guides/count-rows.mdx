@@ -1,5 +1,5 @@
 ---
-title: Count rows
+title: 统计行数
 ---
 import Section from "@mdx/Section.astro";
 import Prerequisites from "@mdx/Prerequisites.astro";
@@ -8,14 +8,14 @@ import CodeTab from '@mdx/CodeTab.astro';
 import Callout from '@mdx/Callout.astro';
 
 <Prerequisites>
-- Get started with [SQLite](/docs/sqlite/get-started-sqlite)
-- [Select statement](/docs/sqlite/select)
-- [Filters](/docs/sqlite/operators) and [sql operator](/docs/sqlite/sql)
-- [Aggregations](/docs/sqlite/select#aggregations) and [Aggregation helpers](/docs/sqlite/select#aggregations-helpers)
-- [Joins](/docs/sqlite/joins)
+- [SQLite 入门](/docs/sqlite/get-started-sqlite)
+- [Select 语句](/docs/sqlite/select)
+- [过滤器](/docs/sqlite/operators) 和 [sql 操作符](/docs/sqlite/sql)
+- [聚合](/docs/sqlite/select#聚合) 和 [聚合辅助函数](/docs/sqlite/select#聚合辅助函数)
+- [连接（Joins）](/docs/sqlite/joins)
 </Prerequisites>
 
-To count all rows in table you can use `count()` function or `sql` operator like below:
+要统计表中的所有行，你可以使用 `count()` 函数或 `sql` 操作符，如下所示：
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
   <CodeTab>
@@ -27,12 +27,12 @@ To count all rows in table you can use `count()` function or `sql` operator like
 
     await db.select({ count: count() }).from(products);
 
-    // Under the hood, the count() function casts its result to a number at runtime.
+    // 在底层，count() 函数会在运行时将其结果转换为 number。
     await db.select({ count: sql`count(*)`.mapWith(Number) }).from(products);
     ```
 
     ```ts
-    // result type
+    // 结果类型
     type Result = {
       count: number;
     }[];
@@ -54,7 +54,7 @@ To count all rows in table you can use `count()` function or `sql` operator like
   ```
 </CodeTabs>
 
-To count rows where the specified column contains non-NULL values you can use `count()` function with a column:
+要统计指定列包含非 NULL 值的行数，你可以将 `count()` 函数与某一列配合使用：
 
 <Section>
 ```ts copy {1}
@@ -62,7 +62,7 @@ await db.select({ count: count(products.discount) }).from(products);
 ```
 
 ```ts
-// result type
+// 结果类型
 type Result = {
   count: number;
 }[];
@@ -73,7 +73,7 @@ select count("discount") from products;
 ```
 </Section>
 
-In SQLite, `count()` result returns as integer.
+在 SQLite 中，`count()` 的结果以 integer 返回。
 
 <Section>
 ```ts copy {3,4}
@@ -90,14 +90,14 @@ select count("discount") from products;
 </Section>
 
 <Callout type="warning">
-By specifying `sql<number>`, you are telling Drizzle that the **expected** type of the field is `number`.<br />
-If you specify it incorrectly (e.g. use `sql<string>` for a field that will be returned as a number), the runtime value won't match the expected type.
-Drizzle cannot perform any type casts based on the provided type generic, because that information is not available at runtime.
+通过指定 `sql<number>`，你是在告诉 Drizzle 该字段的**预期**类型为 `number`。<br />
+如果你指定错误（例如对一个将返回 number 的字段使用 `sql<string>`），运行时的值将不会匹配预期类型。
+Drizzle 无法基于所提供的类型泛型执行任何类型转换，因为该信息在运行时不可用。
 
-If you need to apply runtime transformations to the returned value, you can use the [`.mapWith()`](/docs/sqlite/sql#sqlmapwith) method.
+如果你需要对返回值应用运行时转换，可以使用 [`.mapWith()`](/docs/sqlite/sql#sqlmapwith) 方法。
 </Callout>
 
-To count rows that match a condition you can use `.where()` method:
+要统计匹配某个条件的行数，你可以使用 `.where()` 方法：
 
 <Section>
 ```ts copy {4,6}
@@ -114,7 +114,7 @@ select count(*) from products where price > 100
 ```
 </Section>
 
-This is how you can use `count()` function with joins and aggregations:
+以下是将 `count()` 函数与连接和聚合配合使用的方式：
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
 	<CodeTab>
@@ -122,7 +122,7 @@ This is how you can use `count()` function with joins and aggregations:
     import { count, eq } from 'drizzle-orm';
     import { countries, cities } from './schema';
 
-    // Count cities in each country
+    // 统计每个国家中的城市数量
     await db
       .select({
         country: countries.name,

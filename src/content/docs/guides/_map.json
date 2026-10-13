@@ -1,45 +1,45 @@
 [
-  ["conditional-filters-in-query", "Conditional filters in query"],
-  ["incrementing-a-value", "Incrementing a value"],
-  ["decrementing-a-value", "Decrementing a value"],
-  ["include-or-exclude-columns", "Include or exclude columns"],
-  ["toggling-a-boolean-field", "Toggling a boolean field"],
-  ["count-rows", "Count rows"],
-  ["upsert", "Upsert Query"],
-  ["limit-offset-pagination", "Limit/Offset pagination"],
-  ["cursor-based-pagination", "Cursor-based pagination"],
-  ["timestamp-default-value", "Timestamp as a default value"],
-  ["gel-ext-auth", "Gel Auth extension with Drizzle"],
+  ["conditional-filters-in-query", "查询中的条件过滤器"],
+  ["incrementing-a-value", "递增一个值"],
+  ["decrementing-a-value", "递减一个值"],
+  ["include-or-exclude-columns", "包含或排除列"],
+  ["toggling-a-boolean-field", "切换布尔字段"],
+  ["count-rows", "统计行数"],
+  ["upsert", "Upsert 查询"],
+  ["limit-offset-pagination", "Limit/Offset 分页"],
+  ["cursor-based-pagination", "基于游标的分页"],
+  ["timestamp-default-value", "将时间戳作为默认值"],
+  ["gel-ext-auth", "在 Drizzle 中使用 Gel Auth 扩展"],
   [
     "select-parent-rows-with-at-least-one-related-child-row",
-    "Select parent rows with at least one related child row"
+    "选择至少有一个关联子行的父行"
   ],
-  ["empty-array-default-value", "Empty array as a default value"],
+  ["empty-array-default-value", "将空数组作为默认值"],
   [
     "update-many-with-different-value",
-    "Update many with different value for each row"
+    "为每一行更新不同的值"
   ],
   [
     "unique-case-insensitive-email",
-    "Unique and Case-Insensitive Email Handling"
+    "唯一且大小写不敏感的邮箱处理"
   ],
   [
     "vector-similarity-search",
-    "Vector similarity search with pgvector extension"
+    "使用 pgvector 扩展进行向量相似度搜索"
   ],
-  ["postgresql-full-text-search", "PostgreSQL full-text search"],
-  ["d1-http-with-drizzle-kit", "Cloudflare D1 HTTP API with Drizzle Kit"],
-  ["point-datatype-psql", "Point datatype in PostgreSQL"],
-  ["postgis-geometry-point", "PostGIS geometry point"],
-  ["postgresql-local-setup", "Local setup of PostgreSQL"],
-  ["mysql-local-setup", "Local setup of MySQL"],
+  ["postgresql-full-text-search", "PostgreSQL 全文搜索"],
+  ["d1-http-with-drizzle-kit", "将 Cloudflare D1 HTTP API 与 Drizzle Kit 一起使用"],
+  ["point-datatype-psql", "PostgreSQL 中的 Point 数据类型"],
+  ["postgis-geometry-point", "PostGIS 几何点"],
+  ["postgresql-local-setup", "本地搭建 PostgreSQL"],
+  ["mysql-local-setup", "本地搭建 MySQL"],
   [
     "seeding-with-partially-exposed-schema",
-    "Seeding Partially Exposed Tables with Foreign Key"
+    "为部分暴露的表填充种子数据（含外键）"
   ],
-  ["seeding-using-with-option", "Seeding using 'with' option"],
+  ["seeding-using-with-option", "使用 'with' 选项填充种子数据"],
   [
     "full-text-search-with-generated-columns",
-    "Full-text search with Generated Columns"
+    "使用生成列进行全文搜索"
   ]
 ]

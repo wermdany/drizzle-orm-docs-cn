@@ -1,5 +1,5 @@
 ---
-title: SQL Toggle value
+title: SQL 切换值
 ---
 import Section from "@mdx/Section.astro";
 import IsSupportedChipGroup from "@mdx/IsSupportedChipGroup.astro";
@@ -8,13 +8,13 @@ import Prerequisites from "@mdx/Prerequisites.astro";
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach)
-- [Update statement](/docs/update)
-- [Filters](/docs/operators) and [not operator](/docs/operators#not)
-- Boolean data type in [MySQL](/docs/mysql/column-types#boolean) and [SQLite](/docs/sqlite/column-types#boolean)
+- 从 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach) 开始
+- [更新语句](/docs/update)
+- [过滤器](/docs/operators) 和 [not operator](/docs/operators#not)
+- [MySQL](/docs/mysql/column-types#boolean) 和 [SQLite](/docs/sqlite/column-types#boolean) 中的布尔数据类型
 </Prerequisites>
 
-To toggle a column value you can use `update().set()` method like below:
+要切换某个列的值，你可以像下面这样使用 `update().set()` 方法：
 
 <Section>
 ```tsx copy {8}
@@ -35,6 +35,6 @@ update "table" set "is_active" = not "is_active" where "id" = 1;
 ```
 </Section>
 
-Please note that there is no boolean type in MySQL and SQLite.
-MySQL uses tinyint(1).
-SQLite uses integers 0 (false) and 1 (true). 
+请注意，MySQL 和 SQLite 中没有布尔类型。
+MySQL 使用 tinyint(1)。
+SQLite 使用整数 0（false）和 1（true）。

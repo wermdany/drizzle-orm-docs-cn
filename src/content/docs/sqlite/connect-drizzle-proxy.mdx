@@ -8,17 +8,17 @@ import Section from "@mdx/Section.astro";
 # Drizzle HTTP proxy
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
 </Prerequisites>
 
-How an HTTP Proxy works and why you might need it
+HTTP 代理如何工作以及你为什么可能需要它
 
-Drizzle Proxy is used when you need to implement your own driver communication with the database. 
-It can be used in several cases, such as adding custom logic at the query stage with existing drivers. 
-The most common use is with an HTTP driver, which sends queries to your server with the database, executes the query 
-on your database, and responds with raw data that Drizzle ORM can then map to results
+当你需要实现自己与数据库通信的驱动时，就会用到 Drizzle Proxy。
+它可用于多种场景，例如在查询阶段为现有驱动添加自定义逻辑。
+最常见的用法是配合 HTTP 驱动使用：它把查询发送到带有数据库的服务器，在你的数据库上执行查询，
+并返回原始数据，然后 Drizzle ORM 可以将其映射为结果
 
-<Callout collapsed="How it works under the hood?">
+<Callout collapsed="它在底层是如何工作的？">
 ```                                  
 ┌───────────────────────────┐                 ┌─────────────────────────────┐              
 │       Drizzle ORM         │                 │  HTTP Server with Database  │             
@@ -38,16 +38,16 @@ on your database, and responds with raw data that Drizzle ORM can then map to re
 ```
 </Callout>
 
-Drizzle ORM also supports simply using asynchronous callback function for executing SQL.
+Drizzle ORM 也支持简单地使用异步回调函数来执行 SQL。
 
-- `sql` is a query string with placeholders.
-- `params` is an array of parameters.
-- One of the following values will set for `method` depending on the SQL statement - `run`, `all`, `values` or `get`.
+- `sql` 是带占位符的查询字符串。
+- `params` 是参数数组。
+- 根据 SQL 语句，`method` 会被设置为以下值之一——`run`、`all`、`values` 或 `get`。
 
-Drizzle always waits for `{rows: string[][]}` or `{rows: string[]}` for the return value.
+Drizzle 始终等待 `{rows: string[][]}` 或 `{rows: string[]}` 作为返回值。
 
-- When the `method` is `get`, you should return a value as `{rows: string[]}`.
-- Otherwise, you should return `{rows: string[][]}`.
+- 当 `method` 为 `get` 时，你应该返回 `{rows: string[]}` 类型的值。
+- 否则，你应该返回 `{rows: string[][]}`。
 
 <br/>
 
@@ -68,11 +68,11 @@ const db = drizzle(async (sql, params, method) => {
 });
 ```
 
-**Batch support**
+**批量支持**
 
-Sqlite Proxy supports batch requests, the same as it's done for all other drivers. Check full [docs](/docs/sqlite/batch-api)
+Sqlite Proxy 支持批量请求，与其它所有驱动的做法相同。查看完整[文档](/docs/sqlite/batch-api)
 
-You will need to specify a specific callback for batch queries and handle requests to proxy server:
+你需要为批量查询指定一个特定的回调，并处理发往代理服务器的请求：
 
 ```ts
 import { drizzle } from 'drizzle-orm/sqlite-proxy';
@@ -81,7 +81,7 @@ import axios from 'axios';
 type ResponseType = { rows: any[][] | any[] }[];
 
 const db = drizzle(async (sql, params, method) => {
-  // single queries logic. Same as in code above
+  // 单条查询逻辑，与上面代码相同
 }, async (queries: { sql: string, params: any[], method: 'all' | 'run' | 'get' | 'values'}[]) => {
     try {
       const result: ResponseType = await axios.post('http://localhost:3000/batch', { queries });
@@ -94,13 +94,13 @@ const db = drizzle(async (sql, params, method) => {
   });
 ```
 
-And then you can use `db.batch([])` method, that will proxy all queries
+然后你就可以使用 `db.batch([])` 方法，它会代理所有查询
 
 <Callout>
-  Response from the batch should be an array of raw values (an array within an array), in the same order as they were sent to the proxy server
+  批量请求的响应应该是一个原始值数组（数组中的数组），其顺序与发送到代理服务器的顺序相同
 </Callout>
 
-Unless you plan on writing every SQL query by hand, a table declaration is helpful:
+除非你打算手写每一条 SQL 查询，否则声明一个表会很有帮助：
 ```typescript copy
 import { sql } from "drizzle-orm";
 import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
@@ -111,5 +111,5 @@ const users = sqliteTable('users', {
   intModifiers: integer('int_modifiers', { mode: 'boolean' }).notNull().default(false),
 });
 ```
-For more details about column types, see the **[SQLite column types in Drizzle.](/docs/sqlite/column-types)**
+关于列类型的更多细节，请参阅 **[Drizzle 中的 SQLite 列类型。](/docs/sqlite/column-types)**
 </Section>

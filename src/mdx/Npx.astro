@@ -10,7 +10,7 @@ const installLines = html
 const getCopyButton = (index: number) => {
   return `<div class="btn-container">
   <button
-    aria-label="Copy"
+    aria-label="复制"
     data-copy-btn
     class="button-wrap"
     data-code="${installLines.map((line) => `${installCommands[index]} ${line}`).join("\n")}"

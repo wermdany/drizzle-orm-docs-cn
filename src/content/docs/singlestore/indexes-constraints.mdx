@@ -1,22 +1,22 @@
 import Callout from '@mdx/Callout.astro';
 import Section from '@mdx/Section.astro';
 
-# Indexes & Constraints
+# 索引与约束
 
-## Constraints
+## 约束
 
-SQL constraints are the rules enforced on table columns. They are used to prevent invalid data from being entered into the database.
+SQL 约束是强制执行在表列上的规则。它们用于防止无效数据被写入数据库。
 
-This ensures the accuracy and reliability of your data in the database.
+这确保了数据库中数据的准确性和可靠性。
 
-### Default
+### 默认值
 
-The `DEFAULT` clause specifies a default value to use for the column if no value provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+`DEFAULT` 子句用于指定当用户执行 `INSERT` 时未提供值时该列使用的默认值。
+如果列定义上没有附加显式的 `DEFAULT` 子句，
+那么该列的默认值就是 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以指定默认值为 `NULL`、
+字符串常量、blob 常量、有符号数字，或任何用括号括起来的常量表达式。
 
 <Section>
     ```typescript
@@ -36,12 +36,12 @@ a string constant, a blob constant, a signed-number, or any constant expression 
     ```
     </Section>
 
-### Not null
+### 非空
 
-By default, a column can hold **NULL** values. The `NOT NULL` constraint enforces a column to **NOT** accept **NULL** values.  
+默认情况下，列可以保存 **NULL** 值。`NOT NULL` 约束强制列**不**接受 **NULL** 值。
 
-This enforces a field to always contain a value, which means that you cannot insert a new record,
-or update a record without adding a value to this field.
+这会强制字段始终包含一个值，这意味着你不能插入一条新记录，
+也不能在不为该字段添加值的情况下更新记录。
 
 <Section>
       ```typescript
@@ -59,16 +59,16 @@ or update a record without adding a value to this field.
       ```
     </Section>
 
-### Unique
+### 唯一
 
-The `UNIQUE` constraint ensures that all values in a column are different.  
+`UNIQUE` 约束确保某列中的所有值都不同。
 
-Both the `UNIQUE` and `PRIMARY KEY` constraints provide a guarantee for uniqueness for a column or set of columns.
+`UNIQUE` 和 `PRIMARY KEY` 约束都为一列或一组列提供唯一性保证。
 
-A `PRIMARY KEY` constraint automatically has a `UNIQUE` constraint.  
+`PRIMARY KEY` 约束自动带有 `UNIQUE` 约束。
 
 <Callout type="info" emoji="ℹ️">
-  You can have many `UNIQUE` constraints per table, but only one `PRIMARY KEY` constraint per table.
+  每张表可以有多个 `UNIQUE` 约束，但只能有一个 `PRIMARY KEY` 约束。
 </Callout>
 
 <Section>
@@ -112,12 +112,12 @@ A `PRIMARY KEY` constraint automatically has a `UNIQUE` constraint.
       ```
     </Section>
 
-### Primary Key
+### 主键
 
-The `PRIMARY KEY` constraint uniquely identifies each record in a table.  
-Primary keys must contain `UNIQUE` values, and cannot contain `NULL` values.  
+`PRIMARY KEY` 约束唯一标识表中的每条记录。
+主键必须包含 `UNIQUE` 值，并且不能包含 `NULL` 值。
 
-A table can have only **ONE** primary key; and in the table, this primary key can consist of single or multiple columns (fields).
+一张表只能有**一个**主键；并且在表中，这个主键可以由单个或多个列（字段）组成。
 
 <Section>
       ```typescript
@@ -143,11 +143,11 @@ A table can have only **ONE** primary key; and in the table, this primary key ca
       ```
     </Section>
 
-### Composite Primary Key
+### 复合主键
 
-Just like `PRIMARY KEY`, composite primary key uniquely identifies each record in a table using multiple fields.
+与 `PRIMARY KEY` 一样，复合主键使用多个字段唯一标识表中的每条记录。
 
-Drizzle ORM provides a standalone `primaryKey` operator for that:
+Drizzle ORM 为此提供了独立的 `primaryKey` 操作符：
 
 <Section>
       ```typescript {18, 19}
@@ -168,7 +168,7 @@ Drizzle ORM provides a standalone `primaryKey` operator for that:
         bookId: int("book_id"),
       }, (table) => [
         primaryKey({ columns: [table.bookId, table.authorId] }),
-        // Or PK with custom name
+        // 或使用自定义名称的 PK
         primaryKey({ name: 'custom_name', columns: [table.bookId, table.authorId] }),
       ]);
       ```
@@ -184,9 +184,9 @@ Drizzle ORM provides a standalone `primaryKey` operator for that:
       ```
     </Section>
 
-## Indexes
+## 索引
 
-Drizzle ORM provides API for both `index` and `unique index` declaration:
+Drizzle ORM 同时提供 `index` 和 `unique index` 声明的 API：
 
 <Section>
     ```typescript copy {9-10}

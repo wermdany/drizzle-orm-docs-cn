@@ -1,5 +1,5 @@
 ---
-title: SQL Timestamp as a default value
+title: SQL 时间戳作为默认值
 ---
 
 import Section from "@mdx/Section.astro";
@@ -8,14 +8,14 @@ import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql) and [SQLite](/docs/sqlite/get-started-sqlite)
-- Learn about column data types for [PostgreSQL](/docs/column-types), [MySQL](/docs/mysql/column-types) and [SQLite](/docs/sqlite/column-types)
+- 从 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql) 和 [SQLite](/docs/sqlite/get-started-sqlite) 开始
+- 了解 [PostgreSQL](/docs/column-types)、[MySQL](/docs/mysql/column-types) 和 [SQLite](/docs/sqlite/column-types) 的列数据类型
 - [sql operator](/docs/sql)
 </Prerequisites>
 
 ### PostgreSQL
 
-To set current timestamp as a default value in PostgreSQL, you can use the `defaultNow()` method or `sql` operator with `now()` function which returns the current date and time with the time zone:
+要在 PostgreSQL 中将当前时间戳设置为默认值，你可以使用 `defaultNow()` 方法，或配合 `now()` 函数的 `sql` operator，后者返回带时区的当前日期和时间：
 
 <Section>
 ```ts copy {6,9}
@@ -40,11 +40,11 @@ CREATE TABLE IF NOT EXISTS "users" (
 ```
 </Section>
 
-The `mode` option defines how values are handled in the application. Values with `string` mode are treated as `string` in the application, but stored as timestamps in the database.
+`mode` 选项定义了值在应用程序中的处理方式。采用 `string` mode 的值在应用程序中被视为 `string`，但在数据库中以时间戳形式存储。
 
 <Section>
 ```plaintext
-// Data stored in the database
+// 数据库中存储的数据
 +----+----------------------------+----------------------------+
 | id |         timestamp1         |         timestamp2         |
 +----+----------------------------+----------------------------+
@@ -53,18 +53,18 @@ The `mode` option defines how values are handled in the application. Values with
 ```
 
 ```ts
-// Data returned by the application
+// 应用程序返回的数据
 [
   {
     id: 1,
-    timestamp1: 2024-04-11T14:14:28.038Z, // Date object
-    timestamp2: '2024-04-11 14:14:28.038697' // string
+    timestamp1: 2024-04-11T14:14:28.038Z, // Date 对象
+    timestamp2: '2024-04-11 14:14:28.038697' // 字符串
   }
 ]
 ```
 </Section>
 
-To set unix timestamp as a default value in PostgreSQL, you can use the `sql` operator and `extract(epoch from now())` function which returns the number of seconds since `1970-01-01 00:00:00 UTC`:
+要在 PostgreSQL 中将 unix 时间戳设置为默认值，你可以使用 `sql` operator 和 `extract(epoch from now())` 函数，后者返回自 `1970-01-01 00:00:00 UTC` 起的秒数：
 
 <Section>
 ```ts copy {8}
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 ```
 
 ```plaintext
-// Data stored in the database
+// 数据库中存储的数据
 +----+------------+
 | id | timestamp  |
 +----+------------+
@@ -96,11 +96,11 @@ CREATE TABLE IF NOT EXISTS "users" (
 ```
 
 ```ts
-// Data returned by the application
+// 应用程序返回的数据
 [ 
   { 
     id: 1, 
-    timestamp: 1712846784 // number
+    timestamp: 1712846784 // 数字
   } 
 ]
 ```
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 
 ### MySQL
 
-To set current timestamp as a default value in MySQL, you can use the `defaultNow()` method or `sql` operator with `now()` function which returns the current date and time `(YYYY-MM-DD HH-MM-SS)`:
+要在 MySQL 中将当前时间戳设置为默认值，你可以使用 `defaultNow()` 方法，或配合 `now()` 函数的 `sql` operator，后者返回当前日期和时间 `(YYYY-MM-DD HH-MM-SS)`：
 
 <Section>
 ```ts copy {6,9,12}
@@ -122,7 +122,7 @@ export const users = mysqlTable('users', {
   timestamp2: timestamp('timestamp2', { mode: 'string' })
     .notNull()
     .default(sql`now()`),
-  timestamp3: timestamp('timestamp3', { fsp: 3 }) // fractional seconds part
+  timestamp3: timestamp('timestamp3', { fsp: 3 }) // 小数秒部分
     .notNull()
     .default(sql`now(3)`),
 });
@@ -139,12 +139,12 @@ CREATE TABLE `users` (
 ```
 </Section>
 
-`fsp` option defines the number of fractional seconds to include in the timestamp. The default value is `0`.
-The `mode` option defines how values are handled in the application. Values with `string` mode are treated as `string` in the application, but stored as timestamps in the database.
+`fsp` 选项定义时间戳中要包含的小数秒位数。默认值为 `0`。
+`mode` 选项定义了值在应用程序中的处理方式。采用 `string` mode 的值在应用程序中被视为 `string`，但在数据库中以时间戳形式存储。
 
 <Section>
 ```plaintext
-// Data stored in the database
+// 数据库中存储的数据
 +----+---------------------+---------------------+-------------------------+
 | id | timestamp1          | timestamp2          | timestamp3              |
 +----+---------------------+---------------------+-------------------------+
@@ -153,19 +153,19 @@ The `mode` option defines how values are handled in the application. Values with
 ```
 
 ```ts
-// Data returned by the application
+// 应用程序返回的数据
 [
   {
     id: 1,
-    timestamp1: 2024-04-11T15:24:53.000Z, // Date object
-    timestamp2: '2024-04-11 15:24:53', // string
-    timestamp3: 2024-04-11T15:24:53.236Z // Date object
+    timestamp1: 2024-04-11T15:24:53.000Z, // Date 对象
+    timestamp2: '2024-04-11 15:24:53', // 字符串
+    timestamp3: 2024-04-11T15:24:53.236Z // Date 对象
   }
 ]
 ```
 </Section>
 
-To set unix timestamp as a default value in MySQL, you can use the `sql` operator and `unix_timestamp()` function which returns the number of seconds since `1970-01-01 00:00:00 UTC`:
+要在 MySQL 中将 unix 时间戳设置为默认值，你可以使用 `sql` operator 和 `unix_timestamp()` 函数，后者返回自 `1970-01-01 00:00:00 UTC` 起的秒数：
 
 <Section>
 ```ts copy {8}
@@ -189,7 +189,7 @@ CREATE TABLE `users` (
 ```
 
 ```plaintext
-// Data stored in the database
+// 数据库中存储的数据
 +----+------------+
 | id | timestamp  |
 +----+------------+
@@ -198,11 +198,11 @@ CREATE TABLE `users` (
 ```
 
 ```ts
-// Data returned by the application
+// 应用程序返回的数据
 [ 
   { 
     id: 1, 
-    timestamp: 1712847986 // number
+    timestamp: 1712847986 // 数字
   } 
 ]
 ```
@@ -210,7 +210,7 @@ CREATE TABLE `users` (
 
 ### SQLite
 
-To set current timestamp as a default value in SQLite, you can use `sql` operator with `current_timestamp` constant which returns text representation of the current UTC date and time `(YYYY-MM-DD HH:MM:SS)`:
+要在 SQLite 中将当前时间戳设置为默认值，你可以使用 `sql` operator 和 `current_timestamp` 常量，后者返回当前 UTC 日期和时间的文本表示 `(YYYY-MM-DD HH:MM:SS)`：
 
 <Section>
 ```ts copy {8}
@@ -233,7 +233,7 @@ CREATE TABLE `users` (
 ```
 
 ```plaintext
-// Data stored in the database
+// 数据库中存储的数据
 +----+---------------------+
 | id | timestamp           |
 +----+---------------------+
@@ -242,17 +242,17 @@ CREATE TABLE `users` (
 ```
 
 ```ts
-// Data returned by the application
+// 应用程序返回的数据
 [
   {
     id: 1,
-    timestamp: '2024-04-11 15:40:43' // string
+    timestamp: '2024-04-11 15:40:43' // 字符串
   }
 ]
 ```
 </Section>
 
-To set unix timestamp as a default value in SQLite, you can use the `sql` operator and `unixepoch()` function which returns the number of seconds since `1970-01-01 00:00:00 UTC`:
+要在 SQLite 中将 unix 时间戳设置为默认值，你可以使用 `sql` operator 和 `unixepoch()` 函数，后者返回自 `1970-01-01 00:00:00 UTC` 起的秒数：
 
 <Section>
 ```ts copy {8,11,14}
@@ -283,12 +283,12 @@ CREATE TABLE `users` (
 ```
 </Section>
 
-The `mode` option defines how values are handled in the application. In the application, values with `timestamp` and `timestamp_ms` modes are treated as `Date` objects, but stored as integers in the database.
-The difference is that `timestamp` handles seconds, while `timestamp_ms` handles milliseconds.
+`mode` 选项定义了值在应用程序中的处理方式。在应用程序中，采用 `timestamp` 和 `timestamp_ms` mode 的值被视为 `Date` 对象，但在数据库中以整数形式存储。
+区别在于 `timestamp` 处理秒，而 `timestamp_ms` 处理毫秒。
 
 <Section>
 ```plaintext
-// Data stored in the database
+// 数据库中存储的数据
 +------------+------------+---------------+------------+
 | id         | timestamp1 | timestamp2    | timestamp3 |
 +------------+------------+---------------+------------+
@@ -297,13 +297,13 @@ The difference is that `timestamp` handles seconds, while `timestamp_ms` handles
 ```
 
 ```ts
-// Data returned by the application
+// 应用程序返回的数据
 [
   {
     id: 1,
-    timestamp1: 2024-04-11T11:40:40.000Z, // Date object
-    timestamp2: 2024-04-11T11:40:40.469Z, // Date object
-    timestamp3: 1712835640 // number
+    timestamp1: 2024-04-11T11:40:40.000Z, // Date 对象
+    timestamp2: 2024-04-11T11:40:40.469Z, // Date 对象
+    timestamp3: 1712835640 // 数字
   }
 ]
 ```

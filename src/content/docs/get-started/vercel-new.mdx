@@ -19,47 +19,47 @@ import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and Vercel Postgres
+# Drizzle 与 Vercel Postgres 入门
 
 <Prerequisites>
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **Vercel Postgres database** - [read here](https://vercel.com/docs/storage/vercel-postgres)
-  - **Vercel Postgres driver** - [read here](https://vercel.com/docs/storage/vercel-postgres/sdk) & [GitHub](https://github.com/vercel/storage/tree/main/packages/postgres)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **Vercel Postgres 数据库** - [阅读文档](https://vercel.com/docs/storage/vercel-postgres)
+  - **Vercel Postgres 驱动** - [阅读文档](https://vercel.com/docs/storage/vercel-postgres/sdk) & [GitHub](https://github.com/vercel/storage/tree/main/packages/postgres)
 </Prerequisites>
 
 <FileStructure/>
 
-#### Step 1 - Install required package
+#### 步骤 1 - 安装所需的包
 <InstallPackages lib='@vercel/postgres'/>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 设置连接变量
 
 <SetupEnv env_variable='POSTGRES_URL' />
 
-<Callout title='warning'>
-It's important to name the variable `POSTGRES_URL` for Vercel Postgres.
+<Callout title='警告'>
+对于 Vercel Postgres，务必将变量命名为 `POSTGRES_URL`。
 
-In the Vercel Postgres storage tab, you can find the `.env.local` tab and copy the `POSTGRES_URL` variable
+在 Vercel Postgres 存储标签页中，你可以找到 `.env.local` 标签页并复制 `POSTGRES_URL` 变量
 </Callout>
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 步骤 3 - 将 Drizzle ORM 连接到数据库
 
 <ConnectVercel/>
 
-#### Step 4 - Create a table
+#### 步骤 4 - 创建表
 
 <CreateTable />
 
-#### Step 5 - Setup Drizzle config file
+#### 步骤 5 - 设置 Drizzle 配置文件
 
 <SetupConfig dialect='postgresql' env_variable='POSTGRES_URL'/>
 
-#### Step 6 - Applying changes to the database
+#### 步骤 6 - 将变更应用到数据库
 
 <ApplyChanges />
 
-#### Step 7 - Seed and Query the database
+#### 步骤 7 - 填充种子数据并查询数据库
 
 ```typescript copy filename="src/index.ts"
 import 'dotenv/config';
@@ -105,6 +105,6 @@ async function main() {
 main();
 ```
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>

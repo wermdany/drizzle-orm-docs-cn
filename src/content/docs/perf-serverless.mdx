@@ -1,17 +1,17 @@
-# Drizzle Serverless performance
+# Drizzle Serverless 性能
 
-You can get immense benefits with `serverless functions` like AWS Lambda or Vercel Server Functions (they're AWS Lambda based), 
-since they can live up to 15mins and reuse both database connections and prepared statements.
+使用 `serverless functions`（如 AWS Lambda 或 Vercel Server Functions（它们基于 AWS Lambda））可以获得巨大的收益，
+因为它们最长可存活 15 分钟，并可以复用数据库连接和预编译语句。
 
-On the other, hand `edge functions` tend to clean up straight after they're invoked which leads to little to no performance benefits.
+另一方面，`edge functions` 往往在被调用后立即清理，因此几乎没有性能收益。
   
-To reuse your database connection and prepared statements you just have to declare them outside of handler scope:
+要复用你的数据库连接和预编译语句，你只需在 handler 作用域之外声明它们：
 ```ts
 const databaseConnection = ...;
 const db = drizzle({ client: databaseConnection });
 const prepared = db.select().from(...).prepare();
 
-// AWS handler
+// AWS 处理器
 export const handler = async (event: APIGatewayProxyEvent) => {
   return prepared.execute();
 }

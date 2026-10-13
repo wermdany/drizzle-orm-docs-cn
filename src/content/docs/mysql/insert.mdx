@@ -4,9 +4,9 @@ import Tab from '@mdx/Tab.astro';
 import Tabs from '@mdx/Tabs.astro';
 
 # SQL Insert
-Drizzle ORM provides you the most SQL-like way to insert rows into the database tables.
+Drizzle ORM 为你提供了最贴近 SQL 的方式向数据库表中插入行。
 
-Inserting data with Drizzle is extremely straightforward and sql-like. See for yourself:
+使用 Drizzle 插入数据极其直观且类似 sql。自己看看：
 
 <Section>
 ```typescript copy 
@@ -17,7 +17,7 @@ insert into `users` (`name`) values ('Andrew');
 ```
 </Section>
 
-If you need insert type for a particular table you can use `typeof usersTable.$inferInsert` syntax. 
+如果你需要某张特定表的插入类型，可以使用 `typeof usersTable.$inferInsert` 语法。
 ```typescript copy 
 type NewUser = typeof users.$inferInsert;
 
@@ -30,7 +30,7 @@ await insertUser(newUser);
 ```
 
 ## $returningId
-MySQL itself doesn't have native support for `RETURNING` after using `INSERT`. There is only one way to do it for `primary keys` with `autoincrement` (or `serial`) types, where you can access `insertId` and `affectedRows` fields. We've prepared an automatic way for you to handle such cases with Drizzle and automatically receive all inserted IDs as separate objects
+MySQL 本身并不原生支持在 `INSERT` 之后使用 `RETURNING`。对于带 `autoincrement`（或 `serial`）类型的 `primary keys`，只有一种方式可以做到，即访问 `insertId` 和 `affectedRows` 字段。我们为你准备了一种自动的方式，用 Drizzle 处理这类场景，并自动以独立对象的形式接收所有插入的 ID
 
 ```ts
 import { boolean, int, text, mysqlTable } from 'drizzle-orm/mysql-core';
@@ -46,7 +46,7 @@ const result = await db.insert(usersTable).values([{ name: 'John' }, { name: 'Jo
 //    ^? { id: number }[]
 ```
 
-Also with Drizzle, you can specify a `primary key` with `$default` function that will generate custom primary keys at runtime. We will also return those generated keys for you in the `$returningId()` call
+同样，使用 Drizzle 时，你可以通过 `$default` 函数指定一个会在运行时生成自定义主键的 `primary key`。我们也会在 `$returningId()` 调用中为你返回这些生成的键
 
 ```ts
 import { varchar, text, mysqlTable } from 'drizzle-orm/mysql-core';
@@ -62,29 +62,29 @@ const result = await db.insert(usersTableDefFn).values([{ name: 'John' }, { name
 //  ^? { customId: string }[]
 ```
 
-> If there is no primary keys -> type will be `{}[]` for such queries
+> 如果没有主键 -> 这类查询的类型将是 `{}[]`
 
-## Insert multiple rows
+## 插入多行
 ```typescript copy
 await db.insert(users).values([{ name: 'Andrew' }, { name: 'Dan' }]);
 ```
 
-## Upserts and conflicts
-Drizzle ORM provides simple interfaces for handling upserts and conflicts.
+## Upsert 和冲突
+Drizzle ORM 提供了简单的接口来处理 upsert 和冲突。
 
 ### On duplicate key update
-MySQL supports [`ON DUPLICATE KEY UPDATE`](https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html) instead of `ON CONFLICT` clauses. MySQL will automatically determine the conflict target based on the primary key and unique indexes, and will update the row if *any* unique index conflicts.
+MySQL 支持 [`ON DUPLICATE KEY UPDATE`](https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html)，而不是 `ON CONFLICT` 子句。MySQL 会根据主键和唯一索引自动确定冲突目标，并且当*任意*唯一索引发生冲突时更新该行。
 
-Drizzle supports this through the `onDuplicateKeyUpdate` method:
+Drizzle 通过 `onDuplicateKeyUpdate` 方法支持这一点：
 
 ```typescript
-// Note that MySQL automatically determines targets based on the primary key and unique indexes
+// 注意，MySQL 会根据主键和唯一索引自动确定目标
 await db.insert(users)
   .values({ id: 1, name: 'John' })
   .onDuplicateKeyUpdate({ set: { name: 'John' } });
 ```
 
-While MySQL does not directly support doing nothing on conflict, you can perform a no-op by setting any column's value to itself and achieve the same effect:
+虽然 MySQL 不直接支持在冲突时什么都不做，但你可以通过将任意列的值设为它本身来执行空操作，从而达到相同的效果：
 
 ```typescript
 import { sql } from 'drizzle-orm';
@@ -96,21 +96,21 @@ await db.insert(users)
 
 ## Insert into ... select
 
-As the MySQL documentation mentions:
+正如 MySQL 文档所提到的：
 
 <Callout>
-With INSERT ... SELECT, you can quickly insert many rows into a table from the result of a SELECT statement, which can select from one or many tables
+使用 INSERT ... SELECT，你可以根据 SELECT 语句的结果，快速向表中插入许多行，而该 SELECT 可以从一张或多张表中选择数据
 </Callout>
 
-Drizzle supports the current syntax for all dialects, and all of them share the same syntax. Let's review some common scenarios and API usage. 
-There are several ways to use select inside insert statements, allowing you to choose your preferred approach:
+Drizzle 为所有方言支持当前语法，并且它们都共享相同的语法。让我们回顾一些常见场景和 API 用法。
+在 insert 语句中使用 select 有几种方式，你可以选择自己喜欢的方式：
 
-- You can pass a query builder inside the select function.
-- You can use a query builder inside a callback.
-- You can pass an SQL template tag with any custom select query you want to use
+- 你可以在 select 函数中传入查询构建器。
+- 你可以在回调中使用查询构建器。
+- 你可以传入带有任意自定义 select 查询的 SQL 模板标签
 
 
-<Tabs items={["Query Builder", "Callback", "SQL template tag"]}>
+<Tabs items={["查询构建器", "回调", "SQL 模板标签"]}>
 <Tab>
 <Section>
 ```ts

@@ -9,35 +9,35 @@ import WhatsNextPostgres from "@mdx/WhatsNextPostgres.astro";
 
 <Prerequisites>
 
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- PlanetScale Postgres database - [docs](https://planetscale.com/docs/postgres)
-- Drizzle PostgreSQL drivers - [docs](/docs/get-started-postgresql)
+- 使用 Drizzle 进行[数据库连接基础](/docs/connect-overview)
+- PlanetScale Postgres 数据库 - [文档](https://planetscale.com/docs/postgres)
+- Drizzle PostgreSQL 驱动 - [文档](/docs/get-started-postgresql)
 
 </Prerequisites>
 
-PlanetScale offers both MySQL (Vitess) and PostgreSQL databases. This page covers connecting to PlanetScale Postgres.
+PlanetScale 同时提供 MySQL（Vitess）和 PostgreSQL 数据库。本页介绍如何连接到 PlanetScale Postgres。
 
-For PlanetScale MySQL, see the [PlanetScale MySQL connection guide](/docs/mysql/connect-planetscale).
+关于 PlanetScale MySQL，请参阅 [PlanetScale MySQL 连接指南](/docs/mysql/connect-planetscale)。
 
-With Drizzle ORM you can connect to PlanetScale Postgres using:
+使用 Drizzle ORM，你可以通过以下方式连接到 PlanetScale Postgres：
 
-- The standard `node-postgres` driver
-- The `@neondatabase/serverless` driver for serverless environments
+- 标准的 `node-postgres` 驱动
+- 适用于无服务器环境的 `@neondatabase/serverless` 驱动
 
-For detailed instructions on creating a PlanetScale Postgres database and obtaining credentials, see the [PlanetScale Postgres documentation](https://planetscale.com/docs/postgres/tutorials/planetscale-postgres-drizzle).
+关于创建 PlanetScale Postgres 数据库并获取凭据的详细说明，请参阅 [PlanetScale Postgres 文档](https://planetscale.com/docs/postgres/tutorials/planetscale-postgres-drizzle)。
 
 ## node-postgres
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 
 <Npm>
  drizzle-orm@rc pg
  -D drizzle-kit@rc @types/pg
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 
-<CodeTabs items={["Connection URL", "With config", "With existing client"]}>
+<CodeTabs items={["连接 URL", "带配置", "使用已有客户端"]}>
 ```typescript copy
 import { drizzle } from 'drizzle-orm/node-postgres';
 
@@ -75,28 +75,28 @@ const result = await db.execute("select 1");
 
 ## Neon serverless driver
 
-PlanetScale Postgres also supports connections via the [Neon serverless driver](https://planetscale.com/docs/postgres/connecting/neon-serverless-driver). This is a good option for serverless environments like Vercel Functions, Cloudflare Workers, or AWS Lambda.
+PlanetScale Postgres 也支持通过 [Neon serverless 驱动](https://planetscale.com/docs/postgres/connecting/neon-serverless-driver)进行连接。对于 Vercel Functions、Cloudflare Workers 或 AWS Lambda 等无服务器环境来说，这是一个不错的选择。
 
-The driver supports two modes:
+该驱动支持两种模式：
 
-- **HTTP mode** — Faster for single queries and non-interactive transactions
-- **WebSocket mode** — Required for interactive transactions or session-based features
+- **HTTP 模式** — 对单次查询和非交互式事务更快
+- **WebSocket 模式** — 交互式事务或基于会话的功能所必需
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 
 <Npm>
  drizzle-orm@rc @neondatabase/serverless
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 
 <CodeTabs items={["Neon HTTP", "Neon WebSockets"]}>
 ```typescript copy
 import { neon, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 
-// Required for PlanetScale Postgres connections
+// PlanetScale Postgres 连接所必需
 neonConfig.fetchEndpoint = (host) => `https://${host}/sql`;
 
 const sql = neon(process.env.DATABASE_URL!);
@@ -110,7 +110,7 @@ const result = await db.execute('select 1');
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 
-// Required for PlanetScale Postgres connections
+// PlanetScale Postgres 连接所必需
 neonConfig.pipelineConnect = false;
 neonConfig.wsProxy = (host, port) => `${host}/v2?address=${host}:${port}`;
 
@@ -121,13 +121,13 @@ const result = await db.execute('select 1');
 ````
 
 ```typescript copy
-// For Node.js environments - install 'ws' package
+// 适用于 Node.js 环境 - 安装 'ws' 包
 import ws from "ws";
 import { Pool, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-serverless";
 
 neonConfig.webSocketConstructor = ws;
-// Required for PlanetScale Postgres connections
+// PlanetScale Postgres 连接所必需
 neonConfig.pipelineConnect = false;
 neonConfig.wsProxy = (host, port) => `${host}/v2?address=${host}:${port}`;
 
@@ -140,19 +140,19 @@ const result = await db.execute("select 1");
 </Section>
 </CodeTabs>
 
-<Callout title="Connection URL format">
+<Callout title="连接 URL 格式">
   {`postgresql://{username}:{password}@{host}:{port}/postgres?sslmode=verify-full`}
 </Callout>
 
-<Callout title="Connection ports" type="info">
-  PlanetScale Postgres supports two connection ports:
+<Callout title="连接端口" type="info">
+  PlanetScale Postgres 支持两个连接端口：
 
-`5432`: Direct connection to PostgreSQL. Total connections are limited by your cluster's `max_connections` setting.
+`5432`：直接连接到 PostgreSQL。总连接数受集群的 `max_connections` 设置限制。
 
-`6432`: Connection via PgBouncer for connection pooling. Recommended when you have many simultaneous connections.
+`6432`：通过 PgBouncer 进行连接池连接。当你有大量并发连接时推荐使用。
 
   </Callout>
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres />

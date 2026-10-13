@@ -1,5 +1,5 @@
 ---
-title: "Drizzle with Encore"
+title: "Drizzle 与 Encore"
 date: "2026-02-02"
 svgs: ['<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="9.63139" height="40.8516" rx="4.8157" transform="matrix(0.873028 0.48767 -0.497212 0.867629 43.4805 67.3037)" fill="currentColor"></rect><rect width="9.63139" height="40.8516" rx="4.8157" transform="matrix(0.873028 0.48767 -0.497212 0.867629 76.9395 46.5342)" fill="currentColor"></rect><rect width="9.63139" height="40.8516" rx="4.8157" transform="matrix(0.873028 0.48767 -0.497212 0.867629 128.424 46.5352)" fill="currentColor"></rect><rect width="9.63139" height="40.8516" rx="4.8157" transform="matrix(0.873028 0.48767 -0.497212 0.867629 94.957 67.3037)" fill="currentColor"></rect></svg>', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="90.6 91 90.9 102.1" fill="currentColor"><path d="M181.4,170.2v22.9H90.6v-69.3c14.4-3.1,28.7-7.1,42.6-12c16.6-5.8,32.7-12.7,48.3-20.8v25.6 c-13.2,6.4-26.9,12-40.8,16.9c-15.7,5.5-31.8,9.9-48.1,13.3v0.2c30.1-2.8,59.7-7.7,88.9-14.5v23.5c-29.2,6.6-58.9,11.3-88.9,14v0.2 H181.4z"/></svg>']
 ---
@@ -12,10 +12,10 @@ import Section from "@mdx/Section.astro";
 import Callout from "@mdx/Callout.astro";
 import Prerequisites from "@mdx/Prerequisites.astro";
 
-This tutorial demonstrates how to use **Drizzle ORM** with **Encore**, an open source backend framework with built-in infrastructure automation and observability.
+本教程演示如何将 **Drizzle ORM** 与 **Encore** 结合使用，Encore 是一个开源后端框架，内置基础设施自动化和可观测性。
 
 <Prerequisites>
-  - You should have the Encore CLI installed. You can install it with:
+  - 你应该已经安装了 Encore CLI。可以使用以下命令安装：
   ```bash
   # macOS
   brew install encoredev/tap/encore
@@ -27,35 +27,35 @@ This tutorial demonstrates how to use **Drizzle ORM** with **Encore**, an open s
   iwr https://encore.dev/install.ps1 | iex
   ```
 
-  - You should have installed Drizzle ORM and [Drizzle kit](/docs/kit-overview). You can do this by running the following command:
+  - 你应该已经安装了 Drizzle ORM 和 [Drizzle kit](/docs/kit-overview)。可以通过运行以下命令来安装：
   <Npm>
       drizzle-orm@rc
       -D drizzle-kit@rc
   </Npm>
 </Prerequisites>
 
-## Setup Encore and Drizzle ORM
+## 设置 Encore 和 Drizzle ORM
 
 <Steps>
-#### Create a new Encore project
+#### 创建新的 Encore 项目
 
-You can create a new Encore project with Drizzle already configured:
+你可以创建一个已经配置好 Drizzle 的新 Encore 项目：
 
 ```bash
 encore app create my-app --example=ts/drizzle
 cd my-app
 ```
 
-Or if you have an existing Encore project, install Drizzle:
+或者，如果你已有 Encore 项目，请安装 Drizzle：
 
 <Npm>
     drizzle-orm@rc
     -D drizzle-kit@rc
 </Npm>
 
-#### Create the database
+#### 创建数据库
 
-Define your database in a `database.ts` file. Encore automatically provisions a PostgreSQL database locally using Docker and in the cloud when you deploy:
+在 `database.ts` 文件中定义你的数据库。Encore 会在本地使用 Docker 自动配置一个 PostgreSQL 数据库，并在部署时在云端配置：
 
 ```typescript copy filename="database.ts"
 import { SQLDatabase } from "encore.dev/storage/sqldb";
@@ -72,11 +72,11 @@ const db = new SQLDatabase("mydb", {
 export const orm = drizzle(db.connectionString, { schema });
 ```
 
-Setting `source: "drizzle"` tells Encore to use Drizzle's migration format.
+设置 `source: "drizzle"` 会告诉 Encore 使用 Drizzle 的迁移格式。
 
-#### Define your schema
+#### 定义你的 schema
 
-Create a `schema.ts` file to define your tables:
+创建一个 `schema.ts` 文件来定义你的表：
 
 ```typescript copy filename="schema.ts"
 import * as p from "drizzle-orm/pg-core";
@@ -89,9 +89,9 @@ export const users = p.pgTable("users", {
 });
 ```
 
-#### Setup Drizzle config
+#### 设置 Drizzle 配置
 
-Create a `drizzle.config.ts` file:
+创建一个 `drizzle.config.ts` 文件：
 
 ```typescript copy filename="drizzle.config.ts"
 import { defineConfig } from "drizzle-kit";
@@ -103,19 +103,19 @@ export default defineConfig({
 });
 ```
 
-#### Generate migrations
+#### 生成迁移
 
-Run Drizzle Kit to generate migrations from your schema:
+运行 Drizzle Kit 根据你的 schema 生成迁移：
 
 ```bash
 drizzle-kit generate
 ```
 
-This creates migration files in the `migrations` folder.
+这会在 `migrations` 文件夹中创建迁移文件。
 
-#### Create an API endpoint
+#### 创建 API 端点
 
-Use Drizzle in your Encore endpoints:
+在你的 Encore endpoint 中使用 Drizzle：
 
 ```typescript copy filename="users.ts"
 import { api } from "encore.dev/api";
@@ -149,23 +149,23 @@ export const create = api(
 );
 ```
 
-#### Run your application
+#### 运行你的应用
 
-Start your Encore app:
+启动你的 Encore 应用：
 
 ```bash
 encore run
 ```
 
-Encore automatically applies migrations when starting. Open [localhost:9400](http://localhost:9400) to see the local dashboard with API docs, database explorer, and tracing.
+Encore 在启动时会自动应用迁移。打开 [localhost:9400](http://localhost:9400) 查看本地控制台，其中包含 API 文档、数据库浏览器和链路追踪。
 </Steps>
 
 <Callout type="info">
-Migrations are automatically applied when you run your Encore application. You don't need to run `drizzle-kit migrate` manually.
+运行 Encore 应用时，迁移会自动应用。你无需手动运行 `drizzle-kit migrate`。
 </Callout>
 
-## Learn more
+## 了解更多
 
-- [Encore Documentation](https://encore.dev/docs)
-- [Encore Drizzle Guide](https://encore.dev/docs/ts/develop/orms/drizzle)
-- [Drizzle ORM Documentation](/docs/overview)
+- [Encore 文档](https://encore.dev/docs)
+- [Encore Drizzle 指南](https://encore.dev/docs/ts/develop/orms/drizzle)
+- [Drizzle ORM 文档](/docs/overview)

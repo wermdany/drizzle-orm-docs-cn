@@ -1,18 +1,18 @@
 import Callout from '@mdx/Callout.astro';
 import Section from '@mdx/Section.astro';
 
-# Views
+# 视图
 
-There're several ways you can declare views with Drizzle ORM.  
+你可以在 Drizzle ORM 中用多种方式声明视图。  
 
-You can declare views that have to be created or you can declare views that already exist in the database. 
+你可以声明需要创建的视图，也可以声明数据库中已存在的视图。 
 
-You can declare views statements with an inline `query builder` syntax, with `standalone query builder` and with raw `sql` operators. 
+你可以使用内联 `query builder` 语法、`standalone query builder` 以及原生 `sql` 操作符来声明视图语句。 
 
-When views are created with either inlined or standalone query builders, view columns schema will be automatically inferred, 
-yet when you use `sql` you have to explicitly declare view columns schema.
+当使用内联或独立查询构建器创建视图时，视图列 schema 会被自动推断，
+而当你使用 `sql` 时，则必须显式声明视图列 schema。
 
-### Declaring views
+### 声明视图
 
 <Section>
       ```ts filename="schema.ts" copy {14-15}
@@ -38,7 +38,7 @@ yet when you use `sql` you have to explicitly declare view columns schema.
       ```
     </Section>
 
-You can also declare views using `standalone query builder`, it works exactly the same way:
+你也可以使用 `standalone query builder` 来声明视图，其工作方式完全相同：
 
 <Section>
       ```ts filename="schema.ts" copy {4,16-17}
@@ -66,9 +66,9 @@ You can also declare views using `standalone query builder`, it works exactly th
       ```
     </Section>
 
-### Declaring views with raw SQL
-Whenever you need to declare view using a syntax that is not supported by the query builder, 
-you can directly use `sql` operator and explicitly specify view columns schema.
+### 使用原始 SQL 声明视图
+当你需要使用查询构建器不支持的语法来声明视图时，
+你可以直接使用 `sql` 操作符并显式指定视图列 schema。
 
 ```ts copy
 import { eq, sql } from "drizzle-orm";
@@ -90,9 +90,9 @@ export const newYorkers = mssqlView("new_yorkers", {
 CREATE VIEW [new_yorkers] AS select * from [users] where [users].[city_id] = 1;
 ```
 
-### Declaring existing views
-When you're provided with a read only access to an existing view in the database you should use `.existing()` view configuration, 
-`drizzle-kit` will ignore and will not generate a `create view` statement in the generated migration.
+### 声明已存在的视图
+当你只有对数据库中某个已存在视图的只读访问权限时，你应该使用 `.existing()` 视图配置，
+`drizzle-kit` 会忽略它，不会在生成的迁移中生成 `create view` 语句。
 
 ```ts {17}
 import { int, mssqlTable, mssqlView, nvarchar, datetime2 } from "drizzle-orm/mssql-core";
@@ -114,9 +114,9 @@ export const trimmedUser = mssqlView("trimmed_user", {
 }).existing();
 ```
 
-### Extended example
+### 扩展示例
 <Callout type="info" emoji="ℹ️">
-All the parameters inside the query will be inlined, instead of being parameterised.
+查询内部的所有参数都会被内联，而不是被参数化。
 </Callout>
 
 ```ts copy

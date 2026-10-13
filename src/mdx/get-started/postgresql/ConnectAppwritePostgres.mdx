@@ -1,9 +1,9 @@
 import CodeTabs from "@mdx/CodeTabs.astro";
 import Callout from '@mdx/Callout.astro';
 
-Create a `index.ts` file in the `src` directory and initialize the connection:
+在 `src` 目录中创建 `index.ts` 文件并初始化连接：
 
-<CodeTabs items={["node-postgres", "node-postgres with config", "your node-postgres driver"]}>
+<CodeTabs items={["node-postgres", "带配置的 node-postgres", "你现有的 node-postgres 驱动"]}>
 ```typescript copy
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -14,7 +14,7 @@ const db = drizzle(process.env.DATABASE_URL!);
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 
-// You can specify any property from the node-postgres connection options
+// 你可以指定 node-postgres 连接选项中的任意属性
 const db = drizzle({ 
   connection: { 
     connectionString: process.env.DATABASE_URL!,
@@ -34,8 +34,8 @@ const db = drizzle({ client: pool });
 ```
 </CodeTabs>
 
-<Callout title='Connection ports' type='info'>
-Appwrite Postgres supports two connection ports on the same hostname:
-- **Port 5432** — Direct connection to the PostgreSQL engine. Use it for Drizzle Kit migrations and introspection.
-- **Port 6432** — Connection via the [connection pooler](https://appwrite.io/docs/products/databases/postgresql/connection-pooling) in transaction mode. Recommended for serverless and edge environments. See the [Appwrite Postgres connection guide](/docs/connect-appwrite-postgres#connection-pooling-for-serverless) for details.
+<Callout title='连接端口' type='info'>
+Appwrite Postgres 在同一主机名上支持两个连接端口：
+- **Port 5432** — 直接连接到 PostgreSQL 引擎。用于 Drizzle Kit 迁移和内省。
+- **Port 6432** — 通过事务模式下的[连接池](https://appwrite.io/docs/products/databases/postgresql/connection-pooling)连接。推荐用于 serverless 和边缘环境。详见 [Appwrite Postgres 连接指南](/docs/connect-appwrite-postgres#面向-serverless-的连接池)。
 </Callout>

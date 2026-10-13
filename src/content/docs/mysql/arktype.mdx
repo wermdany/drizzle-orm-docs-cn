@@ -3,7 +3,7 @@ import Callout from '@mdx/Callout.astro';
 
 # arktype
 
-### Install the dependencies
+### 安装依赖
 
 <Npm>
 drizzle-orm@rc arktype
@@ -11,7 +11,7 @@ drizzle-orm@rc arktype
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询到的数据形状——可用于校验 API 响应。
 
 ```ts copy
 import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -27,13 +27,13 @@ const users = mysqlTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // Error: `age` is not returned in the above query
+const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // 错误：上面的查询中没有返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // Will parse successfully
+const parsed: ArkErrors | { id: number; name: string; age: number } = userSelectSchema(rows[0]); // 将成功解析
 ```
 
-Views are also supported.
+也支持视图。
 
 ```ts copy
 import { mysqlView } from 'drizzle-orm/mysql-core';
@@ -47,7 +47,7 @@ const parsed: ArkErrors | { id: number; name: string; age: number } = usersViewS
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据形状——可用于校验 API 请求。
 
 ```ts copy
 import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -63,10 +63,10 @@ const users = mysqlTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: ArkErrors | { id?: number | undefined, name: string, age: number } = userInsertSchema(user); // Error: `age` is not defined
+const parsed: ArkErrors | { id?: number | undefined, name: string, age: number } = userInsertSchema(user); // 错误：`age` 未定义
 
 const user = { name: 'Jane', age: 30 };
-const parsed: ArkErrors | { id?: number | undefined, name: string, age: number } = userInsertSchema(user); // Will parse successfully
+const parsed: ArkErrors | { id?: number | undefined, name: string, age: number } = userInsertSchema(user); // 将成功解析
 
 if (parsed instanceof ArkErrors) {
   console.error(parsed.summary);
@@ -78,7 +78,7 @@ await db.insert(users).values(parsed);
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据形状——可用于校验 API 请求。
 
 ```ts copy
 import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -96,7 +96,7 @@ const users = mysqlTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { age: 35 };
-const parsed:  ArkErrors | { id?: number | undefined, name?: string | undefined, age?: number | undefined } = userUpdateSchema(user); // Will parse successfully
+const parsed:  ArkErrors | { id?: number | undefined, name?: string | undefined, age?: number | undefined } = userUpdateSchema(user); // 将成功解析
 
 if (parsed instanceof ArkErrors) {
   console.error(parsed.summary);
@@ -106,9 +106,9 @@ if (parsed instanceof ArkErrors) {
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a arktype schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，你可以用它来扩展、修改或完全覆盖某个字段的 schema。定义回调函数会扩展或修改 schema，而提供一个 arktype schema 则会覆盖它。
 
 ```ts copy
 import { int, json, mysqlTable, text } from 'drizzle-orm/mysql-core';
@@ -123,9 +123,9 @@ const users = mysqlTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => pipe(schema, maxLength(20)), // Extends schema
-  bio: (schema) => pipe(schema, maxLength(1000)), // Extends schema before becoming nullable/optional
-  preferences: object({ theme: string() }) // Overwrites the field, including its nullability
+  name: (schema) => pipe(schema, maxLength(20)), // 扩展 schema
+  bio: (schema) => pipe(schema, maxLength(1000)), // 在变为可空/可选之前扩展 schema
+  preferences: object({ theme: string() }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: ArkErrors | {
@@ -138,7 +138,7 @@ const parsed: ArkErrors | {
 } = userSelectSchema(...);
 ```
 
-### Data type reference
+### 数据类型参考
 
 ```ts
 mysql.boolean();
@@ -236,28 +236,28 @@ type(`/^[01]{0,${length ?? "*"}}$/`)
 mysql.tinytext();
 
 // Schema
-type.string.atMostLength(255); // unsigned 8-bit integer limit
+type.string.atMostLength(255); // 无符号 8 位整数上限
 ```
 
 ```ts
 mysql.text();
 
 // Schema
-type.string.atMostLength(65_535); // unsigned 16-bit integer limit
+type.string.atMostLength(65_535); // 无符号 16 位整数上限
 ```
 
 ```ts
 mysql.mediumtext();
 
 // Schema
-type.string.atMostLength(16_777_215); // unsigned 24-bit integer limit
+type.string.atMostLength(16_777_215); // 无符号 24 位整数上限
 ```
 
 ```ts
 mysql.longtext();
 
 // Schema
-type.string.atMostLength(4_294_967_295); // unsigned 32-bit integer limit
+type.string.atMostLength(4_294_967_295); // 无符号 32 位整数上限
 ```
 
 ```ts
@@ -276,70 +276,70 @@ type.enumerated(...enum);
 mysql.tinyint();
 
 // Schema
-type.keywords.number.integer.atLeast(-128).atMost(127); // 8-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(-128).atMost(127); // 8 位整数的下限和上限
 ```
 
 ```ts
 mysql.tinyint({ unsigned: true });
 
 // Schema
-type.keywords.number.integer.atLeast(0).atMost(255); // unsigned 8-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(0).atMost(255); // 无符号 8 位整数的下限和上限
 ```
 
 ```ts
 mysql.smallint();
 
 // Schema
-type.keywords.number.integer.atLeast(-32_768).atMost(32_767); // 16-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(-32_768).atMost(32_767); // 16 位整数的下限和上限
 ```
 
 ```ts
 mysql.smallint({ unsigned: true });
 
 // Schema
-type.keywords.number.integer.atLeast(0).atMost(65_535); // unsigned 16-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(0).atMost(65_535); // 无符号 16 位整数的下限和上限
 ```
 
 ```ts
 mysql.float();
 
 // Schema
-type.number.atLeast(-8_388_608).atMost(8_388_607); // 24-bit integer lower and upper limit
+type.number.atLeast(-8_388_608).atMost(8_388_607); // 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.mediumint();
 
 // Schema
-type.keywords.number.integer.atLeast(-8_388_608).atMost(8_388_607); // 24-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(-8_388_608).atMost(8_388_607); // 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.float({ unsigned: true });
 
 // Schema
-type.number.atLeast(0).atMost(16_777_215); // unsigned 24-bit integer lower and upper limit
+type.number.atLeast(0).atMost(16_777_215); // 无符号 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.mediumint({ unsigned: true });
 
 // Schema
-type.keywords.number.integer.atLeast(0).atMost(16_777_215); // unsigned 24-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(0).atMost(16_777_215); // 无符号 24 位整数的下限和上限
 ```
 
 ```ts
 mysql.int();
 
 // Schema
-type.keywords.number.integer.atLeast(-2_147_483_648).atMost(2_147_483_647); // 32-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(-2_147_483_648).atMost(2_147_483_647); // 32 位整数的下限和上限
 ```
 
 ```ts
 mysql.int({ unsigned: true });
 
 // Schema
-type.keywords.number.integer.atLeast(0).atMost(4_294_967_295); // unsgined 32-bit integer lower and upper limit
+type.keywords.number.integer.atLeast(0).atMost(4_294_967_295); // 无符号 32 位整数的下限和上限
 ```
 
 ```ts
@@ -347,14 +347,14 @@ mysql.double();
 mysql.real();
 
 // Schema
-type.number.atLeast(-140_737_488_355_328).atMost(140_737_488_355_327); // 48-bit integer lower and upper limit
+type.number.atLeast(-140_737_488_355_328).atMost(140_737_488_355_327); // 48 位整数的下限和上限
 ```
 
 ```ts
 mysql.double({ unsigned: true });
 
 // Schema
-type.number.atLeast(0).atMost(281_474_976_710_655); // unsigned 48-bit integer lower and upper limit
+type.number.atLeast(0).atMost(281_474_976_710_655); // 无符号 48 位整数的下限和上限
 ```
 
 ```ts
@@ -370,7 +370,7 @@ mysql.decimal({ mode: 'bigint' });
 // Schema
 type.bigint.narrow(
   (value, ctx) => value < -9_223_372_036_854_775_808n ? ctx.mustBe('greater than') : value > 9_223_372_036_854_775_807n ? ctx.mustBe('less than') : true
-); // 64-bit integer lower and upper limit
+); // 64 位整数的下限和上限
 ```
 
 ```ts
@@ -386,21 +386,21 @@ mysql.decimal({ mode: 'bigint', unsigned: true });
 // Schema
 type.bigint.narrow(
   (value, ctx) => value < 0n ? ctx.mustBe('greater than') : value > 18_446_744_073_709_551_615n ? ctx.mustBe('less than') : true
-); // unsigned 64-bit integer lower and upper limit
+); // 无符号 64 位整数的下限和上限
 ```
 
 ```ts
 mysql.bigint({ mode: 'number' });
 
 // Schema
-type.keywords.number.integer.atLeast(-9_007_199_254_740_991).atMost(9_007_199_254_740_991); // Javascript min. and max. safe integers
+type.keywords.number.integer.atLeast(-9_007_199_254_740_991).atMost(9_007_199_254_740_991); // Javascript 最小和最大安全整数
 ```
 
 ```ts
 mysql.bigint({ mode: 'number', unsigned: true });
 
 // Schema
-type.keywords.number.integer.atLeast(0).atMost(9_007_199_254_740_991); // Javascript min. and max. safe integers
+type.keywords.number.integer.atLeast(0).atMost(9_007_199_254_740_991); // Javascript 最小和最大安全整数
 ```
 
 ```ts
@@ -457,7 +457,7 @@ mysql.bigint({ mode: 'bigint' });
 // Schema
 type.bigint.narrow(
   (value, ctx) => value < -9_223_372_036_854_775_808n ? ctx.mustBe('greater than') : value > 9_223_372_036_854_775_807n ? ctx.mustBe('less than') : true
-); // 64-bit integer lower and upper limit
+); // 64 位整数的下限和上限
 ```
 
 ```ts
@@ -466,14 +466,14 @@ mysql.bigint({ mode: 'bigint', unsigned: true });
 // Schema
 type.bigint.narrow(
   (value, ctx) => value < 0n ? ctx.mustBe('greater than') : value > 18_446_744_073_709_551_615n ? ctx.mustBe('less than') : true
-); // unsigned 64-bit integer lower and upper limit
+); // 无符号 64 位整数的下限和上限
 ```
 
 ```ts
 mysql.serial();
 
 // Schema
-type.keywords.number.integer.atLeast(0).atMost(9_007_199_254_740_991); // Javascript max. safe integer
+type.keywords.number.integer.atLeast(0).atMost(9_007_199_254_740_991); // Javascript 最大安全整数
 ```
 
 ```ts

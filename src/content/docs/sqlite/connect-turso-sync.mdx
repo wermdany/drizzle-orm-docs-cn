@@ -11,53 +11,53 @@ import LibsqlTabs from "@mdx/LibsqlTabs.mdx";
 # Drizzle \<\> Turso Database Sync
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
-- Turso Database - [website](https://docs.turso.tech/introduction)
-- Turso Database sync driver - [GitHub](https://github.com/tursodatabase/turso/tree/main/bindings/javascript/sync)
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
+- Turso Database - [网站](https://docs.turso.tech/introduction)
+- Turso Database sync 驱动 - [GitHub](https://github.com/tursodatabase/turso/tree/main/bindings/javascript/sync)
 </Prerequisites>
 
-According to the **[official website](https://docs.turso.tech/introduction)**, 
-Turso is the small database to power your big dreams in the age of AI.
+根据 **[官方网站](https://docs.turso.tech/introduction)**，
+Turso 是在 AI 时代为你的宏大梦想提供动力的小型数据库。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
  drizzle-orm@rc @tursodatabase/sync
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并执行查询
 ```typescript
 import { drizzle } from 'drizzle-orm/tursodatabase-sync';
 
 const db = drizzle({
 	connection: {
-    	path: 'local.db',                // path used as a prefix for local files created by sync-engine
-    	url: 'https://<db>.turso.io',    // URL of the remote database: turso db show <db>
-    	authToken: '...',                // auth token issued from the Turso Cloud: turso db tokens create <db>
-    	clientName: 'turso-sync-example' // arbitrary client name
+    	path: 'local.db',                // 用作 sync-engine 创建的本地文件前缀的路径
+    	url: 'https://<db>.turso.io',    // 远程数据库的 URL：turso db show <db>
+    	authToken: '...',                // 由 Turso Cloud 签发的 auth token：turso db tokens create <db>
+    	clientName: 'turso-sync-example' // 任意客户端名称
 	}
 });
 
 const result = await db.all('select 1');
 ```
 
-If you need to provide your existing drivers:
+如果你需要提供已有的驱动：
 
 ```typescript
 import { connect } from '@tursodatabase/sync';
 import { drizzle } from 'drizzle-orm/tursodatabase-sync';
 
 const client = await connect({
-    path: 'local.db',                // path used as a prefix for local files created by sync-engine
-    url: 'https://<db>.turso.io',    // URL of the remote database: turso db show <db>
-    authToken: '...',                // auth token issued from the Turso Cloud: turso db tokens create <db>
-    clientName: 'turso-sync-example' // arbitrary client name
+    path: 'local.db',                // 用作 sync-engine 创建的本地文件前缀的路径
+    url: 'https://<db>.turso.io',    // 远程数据库的 URL：turso db show <db>
+    authToken: '...',                // 由 Turso Cloud 签发的 auth token：turso db tokens create <db>
+    clientName: 'turso-sync-example' // 任意客户端名称
 });
 const db = drizzle({ client });
 
 const result = await db.all('select 1');
 ```
 
-#### What's next?
+#### 下一步？
 
 <WhatsNextSQLite/>

@@ -3,14 +3,14 @@ import Callout from '@mdx/Callout.astro';
 
 # typebox-legacy
 
-### Install the dependencies
+### 安装依赖
 <Npm>
 drizzle-orm@rc @sinclair/typebox
 </Npm>
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询的数据的形状——可用于校验 API 响应。
 
 ```ts copy
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -26,13 +26,13 @@ const users = sqliteTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // Error: `age` is not returned in the above query
+const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // 错误：上面的查询未返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // Will parse successfully
+const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // 将解析成功
 ```
 
-Views are also supported.
+也支持视图。
 
 ```ts copy
 import { sqliteView } from 'drizzle-orm/sqlite-core';
@@ -47,7 +47,7 @@ const parsed: { id: number; name: string; age: number } = Value.Parse(usersViewS
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据的形状——可用于校验 API 请求。
 
 ```ts copy
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -63,16 +63,16 @@ const users = sqliteTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // Error: `age` is not defined
+const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // 错误：`age` 未定义
 
 const user = { name: 'Jane', age: 30 };
-const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // Will parse successfully
+const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // 将解析成功
 await db.insert(users).values(parsed);
 ```
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据的形状——可用于校验 API 请求。
 
 ```ts copy
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -88,13 +88,13 @@ const users = sqliteTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { age: 35 };
-const parsed: { name?: string | undefined, age?: number | undefined } = Value.Parse(userUpdateSchema, user); // Will parse successfully
+const parsed: { name?: string | undefined, age?: number | undefined } = Value.Parse(userUpdateSchema, user); // 将解析成功
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a Typebox schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，你可以用它来扩展、修改或完全覆盖某个字段的 schema。定义回调函数会扩展或修改，而提供一个 Typebox schema 则会覆盖它。
 
 ```ts copy
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -110,9 +110,9 @@ const users = sqliteTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => Type.String({ ...schema, maxLength: 20 }), // Extends schema
-  bio: (schema) => Type.String({ ...schema, maxLength: 1000 }), // Extends schema before becoming nullable/optional
-  preferences: Type.Object({ theme: Type.String() }) // Overwrites the field, including its nullability
+  name: (schema) => Type.String({ ...schema, maxLength: 20 }), // 扩展 schema
+  bio: (schema) => Type.String({ ...schema, maxLength: 1000 }), // 在变为可空/可选之前扩展 schema
+  preferences: Type.Object({ theme: Type.String() }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: {
@@ -125,16 +125,16 @@ const parsed: {
 } = Value.Parse(userSelectSchema, ...);
 ```
 
-### Factory functions
+### 工厂函数
 
-For more advanced use cases, you can use the `createSchemaFactory` function.
+对于更高级的用例，你可以使用 `createSchemaFactory` 函数。
 
-**Use case: Using an extended Typebox instance**
+**用例：使用扩展的 Typebox 实例**
 
 ```ts copy
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { createSchemaFactory } from 'drizzle-orm/typebox';
-import { t } from 'elysia'; // Extended Typebox instance
+import { t } from 'elysia'; // 扩展的 Typebox 实例
 
 const users = sqliteTable('users', {
   id: integer().primaryKey({ autoIncrement: true }),
@@ -145,12 +145,12 @@ const users = sqliteTable('users', {
 const { createInsertSchema } = createSchemaFactory({ typeboxInstance: t });
 
 const userInsertSchema = createInsertSchema(users, {
-  // We can now use the extended instance
+  // 现在我们可以使用扩展的实例
   name: (schema) => t.Number({ ...schema }, { error: '`name` must be a string' })
 });
 ```
 
-### Data type reference
+### 数据类型参考
 
 ```ts
 sqlite.integer({ mode: 'boolean' });
@@ -179,14 +179,14 @@ Type.String();
 sqlite.numeric({ mode: 'number' });
 
 // Schema
-Type.Number({ minimum: -9_007_199_254_740_991, maximum: 9_007_199_254_740_991 }); // Javascript min. and max. safe integers
+Type.Number({ minimum: -9_007_199_254_740_991, maximum: 9_007_199_254_740_991 }); // Javascript 安全整数的最小值和最大值
 ```
 
 ```ts
 sqlite.numeric({ mode: 'bigint' });
 
 // Schema
-Type.BigInt({ minimum: -9_223_372_036_854_775_808n, maximum: 9_223_372_036_854_775_807n }); // 64-bit integer lower and upper limit
+Type.BigInt({ minimum: -9_223_372_036_854_775_808n, maximum: 9_223_372_036_854_775_807n }); // 64 位整数的上下限
 ```
 
 ```ts
@@ -207,21 +207,21 @@ Type.Enum(enum);
 sqlite.real();
 
 // Schema
-Type.Number({ minimum: -140_737_488_355_328, maximum: 140_737_488_355_327 }); // 48-bit integer lower and upper limit
+Type.Number({ minimum: -140_737_488_355_328, maximum: 140_737_488_355_327 }); // 48 位整数的上下限
 ```
 
 ```ts
 sqlite.integer({ mode: 'number' });
 
 // Schema
-Type.Integer({ minimum: -9_007_199_254_740_991, maximum: 9_007_199_254_740_991 }); // Javascript min. and max. safe integers
+Type.Integer({ minimum: -9_007_199_254_740_991, maximum: 9_007_199_254_740_991 }); // Javascript 安全整数的最小值和最大值
 ```
 
 ```ts
 sqlite.blob({ mode: 'bigint' });
 
 // Schema
-Type.BigInt({ minimum: -9_223_372_036_854_775_808n, maximum: 9_223_372_036_854_775_807n }); // 64-bit integer lower and upper limit
+Type.BigInt({ minimum: -9_223_372_036_854_775_808n, maximum: 9_223_372_036_854_775_807n }); // 64 位整数的上下限
 ```
 
 ```ts

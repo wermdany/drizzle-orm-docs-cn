@@ -9,23 +9,23 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> AWS Data API Postgres
 
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- AWS Data API - [website](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/data-api.html)
-- AWS SDK - [website](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-rds-data/)
+- 使用 Drizzle 的数据库[连接基础](/docs/connect-overview)
+- AWS Data API - [网站](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/data-api.html)
+- AWS SDK - [网站](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-rds-data/)
 </Prerequisites>
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <Npm>
  drizzle-orm@rc @aws-sdk/client-rds-data
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 ```typescript copy
 import { drizzle } from 'drizzle-orm/aws-data-api/pg';
 
-// These three properties are required. You can also specify
-// any property from the RDSDataClient type inside the connection object.
+// 这三个属性是必需的。你也可以在 connection 对象内指定
+// RDSDataClient 类型中的任意属性。
 const db = drizzle({ connection: {
   database: process.env['DATABASE']!,
   secretArn: process.env['SECRET_ARN']!,
@@ -35,7 +35,7 @@ const db = drizzle({ connection: {
 await db.select().from(...);
 ```
 
-If you need to provide your existing driver:
+如果你需要提供自己已有的驱动：
 
 ```typescript copy
 import { drizzle } from 'drizzle-orm/aws-data-api/pg';
@@ -53,6 +53,6 @@ const db = drizzle({
 await db.select().from(...);
 ```
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres/>

@@ -22,44 +22,44 @@ import UpdateSchema from '@mdx/get-started/sqlite/UpdateSchema.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and SQLite Cloud in existing project
+# 在现有项目中使用 Drizzle 与 SQLite Cloud 入门
 
 <Prerequisites>
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **SQLite Cloud database** - [read here](https://docs.sqlitecloud.io/docs/overview)
-  - **SQLite Cloud driver** - [read here](https://docs.sqlitecloud.io/docs/sdk-js-introduction) & [GitHub](https://github.com/sqlitecloud/sqlitecloud-js)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **SQLite Cloud 数据库** - [阅读文档](https://docs.sqlitecloud.io/docs/overview)
+  - **SQLite Cloud 驱动** - [阅读文档](https://docs.sqlitecloud.io/docs/sdk-js-introduction) & [GitHub](https://github.com/sqlitecloud/sqlitecloud-js)
 </Prerequisites>
 
 <FileStructure/>
 
-#### Step 1 - Install required package
+#### 步骤 1 - 安装所需的包
 <Npm>
     drizzle-orm@rc @sqlitecloud/drivers dotenv
     -D drizzle-kit@rc tsx
 </Npm>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 设置连接变量
 
 <SetupEnv env_variable='SQLITE_CLOUD_CONNECTION_STRING' />
 
-#### Step 3 - Setup Drizzle config file
+#### 步骤 3 - 设置 Drizzle 配置文件
 
 <SetupConfig dialect='sqlite' env_variable='SQLITE_CLOUD_CONNECTION_STRING'/>
 
-#### Step 4 - Introspect your database
+#### 步骤 4 - 内省数据库
 
 <IntrospectSQLite/>
 
-#### Step 5 - Transfer code to your actual schema file
+#### 步骤 5 - 将代码转移到实际的 schema 文件
 
 <TransferCode/>
 
-#### Step 6 - Connect Drizzle ORM to the database
+#### 步骤 6 - 将 Drizzle ORM 连接到数据库
 
 <ConnectSQLiteCloud/>
 
-#### Step 7 - Query the database
+#### 步骤 7 - 查询数据库
 
 ```typescript copy filename="src/index.ts"
 import 'dotenv/config';
@@ -105,19 +105,19 @@ async function main() {
 main();
 ```
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>
 
-#### Step 9 - Update your table schema (optional)
+#### 步骤 9 - 更新表 schema（可选）
 
 <UpdateSchema/>
 
-#### Step 10 - Applying changes to the database (optional)
+#### 步骤 10 - 将变更应用到数据库（可选）
 
 <ApplyChanges />
 
-#### Step 11 - Query the database with a new field (optional)
+#### 步骤 11 - 使用新字段查询数据库（可选）
 
 ```typescript copy filename="src/index.ts"
 import 'dotenv/config';

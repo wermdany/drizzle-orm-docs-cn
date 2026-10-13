@@ -1,25 +1,25 @@
 ---
-title: PostgreSQL column types
+title: PostgreSQL 列类型
 ---
 
 import Section from '@mdx/Section.astro';
 import Callout from '@mdx/Callout.astro';
 
-We have native support for all of them, yet if that's not enough for you, feel free to create **[custom types](/docs/custom-types)**.
+我们对所有这些类型都有原生支持，但如果这还不够，欢迎创建 **[自定义类型](/docs/custom-types)**。
 
-<Callout title='important' type='warning'>
-All examples in this part of the documentation do not use database column name aliases, and column names are generated from TypeScript keys. 
+<Callout title='重要' type='warning'>
+本文档这一部分的所有示例都不使用数据库列名别名，列名由 TypeScript 键生成。
 
-You can use database aliases in column names if you want, and you can also use the `casing API` to define a mapping strategy for Drizzle.
-You can read more about it [here](/docs/sql-schema-declaration#shape-your-data-schema)
+如果你愿意，也可以在列名中使用数据库别名，还可以使用 `casing API` 为 Drizzle 定义映射策略。
+你可以在[这里](/docs/sql-schema-declaration#设计你的数据-schema)阅读更多相关内容
 
 </Callout>
 
 ### integer
 `integer` `int` `int4`  
-Signed 4-byte integer     
+有符号 4 字节整数     
 
-If you need `integer autoincrement` please refer to **[serial.](#serial)**
+如果你需要 `integer autoincrement`，请参考 **[serial。](#serial)**
 
 <Section>
 ```typescript
@@ -60,9 +60,9 @@ CREATE TABLE "table" (
 
 ### smallint
 `smallint` `int2`  
-Small-range signed 2-byte integer   
+小范围有符号 2 字节整数   
 
-If you need `smallint autoincrement` please refer to **[smallserial.](#smallserial)**
+如果你需要 `smallint autoincrement`，请参考 **[smallserial。](#smallserial)**
 <Section>
 ```typescript
 import { smallint, pgTable } from "drizzle-orm/pg-core";
@@ -100,11 +100,11 @@ CREATE TABLE "table" (
 
 ### bigint
 `bigint` `int8`  
-Signed 8-byte integer  
+有符号 8 字节整数  
 
-If you need `bigint autoincrement` please refer to **[bigserial.](#bigserial)**
+如果你需要 `bigint autoincrement`，请参考 **[bigserial。](#bigserial)**
 
-If you're expecting values above 2^31 but below 2^53, you can utilise `mode: 'number'` and deal with javascript number as opposed to bigint.
+如果你期望的值大于 2^31 但小于 2^53，可以使用 `mode: 'number'`，用 JavaScript number 而非 bigint 来处理。
 <Section>
 ```typescript
 import { bigint, pgTable } from "drizzle-orm/pg-core";
@@ -113,10 +113,10 @@ export const table = pgTable('table', {
 	bigint: bigint({ mode: 'number' })
 });
 
-// will be inferred as `number`
+// 会被推断为 `number`
 bigint: bigint({ mode: 'number' })
 
-// will be inferred as `bigint`
+// 会被推断为 `bigint`
 bigint: bigint({ mode: 'bigint' })
 ```
 
@@ -150,9 +150,9 @@ CREATE TABLE "table" (
 
 ### serial
 `serial` `serial4`  
-Auto incrementing 4-bytes integer, notational convenience for creating unique identifier columns (similar to the `AUTO_INCREMENT` property supported by some other databases). 
+自增 4 字节整数，是为创建唯一标识符列提供的书写便利（类似于其他一些数据库支持的 `AUTO_INCREMENT` 属性）。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL)**
 <Section>
 ```typescript
 import { serial, pgTable } from "drizzle-orm/pg-core";
@@ -171,9 +171,9 @@ CREATE TABLE "table" (
 
 ### smallserial
 `smallserial` `serial2`  
-Auto incrementing 2-bytes integer, notational convenience for creating unique identifier columns (similar to the `AUTO_INCREMENT` property supported by some other databases). 
+自增 2 字节整数，是为创建唯一标识符列提供的书写便利（类似于其他一些数据库支持的 `AUTO_INCREMENT` 属性）。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL)**
 <Section>
 ```typescript
 import { smallserial, pgTable } from "drizzle-orm/pg-core";
@@ -192,11 +192,11 @@ CREATE TABLE "table" (
 
 ### bigserial
 `bigserial` `serial8`  
-Auto incrementing 8-bytes integer, notational convenience for creating unique identifier columns (similar to the `AUTO_INCREMENT` property supported by some other databases).
+自增 8 字节整数，是为创建唯一标识符列提供的书写便利（类似于其他一些数据库支持的 `AUTO_INCREMENT` 属性）。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-SERIAL)**
 
-If you're expecting values above 2^31 but below 2^53, you can utilise `mode: 'number'` and deal with javascript number as opposed to bigint.
+如果你期望的值大于 2^31 但小于 2^53，可以使用 `mode: 'number'`，用 JavaScript number 而非 bigint 来处理。
 <Section>
 ```typescript
 import { bigserial, pgTable } from "drizzle-orm/pg-core";
@@ -216,9 +216,9 @@ CREATE TABLE "table" (
 ### ---
 
 ### boolean
-PostgreSQL provides the standard SQL type boolean.
+PostgreSQL 提供标准 SQL 类型 boolean。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-boolean.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-boolean.html)**
 
 <Section>
 ```typescript
@@ -245,9 +245,9 @@ CREATE TABLE "table" (
 
 ### bytea
 
-PostgreSQL provides the standard SQL type bytea.
+PostgreSQL 提供标准 SQL 类型 bytea。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-binary.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-binary.html)**
 
 <Section>
 ```typescript
@@ -270,11 +270,11 @@ CREATE TABLE "table" (
 
 ### text
 `text`  
-Variable-length(unlimited) character string.
+变长（无限制）字符串。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-character.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-character.html)**
   
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 <Section>
 ```typescript
 import { text, pgTable } from "drizzle-orm/pg-core";
@@ -283,7 +283,7 @@ export const table = pgTable('table', {
 	text: text()
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 会被推断为 text："value1" | "value2" | null
 text: text({ enum: ["value1", "value2"] })
 ```
 
@@ -296,13 +296,13 @@ CREATE TABLE "table" (
 
 ### varchar
 `character varying(n)` `varchar(n)`  
-Variable-length character string, can store strings up to **`n`** characters (not bytes). 
+变长字符串，最多可存储 **`n`** 个字符（不是字节）。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-character.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-character.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to PostgreSQL docs.
+根据 PostgreSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { varchar, pgTable } from "drizzle-orm/pg-core";
@@ -312,7 +312,7 @@ export const table = pgTable('table', {
 	varchar2: varchar({ length: 256 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 会被推断为 text："value1" | "value2" | null
 varchar: varchar({ enum: ["value1", "value2"] }),
 ```
 
@@ -326,13 +326,13 @@ CREATE TABLE "table" (
 
 ### char
 `character(n)` `char(n)`  
-Fixed-length, blank padded character string, can store strings up to **`n`** characters(not bytes).
+定长、以空格填充的字符串，最多可存储 **`n`** 个字符（不是字节）。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-character.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-character.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to PostgreSQL docs.
+根据 PostgreSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { char, pgTable } from "drizzle-orm/pg-core";
@@ -342,7 +342,7 @@ export const table = pgTable('table', {
 	char2: char({ length: 256 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 会被推断为 text："value1" | "value2" | null
 char: char({ enum: ["value1", "value2"] }),
 ```
 
@@ -358,9 +358,9 @@ CREATE TABLE "table" (
 
 ### numeric
 `numeric` `decimal`  
-Exact numeric of selectable precision. Can store numbers with a very large number of digits, up to 131072 digits before the decimal point and up to 16383 digits after the decimal point.
+可选择精度的精确数值。可存储位数非常多的数字，小数点前最多 131072 位，小数点后最多 16383 位。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-NUMERIC-DECIMAL)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-numeric.html#DATATYPE-NUMERIC-DECIMAL)**
 
 <Section>
 ```typescript
@@ -387,13 +387,13 @@ CREATE TABLE "table" (
 </Section>
 
 ### decimal
-An alias of **[numeric.](#numeric)**
+**[numeric](#numeric)** 的别名。
 
 ### real
 `real` `float4`  
-Single precision floating-point number (4 bytes)
+单精度浮点数（4 字节）
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-numeric.html)**  
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-numeric.html)**  
 
 <Section>
 ```typescript
@@ -418,9 +418,9 @@ CREATE TABLE "table" (
 
 ### double precision
 `double precision` `float8`  
-Double precision floating-point number (8 bytes)
+双精度浮点数（8 字节）
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-numeric.html)**  
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-numeric.html)**  
 
 <Section>
 ```typescript
@@ -448,9 +448,9 @@ CREATE TABLE "table3" (
 
 ### json
 `json`  
-Textual JSON data, as specified in **[RFC 7159.](https://tools.ietf.org/html/rfc7159)**
+文本形式的 JSON 数据，如 **[RFC 7159](https://tools.ietf.org/html/rfc7159)** 所规定。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-json.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-json.html)**
 <Section>
 ```typescript
 import { sql } from "drizzle-orm";
@@ -472,24 +472,24 @@ CREATE TABLE "table" (
 ```
 </Section>
   
-You can specify `.$type<..>()` for json object inference, it **won't** check runtime values. 
-It provides compile time protection for default values, insert and select schemas.
+你可以指定 `.$type<..>()` 用于 JSON 对象推断，它**不会**检查运行时值。
+它为默认值、insert 和 select schema 提供编译期保护。
 ```typescript
-// will be inferred as { foo: string }
+// 会被推断为 { foo: string }
 json: json().$type<{ foo: string }>();
 
-// will be inferred as string[]
+// 会被推断为 string[]
 json: json().$type<string[]>();
 
-// won't compile
+// 无法通过编译
 json: json().$type<string[]>().default({});
 ```
 
 ### jsonb
 `jsonb`  
-Binary JSON data, decomposed.
+二进制 JSON 数据，已分解。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-json.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-json.html)**
 <Section>
 ```typescript
 import { jsonb, pgTable } from "drizzle-orm/pg-core";
@@ -509,17 +509,17 @@ CREATE TABLE "table" (
 ```
 </Section>
 
-You can specify `.$type<..>()` for json object inference, it **won't** check runtime values. 
-It provides compile time protection for default values, insert and select schemas.
+你可以指定 `.$type<..>()` 用于 JSON 对象推断，它**不会**检查运行时值。
+它为默认值、insert 和 select schema 提供编译期保护。
 
 ```typescript
-// will be inferred as { foo: string }
+// 会被推断为 { foo: string }
 jsonb: jsonb().$type<{ foo: string }>();
 
-// will be inferred as string[]
+// 会被推断为 string[]
 jsonb: jsonb().$type<string[]>();
 
-// won't compile
+// 无法通过编译
 jsonb: jsonb().$type<string[]>().default({});
 ```
 
@@ -528,9 +528,9 @@ jsonb: jsonb().$type<string[]>().default({});
 ### uuid
 `uuid`
 
-The data type uuid stores Universally Unique Identifiers (UUID) as defined by RFC 4122, ISO/IEC 9834-8:2005, and related standards
+uuid 数据类型存储通用唯一标识符（UUID），由 RFC 4122、ISO/IEC 9834-8:2005 及相关标准定义
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-uuid.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-uuid.html)**
 
 ```ts
 import { uuid, pgTable } from "drizzle-orm/pg-core";
@@ -554,9 +554,9 @@ CREATE TABLE "table" (
 
 ### time
 `time` `timetz` `time with timezone` `time without timezone`  
-Time of day with or without time zone.
+一天中的时间，可带或不带时区。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-datetime.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-datetime.html)**
 
 <Section>
 ```typescript
@@ -582,9 +582,9 @@ CREATE TABLE "table" (
 
 ### timestamp
 `timestamp` `timestamptz` `timestamp with time zone` `timestamp without time zone`  
-Date and time with or without time zone.
+日期和时间，可带或不带时区。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-datetime.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-datetime.html)**
 <Section>
 ```typescript
 import { sql } from "drizzle-orm";
@@ -607,36 +607,36 @@ CREATE TABLE "table" (
 ```
 </Section>
 
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 会推断为 date
 timestamp: timestamp({ mode: "date" }),
 
-// will infer as string
+// 会推断为 string
 timestamp: timestamp({ mode: "string" }),
 ```
 
-> The `string` mode does not perform any mappings for you. This mode was added to Drizzle ORM to provide developers
-with the possibility to handle dates and date mappings themselves, depending on their needs.
-Drizzle will pass raw dates as strings `to` and `from` the database, so the behavior should be as predictable as possible 
-and aligned 100% with the database behavior
+> `string` 模式不会为你执行任何映射。该模式被加入 Drizzle ORM，是为了让开发者可以
+根据自身需求自行处理日期和日期映射。
+Drizzle 会以字符串形式在数据库 `to` 和 `from` 之间传递原始日期，因此其行为应尽可能可预测，
+并与数据库行为 100% 一致
 
-> The `date` mode is the regular way to work with dates. Drizzle will take care of all mappings between the database and the JS Date object
+> `date` 模式是处理日期的常规方式。Drizzle 会负责数据库与 JS Date 对象之间的所有映射
 
 <Callout type='info' emoji='ℹ️'>
- How mapping works for `timestamp` and `timestamp with timezone`:
+ `timestamp` 和 `timestamp with timezone` 的映射如何工作：
 
- As PostgreSQL docs stated:
- > In a literal that has been determined to be timestamp without time zone, PostgreSQL will silently ignore any time zone indication. 
- > That is, the resulting value is derived from the date/time fields in the input value, and is not adjusted for time zone.
+ 正如 PostgreSQL 文档所述：
+ > 对于被确定为 timestamp without time zone 的字面量，PostgreSQL 会静默忽略任何时区指示。
+ > 也就是说，结果值由输入值中的日期/时间字段推导而来，不会针对时区进行调整。
  >
- > For timestamp with time zone, the internally stored value is always in UTC (Universal Coordinated Time, traditionally known as Greenwich Mean Time, GMT). 
- An input value that has an explicit time zone specified is converted to UTC using the appropriate offset for that time zone. 
- If no time zone is stated in the input string, then it is assumed to be in the time zone indicated by the system's TimeZone parameter, 
- and is converted to UTC using the offset for the timezone zone.
+ > 对于 timestamp with time zone，内部存储的值始终为 UTC（协调世界时，传统上称为格林尼治标准时间，GMT）。
+ 指定了显式时区的输入值会使用该时区的相应偏移量转换为 UTC。
+ 如果输入字符串中未声明时区，则假定为系统 TimeZone 参数所指示的时区，
+ 并使用该时区的偏移量转换为 UTC。
 
- So for `timestamp with timezone` you will get back string converted to a timezone set in your Postgres instance. 
- You can check timezone using this sql query: 
+ 因此，对于 `timestamp with timezone`，你会得到转换为 Postgres 实例中所设时区的字符串。
+ 你可以使用以下 sql 查询查看时区：
  
  ```sql 
  show timezone;
@@ -647,9 +647,9 @@ and aligned 100% with the database behavior
 
 ### date
 `date`  
-Calendar date (year, month, day)
+日历日期（年、月、日）
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-datetime.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-datetime.html)**
 <Section>
 ```typescript
 import { date, pgTable } from "drizzle-orm/pg-core";
@@ -665,19 +665,19 @@ CREATE TABLE "table" (
 );
 ```
 </Section>
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 会推断为 date
 date: date({ mode: "date" }),
 
-// will infer as string
+// 会推断为 string
 date: date({ mode: "string" }),
 ```
 ### interval
 `interval`  
-Time span
+时间跨度
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-datetime.html)** 
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-datetime.html)** 
 
 <Section>
 ```typescript
@@ -704,15 +704,15 @@ CREATE TABLE "table" (
 
 ### point
 `point`  
-Geometric point type
+几何点类型
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-geometric.html#DATATYPE-GEOMETRIC-POINTS)** 
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-geometric.html#DATATYPE-GEOMETRIC-POINTS)** 
 
-Type `point` has 2 modes for mappings from the database: `tuple` and `xy`.
+类型 `point` 有 2 种从数据库映射的模式：`tuple` 和 `xy`。
 
-- `tuple` will be accepted for insert and mapped on select to a tuple. So, the database Point(1,2) will be typed as [1,2] with drizzle.
+- `tuple`：插入时被接受，select 时映射为元组。因此，数据库中的 Point(1,2) 在 drizzle 中会被类型化为 [1,2]。
 
-- `xy` will be accepted for insert and mapped on select to an object with x, y coordinates. So, the database Point(1,2) will be typed as `{ x: 1, y: 2 }` with drizzle
+- `xy`：插入时被接受，select 时映射为带有 x、y 坐标的对象。因此，数据库中的 Point(1,2) 在 drizzle 中会被类型化为 `{ x: 1, y: 2 }`
 
 <Section>
 ```typescript
@@ -732,15 +732,15 @@ CREATE TABLE "items" (
 
 ### line
 `line`  
-Geometric line type
+几何线类型
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-geometric.html#DATATYPE-LINE)** 
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-geometric.html#DATATYPE-LINE)** 
 
-Type `line` has 2 modes for mappings from the database: `tuple` and `abc`.
+类型 `line` 有 2 种从数据库映射的模式：`tuple` 和 `abc`。
 
-- `tuple` will be accepted for insert and mapped on select to a tuple. So, the database Line `{1,2,3}` will be typed as `[1,2,3]` with drizzle.
+- `tuple`：插入时被接受，select 时映射为元组。因此，数据库中的 Line `{1,2,3}` 在 drizzle 中会被类型化为 `[1,2,3]`。
 
-- `abc` will be accepted for insert and mapped on select to an object with a, b, and c constants from the equation `Ax + By + C = 0`. So, the database Line `{1,2,3}` will be typed as `{ a: 1, b: 2, c: 3 }` with drizzle.
+- `abc`：插入时被接受，select 时映射为带有方程 `Ax + By + C = 0` 中 a、b、c 常量的对象。因此，数据库中的 Line `{1,2,3}` 在 drizzle 中会被类型化为 `{ a: 1, b: 2, c: 3 }`。
 
 <Section>
 ```typescript
@@ -762,11 +762,11 @@ CREATE TABLE "items" (
 
 ### enum 
 `enum` `enumerated types`  
-Enumerated (enum) types are data types that comprise a static, ordered set of values. 
-They are equivalent to the enum types supported in a number of programming languages. 
-An example of an enum type might be the days of the week, or a set of status values for a piece of data.
+枚举（enum）类型是包含一组静态、有序值的数据类型。
+它们等价于许多编程语言中支持的 enum 类型。
+枚举类型的一个例子可以是一周中的各天，或某个数据的一组状态值。
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-enum.html)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-enum.html)**
 <Section>
 ```typescript
 import { pgEnum, pgTable } from "drizzle-orm/pg-core";
@@ -791,9 +791,9 @@ CREATE TABLE "table" (
 
 ### inet
 `inet`  
-The `inet` type holds an IPv4 or IPv6 host address, and optionally its subnet, all in one field
+`inet` 类型保存 IPv4 或 IPv6 主机地址，以及可选的子网，全部在一个字段中
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-INET)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-INET)**
 
 <Section>
 ```typescript
@@ -815,9 +815,9 @@ CREATE TABLE "table" (
 
 ### cidr
 `cidr`  
-The `cidr` type holds an IPv4 or IPv6 network specification
+`cidr` 类型保存 IPv4 或 IPv6 网络规范
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-CIDR)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-CIDR)**
 
 <Section>
 ```typescript
@@ -839,9 +839,9 @@ CREATE TABLE "table" (
 
 ### macaddr
 `macaddr`  
-The `macaddr` type stores MAC (Media Access Control) address
+`macaddr` 类型存储 MAC（媒体访问控制）地址
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-MACADDR)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-MACADDR)**
 
 <Section>
 ```typescript
@@ -863,9 +863,9 @@ CREATE TABLE "table" (
 
 ### macaddr8
 `macaddr8`  
-The `macaddr8` type stores MAC addresses in EUI-64 format
+`macaddr8` 类型以 EUI-64 格式存储 MAC 地址
 
-For more info please refer to the official PostgreSQL **[docs.](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-MACADDR8)**
+更多信息请参考 PostgreSQL 官方 **[文档。](https://www.postgresql.org/docs/current/datatype-net-types.html#DATATYPE-MACADDR8)**
 
 <Section>
 ```typescript
@@ -887,10 +887,10 @@ CREATE TABLE "table" (
 
 ## ---
 
-### Customizing data type
-Every column builder has a `.$type()` method, which allows you to customize the data type of the column. 
+### 自定义数据类型
+每个列构建器都有一个 `.$type()` 方法，允许你自定义该列的数据类型。
 
-This is useful, for example, with unknown or branded types:
+例如，这对 unknown 或 branded 类型很有用：
 ```ts
 type UserId = number & { __brand: 'user_id' };
 type Data = {
@@ -904,24 +904,24 @@ export const users = pgTable('users', {
 });
 ```
 
-### Identity Columns
+### 标识列
 
-PostgreSQL supports identity columns as a way to automatically generate unique integer values for a column. These values are generated using sequences and can be defined using the GENERATED AS IDENTITY clause.
+PostgreSQL 支持标识列，作为为列自动生成唯一整数值的一种方式。这些值使用序列生成，可以通过 GENERATED AS IDENTITY 子句定义。
 
-**Types of Identity Columns**
-- `GENERATED ALWAYS AS IDENTITY`: The database always generates a value for the column. Manual insertion or updates to this column are not allowed unless the OVERRIDING SYSTEM VALUE clause is used.
-- `GENERATED BY DEFAULT AS IDENTITY`: The database generates a value by default, but manual values can also be inserted or updated. If a manual value is provided, it will be used instead of the system-generated value.
+**标识列的类型**
+- `GENERATED ALWAYS AS IDENTITY`：数据库始终为该列生成值。除非使用 OVERRIDING SYSTEM VALUE 子句，否则不允许手动插入或更新该列。
+- `GENERATED BY DEFAULT AS IDENTITY`：数据库默认生成值，但也可以手动插入或更新值。如果提供了手动值，将使用该值而不是系统生成的值。
 
-**Key Features**
-- Automatic Value Generation: Utilizes sequences to generate unique values for each new row.
-- Customizable Sequence Options: You can define starting values, increments, and other sequence options.
-- Support for Multiple Identity Columns: PostgreSQL allows more than one identity column per table.
+**主要特性**
+- 自动生成值：利用序列为每一新行生成唯一值。
+- 可自定义的序列选项：你可以定义起始值、增量以及其他序列选项。
+- 支持多个标识列：PostgreSQL 允许每个表有多个标识列。
 
-**Limitations**
-- Manual Insertion Restrictions: For columns defined with GENERATED ALWAYS AS IDENTITY, manual insertion or updates require the OVERRIDING SYSTEM VALUE clause.
-- Sequence Constraints: Identity columns depend on sequences, which must be managed correctly to avoid conflicts or gaps.
+**限制**
+- 手动插入限制：对于使用 GENERATED ALWAYS AS IDENTITY 定义的列，手动插入或更新需要 OVERRIDING SYSTEM VALUE 子句。
+- 序列约束：标识列依赖序列，必须正确管理序列以避免冲突或空缺。
 
-**Usage example**
+**用法示例**
 ```ts
 import { pgTable, integer, text } from 'drizzle-orm/pg-core' 
 
@@ -932,18 +932,17 @@ export const ingredients = pgTable('ingredients', {
 });
 ```
 
-You can specify all properties available for sequences in the `.generatedAlwaysAsIdentity()` function. Additionally, you can specify custom names for these sequences
+你可以在 `.generatedAlwaysAsIdentity()` 函数中指定序列可用的所有属性。此外，你还可以为这些序列指定自定义名称
 
-PostgreSQL docs [reference](https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-PARMS-GENERATED-IDENTITY).
+PostgreSQL 文档 [参考](https://www.postgresql.org/docs/current/sql-createtable.html#SQL-CREATETABLE-PARMS-GENERATED-IDENTITY)。
 
-### Default value
-The `DEFAULT` clause specifies a default value to use for the column if no value
-is explicitly provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+### 默认值
+`DEFAULT` 子句指定当用户执行 `INSERT` 时没有显式提供值时该列要使用的默认值。
+如果列定义没有附加显式的 `DEFAULT` 子句，
+那么该列的默认值为 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以指定默认值为 `NULL`、
+字符串常量、blob 常量、带符号数字，或任何用括号括起来的常量表达式。
 
 <Section>
 ```typescript
@@ -968,13 +967,13 @@ CREATE TABLE "table" (
 ```
 </Section>
 
-When using `$default()` or `$defaultFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all insert queries. 
+使用 `$default()` 或 `$defaultFn()` 时（它们只是同一函数的不同别名），
+你可以在运行时生成默认值，并在所有 insert 查询中使用这些值。
 
-These functions can assist you in utilizing various implementations such as `uuid`, `cuid`, `cuid2`, and many more.
+这些函数可以帮助你利用各种实现，例如 `uuid`、`cuid`、`cuid2` 等。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：该值不影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 的运行时中使用
 </Callout>
 
 ```ts
@@ -986,16 +985,16 @@ export const table = pgTable('table', {
 });
 ```
 
-When using `$onUpdate()` or `$onUpdateFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all update queries. 
+使用 `$onUpdate()` 或 `$onUpdateFn()` 时（它们只是同一函数的不同别名），
+你可以在运行时生成默认值，并在所有 update 查询中使用这些值。
 
-Adds a dynamic update value to the column. The function will be called when the row is updated, 
-and the returned value will be used as the column value if none is provided.
-If no default (or $defaultFn) value is provided, the function will be called
-when the row is inserted as well, and the returned value will be used as the column value.
+为列添加动态更新值。当行被更新时会调用该函数，
+如果未提供值，则返回的值将用作该列的值。
+如果未提供默认值（或 $defaultFn）值，则在行被插入时也会调用该函数，
+返回的值将用作该列的值。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：该值不影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 的运行时中使用
 </Callout>
 
 ```ts
@@ -1009,8 +1008,8 @@ export const table = pgTable('table', {
 ```
 
 
-### Not null
-`NOT NULL` constraint dictates that the associated column may not contain a `NULL` value.
+### 非空
+`NOT NULL` 约束规定关联的列不可包含 `NULL` 值。
 
 <Section>
 ```typescript
@@ -1029,9 +1028,9 @@ CREATE TABLE "table" (
 </Section>
 
 
-### Primary key
-A primary key constraint indicates that a column, or group of columns, can be used as a unique identifier for rows in the table. 
-This requires that the values be both unique and not null.
+### 主键
+主键约束表示某一列或一组列可用作表中各行的唯一标识符。
+这要求这些值既是唯一的又是非空的。
 <Section>
 ```typescript
 import { serial, pgTable } from "drizzle-orm/pg-core";

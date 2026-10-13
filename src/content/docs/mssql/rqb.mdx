@@ -3,17 +3,17 @@ import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 import Section from '@mdx/Section.astro';
 
-# Drizzle Queries
+# Drizzle 查询
 
-Drizzle ORM is designed to be a thin typed layer on top of SQL. 
-We truly believe we've designed the best way to operate an SQL database from TypeScript and it's time to make it better.  
-  
-Relational queries are meant to provide you with a great developer experience for querying 
-nested relational data from an SQL database, avoiding multiple joins and complex data mappings.  
+Drizzle ORM 被设计为 SQL 之上的一层轻量类型化封装。
+我们坚信我们已设计出从 TypeScript 操作 SQL 数据库的最佳方式，而现在是时候让它变得更好。  
 
-It is an extension to the existing schema definition and query builder. 
-You can opt-in to use it based on your needs. 
-We've made sure you have both the best-in-class developer experience and performance.  
+关系查询（Relational queries）旨在为你提供出色的开发者体验，用于查询 
+SQL 数据库中的嵌套关系数据，避免多次 join 和复杂的数据映射。  
+
+它是对现有 schema 定义和查询构建器的扩展。 
+你可以根据自身需要选择使用。 
+我们已确保你同时获得一流的开发者体验和性能。  
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
 	<CodeTab>
@@ -75,7 +75,7 @@ We've made sure you have both the best-in-class developer experience and perform
 	```
 </CodeTabs>
 
-⚠️ If you have SQL schema declared in multiple files you can do it like that
+⚠️ 如果你的 SQL schema 声明在多个文件中，可以这样做
 <CodeTabs items={["index.ts", "schema1.ts", "schema2.ts"]}>
 	```typescript copy /schema/3
 	import * as schema1 from './schema1';
@@ -92,19 +92,19 @@ We've made sure you have both the best-in-class developer experience and perform
 	```
 	
 	```ts
-	// schema declaration in the first file
+	// 第一个文件中的 schema 声明
 	```
 	```ts
-	// schema declaration in the second file
+	// 第二个文件中的 schema 声明
 	```
 </CodeTabs>
 
-## Querying
-Relational queries are an extension to Drizzle's original **[query builder](/docs/mssql/select)**.
-You need to provide all `tables` and `relations` from your schema file/files upon `drizzle()` 
-initialization and then just use the `db._query` API.
+## 查询
+关系查询是 Drizzle 原有 **[查询构建器](/docs/mssql/select)** 的扩展。
+你需要在使用 `drizzle()` 初始化时提供 schema 文件中的所有 `tables` 和 `relations`，
+然后直接使用 `db._query` API。
 <Callout type="info" emoji="ℹ️">
-	`drizzle` import path depends on the **[database driver](/docs/mssql/connect-overview)** you're using.
+	`drizzle` 的导入路径取决于你使用的 **[数据库驱动](/docs/mssql/connect-overview)**。
 </Callout>
 <CodeTabs items={["index.ts", "schema.ts"]}>
 <CodeTab>
@@ -117,7 +117,7 @@ const db = drizzle({ schema });
 await db._query.users.findMany(...);
 ```
 ```ts
-// if you have schema in multiple files
+// 如果你的 schema 分布在多个文件中
 import * as schema1 from './schema1';
 import * as schema2 from './schema2';
 import { drizzle } from 'drizzle-orm/node-mssql';
@@ -208,14 +208,14 @@ await db._query.users.findMany(...);
 ```
 </CodeTabs>
 
-Drizzle provides `.findMany()` and `.findFirst()` APIs.
-### Find many
+Drizzle 提供了 `.findMany()` 和 `.findFirst()` API。
+### 查询多条
 <Section>
 ```typescript copy
 const users = await db._query.users.findMany();
 ```
 ```ts
-// result type
+// 结果类型
 const result: {
 	id: number;
 	name: string;
@@ -225,16 +225,16 @@ const result: {
 ```
 </Section>
 
-### Find first
+### 查询第一条
 <Callout>
-  `.findFirst()` will add `limit 1` to the query.
+  `.findFirst()` 会在查询中添加 `limit 1`。
 </Callout>
 <Section>
 ```typescript copy
 const user = await db._query.users.findFirst();
 ```
 ```ts
-// result type
+// 结果类型
 const result: {
 	id: number;
 	name: string;
@@ -244,11 +244,11 @@ const result: {
 ```
 </Section>
 
-### Include relations
+### 包含关系
 
-`With` operator lets you combine data from multiple related tables and properly aggregate results.
+`With` 操作符让你可以组合来自多个关联表的数据并正确聚合结果。
 
-**Getting all posts with comments:**
+**获取所有带评论的帖子：**
 ```typescript copy
 const posts = await db._query.posts.findMany({
 	with: {
@@ -257,7 +257,7 @@ const posts = await db._query.posts.findMany({
 });
 ```
 
-**Getting first post with comments:**
+**获取第一条带评论的帖子：**
 ```typescript copy
 const post = await db._query.posts.findFirst({
 	with: {
@@ -266,10 +266,10 @@ const post = await db._query.posts.findFirst({
 });
 ```
 
-You can chain nested with statements as much as necessary.  
-For any nested `with` queries Drizzle will infer types using [Core Type API](/docs/mssql/goodies#type-api).
+你可以按需任意层地链式嵌套 with 语句。  
+对于任何嵌套的 `with` 查询，Drizzle 会使用 [Core Type API](/docs/mssql/goodies#类型-api) 推断类型。
   
-**Get all users with posts. Each post should contain a list of comments:**
+**获取所有用户及其帖子。每个帖子应包含评论列表：**
 ```typescript copy
 const users = await db._query.users.findMany({
 	with: {
@@ -282,16 +282,16 @@ const users = await db._query.users.findMany({
 });
 ```
 
-### Partial fields select
-`columns` parameter lets you include or omit columns you want to get from the database.
+### 部分字段 select
+`columns` 参数让你可以包含或省略想要从数据库中获取的列。
 
 <Callout type="info" emoji="ℹ️">
-  Drizzle performs partial selects on the query level, no additional data is transferred from the database.
+  Drizzle 在查询层面执行部分查询，不会从数据库传输额外数据。
 
-  Keep in mind that **a single SQL statement is outputted by Drizzle.**
+  请记住，**Drizzle 只输出单条 SQL 语句。**
 </Callout>
 
-**Get all posts with just `id`, `content` and include `comments`:**
+**仅获取所有帖子的 `id`、`content` 并包含 `comments`：**
 ```typescript copy
 const posts = await db._query.posts.findMany({
 	columns: {
@@ -304,7 +304,7 @@ const posts = await db._query.posts.findMany({
 });
 ```
 
-**Get all posts without `content`:**
+**获取所有帖子但不包含 `content`：**
 ```typescript copy
 const posts = await db._query.posts.findMany({
 	columns: {
@@ -314,31 +314,31 @@ const posts = await db._query.posts.findMany({
 ```
 
 <Callout type="info" emoji="ℹ️">
-When both `true` and `false` select options are present, all `false` options are ignored.
+当同时存在 `true` 和 `false` 选择选项时，所有 `false` 选项都会被忽略。
 </Callout>
 
-If you include the `name` field and exclude the `id` field, `id` exclusion will be redundant, 
-all fields apart from `name` would be excluded anyways.  
+如果你包含 `name` 字段并排除 `id` 字段，排除 `id` 将是多余的，
+因为除 `name` 之外的所有字段都会被排除。  
   
-**Exclude and Include fields in the same query:**
+**在同一条查询中排除和包含字段：**
 <Section>
 ```typescript copy
 const users = await db._query.users.findMany({
 	columns: {
 		name: true,
-		id: false //ignored
+		id: false //忽略
 	},
 });
 ```
 ```ts
-// result type
+// 结果类型
 const users: {
 	name: string;
 };
 ```
 </Section>
 
-**Only include columns from nested relations:**
+**仅包含嵌套关系中的列：**
 <Section>
 ```typescript copy
 const res = await db._query.users.findMany({
@@ -349,7 +349,7 @@ const res = await db._query.users.findMany({
 });
 ```
 ```ts
-// result type
+// 结果类型
 const res: {
 	posts: {
 		id: number,
@@ -359,8 +359,8 @@ const res: {
 ```
 </Section>
 
-### Nested partial fields select
-Just like with **[`partial select`](#partial-select)**, you can include or exclude columns of nested relations:
+### 嵌套部分字段 select
+就像 **[`部分查询`](#partial-select)** 一样，你可以包含或排除嵌套关系的列：
 ```typescript copy
 const posts = await db._query.posts.findMany({
 	columns: {
@@ -377,11 +377,11 @@ const posts = await db._query.posts.findMany({
 });
 ```
 
-### Select filters
-Just like in our SQL-like query builder, 
-relational queries API lets you define filters and conditions with the list of our **[`operators`](/docs/mssql/operators)**.  
+### select 过滤器
+就像我们的类 SQL 查询构建器一样，
+关系查询 API 让你可以使用我们的 **[`操作符`](/docs/mssql/operators)** 列表来定义过滤器和条件。  
 
-You can either import them from `drizzle-orm` or use from the callback syntax:
+你可以从 `drizzle-orm` 导入它们，也可以使用回调语法：
 <Section>
 ```typescript copy
 import { eq } from 'drizzle-orm';
@@ -397,7 +397,7 @@ const users = await db._query.users.findMany({
 ```
 </Section>
 
-Find post with `id=1` and comments that were created before particular date:
+查找 `id=1` 的帖子以及创建于特定日期之前的评论：
 ```typescript copy
 await db._query.posts.findMany({
 	where: (posts, { eq }) => (eq(posts.id, 1)),
@@ -409,17 +409,17 @@ await db._query.posts.findMany({
 });
 ```
 
-### Limit & Offset
-Drizzle ORM provides `limit` & `offset` API for queries and for the nested entities.
+### Limit 与 Offset
+Drizzle ORM 为查询和嵌套实体提供了 `limit` 与 `offset` API。
   
-**Find 5 posts:**
+**查找 5 条帖子：**
 ```typescript copy
 await db._query.posts.findMany({
 	limit: 5,
 });
 ```
 
-**Find posts and get 3 comments at most:**
+**查找帖子并最多获取 3 条评论：**
 ```typescript copy
 await db._query.posts.findMany({
 	with: {
@@ -431,22 +431,22 @@ await db._query.posts.findMany({
 ```
 
 <Callout type="warning" emoji="⚠️">
-  `offset` is only available for top level query.
+  `offset` 仅适用于顶层查询。
 </Callout>
 ```typescript 
 await db._query.posts.findMany({
 	limit: 5,
-	offset: 2, // correct ✅
+	offset: 2, // 正确 ✅
 	with: {
 		comments: {
-			offset: 3, // incorrect ❌
+			offset: 3, // 错误 ❌
 			limit: 3,
 		},
 	},
 });
 ```
 
-Find posts with comments from the 6th to the 10th post:
+查找帖子及其评论，从第 6 条到第 10 条帖子：
 ```typescript copy
 await db._query.posts.findMany({
 	limit: 5,
@@ -458,10 +458,10 @@ await db._query.posts.findMany({
 ```
 
 ### Order By
-Drizzle provides API for ordering in the relational query builder.  
+Drizzle 在关系查询构建器中提供了排序 API。  
 
-You can use same ordering **[core API](/docs/mssql/select#order-by)** or use
-`order by` operator from the callback with no imports.  
+你可以使用相同的排序 **[核心 API](/docs/mssql/select#order-by)**，也可以使用
+回调中的 `order by` 操作符而无需任何导入。  
 
 <Section>
 ```typescript copy
@@ -478,7 +478,7 @@ await db._query.posts.findMany({
 ```
 </Section>
 
-**Order by `asc` + `desc`:**
+**按 `asc` + `desc` 排序：**
 ```typescript copy
 await db._query.posts.findMany({
 	orderBy: (posts, { asc }) => [asc(posts.id)],
@@ -490,11 +490,11 @@ await db._query.posts.findMany({
 });
 ```
 
-### Include custom fields
-Relational query API lets you add custom additional fields. 
-It's useful when you need to retrieve data and apply additional functions to it.
+### 包含自定义字段
+关系查询 API 让你添加额外的自定义字段。 
+当你想检索数据并对其应用额外函数时非常有用。
 <Callout type="warning" emoji="⚠️">
-	As of now aggregations are not supported in `extras`, please use **[`core queries`](/docs/mssql/select)** for that.
+	目前 `extras` 不支持聚合，请使用 **[`核心查询`](/docs/mssql/select)**。
 </Callout>
 
 <Section>
@@ -517,14 +517,14 @@ await db._query.users.findMany({
 
 </Section>
 
-`lowerName` as a key will be included to all fields in returned object.
+`lowerName` 作为键会被包含在返回对象的所有字段中。
 
 <Callout type="warning" emoji="⚠️">
-  You have to explicitly specify `.as("<name_for_column>")`
+  你必须显式指定 `.as("<name_for_column>")`
 </Callout>
 
-To retrieve all users with groups, but with the fullName field included (which is a concatenation of firstName and lastName), 
-you can use the following query with the Drizzle relational query builder.
+要检索所有用户及其分组，并包含 fullName 字段（它是 firstName 和 lastName 的拼接），
+你可以使用以下 Drizzle 关系查询构建器查询。
 
 <Section>
 ```typescript copy
@@ -543,7 +543,7 @@ const res = await db._query.users.findMany({
 });
 ```
 ```ts
-// result type
+// 结果类型
 const res: {
     id: number;
     name: string;
@@ -562,7 +562,7 @@ const res: {
 ```
 </Section>
 
-To retrieve all posts with comments and add an additional field to calculate the size of the post content and the size of each comment content:
+要检索所有帖子及其评论，并添加一个额外字段来计算帖子内容的长度和每条评论内容的长度：
 <Section>
 ```typescript copy
 const res = await db._query.posts.findMany({
@@ -579,7 +579,7 @@ const res = await db._query.posts.findMany({
 });
 ```
 ```ts
-// result type
+// 结果类型
 const res: {
     id: number;
     createdAt: Date;
@@ -598,13 +598,12 @@ const res: {
 ```
 </Section>
 
-### Prepared statements
-Prepared statements are designed to massively improve query performance — [see here.](/docs/mssql/perf-queries)
+### 预编译语句
+预编译语句旨在大幅提升查询性能 —— [参见此处。](/docs/mssql/perf-queries)
 
-In this section, you can learn how to define placeholders and execute prepared statements 
-using the Drizzle relational query builder.
+本节中，你将学习如何使用 Drizzle 关系查询构建器定义占位符并执行预编译语句。
 
-##### **Placeholder in `where`**
+##### **`where` 中的占位符**
 
 <Section>
 ```ts copy
@@ -621,7 +620,7 @@ const usersWithPosts = await prepared.execute({ id: 1, pid: 1 });
 ```
 </Section>
 
-##### **Placeholder in `limit`**
+##### **`limit` 中的占位符**
 
 <Section>
 ```ts copy
@@ -637,7 +636,7 @@ const usersWithPosts = await prepared.execute({ limit: 1 });
 ```
 </Section>
 
-##### **Placeholder in `offset`**
+##### **`offset` 中的占位符**
 
 <Section>
 ```ts copy
@@ -652,7 +651,7 @@ const usersWithPosts = await prepared.execute({ offset: 1 });
 ```
 </Section>
 
-##### **Multiple placeholders**
+##### **多个占位符**
 
 <Section>
 ```ts copy

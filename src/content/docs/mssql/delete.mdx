@@ -3,24 +3,24 @@ import Section from '@mdx/Section.astro';
 
 # SQL Delete
 
-You can delete all rows in the table:
+你可以删除表中的所有行：
 ```typescript copy
 await db.delete(users);
 ```
-And you can delete with filters and conditions:
+你也可以配合过滤器和条件进行删除：
 ```typescript copy
 await db.delete(users).where(eq(users.name, 'Dan'));
 ```
 
-### Output
+### 输出
 
-You can delete a row and get it back in PostgreSQL:
+在 PostgreSQL 中，你可以删除一行并将其返回：
 ```typescript copy
 const deletedUser = await db.delete(users)
   .where(eq(users.name, 'Dan'))
   .output();
 
-// partial return
+// 部分返回
 const deletedUserId = await db.delete(users)
   .where(eq(users.name, "Dan"))
   .output({ deletedId: users.id });

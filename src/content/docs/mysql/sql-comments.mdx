@@ -1,15 +1,15 @@
 import Section from '@mdx/Section.astro';
 import Callout from '@mdx/Callout.astro';
 
-# SQL Comments
+# SQL 注释
 
-You can add custom tags to any query using the `.comment()` method. These tags are appended as [sqlcommenter](https://google.github.io/sqlcommenter)-formatted comments at the end of each query, 
-helping you attach metadata for query tracking, debugging and database traffic control.
+你可以使用 `.comment()` 方法向任何查询添加自定义标签。这些标签会以 [sqlcommenter](https://google.github.io/sqlcommenter) 格式的注释追加到每个查询的末尾，
+帮助你附加元数据，用于查询追踪、调试和数据库流量控制。
 
-The `.comment()` method is available on `select`, `insert`, `update` and `delete` queries.
+`.comment()` 方法可用于 `select`、`insert`、`update` 和 `delete` 查询。
 
-### String comments
-You can pass a raw string as a comment:
+### 字符串注释
+你可以传入一个原始字符串作为注释：
 
 <Section>
 ```ts
@@ -29,8 +29,8 @@ select `id`, `name` from `users` /*key='val'*/
 ```
 </Section>
 
-### Object comments
-You can pass an object with key-value pairs for structured tags:
+### 对象注释
+你可以传入一个包含键值对的对象来进行结构化标记：
 
 <Section>
 ```ts
@@ -50,7 +50,7 @@ select `id`, `name` from `users` /*route='%2Fapi%2Fusers',trace='true',version='
 ```
 </Section>
 
-### Usage with insert, update, delete
+### 与 insert、update、delete 搭配使用
 
 <Section>
 ```ts
@@ -79,18 +79,18 @@ delete from `users` where `users`.`id` = 1 /*operation='cleanup'*/
 ```
 </Section>
 
-### Limitations
-You can't use `.comment()` after the statement has been prepared. Prepared statements compile the SQL query once and reuse it across executions, 
-so the query string is fixed at preparation time and can't be modified afterwards — including appending comments:
+### 限制
+你不能在语句预编译之后使用 `.comment()`。预编译语句只编译一次 SQL 查询并在多次执行中复用它，
+因此查询字符串在预编译时就已固定，之后无法修改——包括追加注释：
 
 ```ts
-// can't be used
+// 不能这样使用
 const p = db.select().from(users).prepare();
 // ❌
 p.comment({ key: 'val' }).execute();
 ```
 
-Instead, add the comment before preparing the statement:
+取而代之，在预编译语句之前添加注释：
 
 ```ts
 // ✅

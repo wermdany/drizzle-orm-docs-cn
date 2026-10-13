@@ -1,5 +1,5 @@
 ---
-title: MSSQL column types
+title: MSSQL 列类型
 ---
 
 import Section from '@mdx/Section.astro';
@@ -7,7 +7,7 @@ import Callout from '@mdx/Callout.astro';
 import Npm from '@mdx/Npm.astro';
 
 <Callout type='error'>
-This page explains concepts available on drizzle versions `1.0.0-beta.2` and higher.
+本页介绍 drizzle 版本 `1.0.0-beta.2` 及更高版本中可用的概念。
 </Callout>
 
 <Npm>
@@ -17,18 +17,18 @@ drizzle-kit@rc -D
 
 <br/>
 
-We have native support for all of them, yet if that's not enough for you, feel free to create **[custom types](/docs/custom-types)**.
+我们对它们都有原生支持，但如果这还不能满足你的需求，欢迎创建 **[自定义类型](/docs/custom-types)**。
 
-<Callout title='important' type='warning'>
-All examples in this part of the documentation do not use database column name aliases, and column names are generated from TypeScript keys. 
+<Callout title='重要' type='warning'>
+文档这一部分的所有示例都不使用数据库列名别名，列名由 TypeScript 键生成。 
 
-You can use database aliases in column names if you want, and you can also use the `casing` parameter to define a mapping strategy for Drizzle. 
+如果你愿意，可以在列名中使用数据库别名，也可以使用 `casing` 参数为 Drizzle 定义映射策略。 
 
-You can read more about it [here](/docs/sql-schema-declaration#shape-your-data-schema)
+你可以[在此处](/docs/sql-schema-declaration#设计你的数据-schema)阅读更多相关内容
 </Callout>
 
 ### int
-Signed 4-byte integer     
+有符号 4 字节整数     
 
 <Section>
 ```typescript
@@ -68,7 +68,7 @@ CREATE TABLE [table] (
 ### smallint
 `smallint`
 
-Small-range signed 2-byte integer   
+小范围有符号 2 字节整数   
 
 <Section>
 ```typescript
@@ -106,7 +106,7 @@ CREATE TABLE [table] (
 ### tinyint
 `tinyint`
 
-Small-range signed 1-byte integer   
+小范围有符号 1 字节整数   
 
 <Section>
 ```typescript
@@ -144,9 +144,9 @@ CREATE TABLE [table] (
 ### bigint
 `bigint`
 
-Signed 8-byte integer  
+有符号 8 字节整数  
 
-If you're expecting values above 2^31 but below 2^53, you can utilise `mode: 'number'` and deal with javascript number as opposed to bigint.
+如果你预期值大于 2^31 但小于 2^53，可以使用 `mode: 'number'`，以 javascript number 而非 bigint 来处理。
 <Section>
 ```typescript
 import { bigint, mssqlTable } from "drizzle-orm/mssql-core";
@@ -155,13 +155,13 @@ export const table = mssqlTable('table', {
 	bigint: bigint({ mode: 'number' })
 });
 
-// will be inferred as `number`
+// 将被推断为 `number`
 bigint: bigint({ mode: 'number' })
 
-// will be inferred as `bigint`
+// 将被推断为 `bigint`
 bigint: bigint({ mode: 'bigint' })
 
-// will be inferred as `string`
+// 将被推断为 `string`
 bigint: bigint({ mode: 'string' })
 ```
 
@@ -193,9 +193,9 @@ CREATE TABLE [table] (
 
 ### bit
 
-An integer data type that can take a value of `1`, `0`, or `NULL`
+一种整数数据类型，其值可以为 `1`、`0` 或 `NULL`
 
-Drizzle will accept `true` or `false` as values instead of `1` and `0`
+Drizzle 将接受 `true` 或 `false` 作为值，而非 `1` 和 `0`
 
 <Section>
 ```typescript
@@ -218,12 +218,12 @@ CREATE TABLE [table] (
 
 ### text
 `text`  
-Variable-length non-Unicode data in the code page of the server and with a maximum string length 
-of 2^31 - 1 (2,147,483,647)
+服务器代码页中的可变长度非 Unicode 数据，最大字符串长度
+为 2^31 - 1（2,147,483,647）
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/ntext-text-and-image-transact-sql?view=sql-server-ver17#text)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/ntext-text-and-image-transact-sql?view=sql-server-ver17#text)**
   
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 <Section>
 ```typescript
 import { text, mssqlTable } from "drizzle-orm/mssql-core";
@@ -232,7 +232,7 @@ export const table = mssqlTable('table', {
   text: text()
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 text: text({ enum: ["value1", "value2"] })
 ```
 
@@ -245,11 +245,11 @@ CREATE TABLE [table] (
 
 ### ntext
 `text`  
-Variable-length Unicode data with a maximum string length of 2^30 - 1 (1,073,741,823).
+可变长度 Unicode 数据，最大字符串长度为 2^30 - 1（1,073,741,823）。
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/ntext-text-and-image-transact-sql?view=sql-server-ver17#text)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/ntext-text-and-image-transact-sql?view=sql-server-ver17#text)**
   
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 <Section>
 ```typescript
 import { text, mssqlTable } from "drizzle-orm/mssql-core";
@@ -258,7 +258,7 @@ export const table = mssqlTable('table', {
   ntext: ntext()
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 ntext: ntext({ enum: ["value1", "value2"] })
 ```
 
@@ -271,13 +271,13 @@ CREATE TABLE [table] (
 
 ### varchar
 `varchar(n|max)`  
-Variable-size string data. Use n to define the string size in bytes and can be a value from 1 through 8,000
+可变大小字符串数据。使用 n 以字节为单位定义字符串大小，其值可以为 1 到 8,000
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/char-and-varchar-transact-sql?view=sql-server-ver17#varchar---n--max--)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/char-and-varchar-transact-sql?view=sql-server-ver17#varchar---n--max--)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to MSSQL docs.
+根据 MSSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { varchar, mssqlTable } from "drizzle-orm/mssql-core";
@@ -288,7 +288,7 @@ export const table = mssqlTable('table', {
   varchar3: varchar({ length: 'max' })
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 varchar: varchar({ enum: ["value1", "value2"] }),
 ```
 
@@ -303,13 +303,13 @@ CREATE TABLE [table] (
 
 ### nvarchar
 `nvarchar(n|max)`  
-Variable-size string data. The value of n defines the string size in byte-pairs
+可变大小字符串数据。n 的值以字节对为单位定义字符串大小
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/nchar-and-nvarchar-transact-sql?view=sql-server-ver17#nvarchar---n--max--)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/nchar-and-nvarchar-transact-sql?view=sql-server-ver17#nvarchar---n--max--)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to MSSQL docs.
+根据 MSSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { nvarchar, mssqlTable } from "drizzle-orm/mssql-core";
@@ -319,10 +319,10 @@ export const table = mssqlTable('table', {
   nvarchar2: nvarchar({ length: 256 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 nvarchar: nvarchar({ enum: ["value1", "value2"] }),
 
-// will be inferred as `json`
+// 将被推断为 `json`
 nvarchar: nvarchar({ mode: 'json' })
 ```
 
@@ -337,13 +337,13 @@ CREATE TABLE [table] (
 ### char
 `char(n)`  
 
-Fixed-size string data. n defines the string size in bytes and must be a value from 1 through 8,000
+固定大小字符串数据。n 以字节为单位定义字符串大小，其值必须为 1 到 8,000
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/char-and-varchar-transact-sql?view=sql-server-ver17#char---n--)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/char-and-varchar-transact-sql?view=sql-server-ver17#char---n--)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to MSSQL docs.
+根据 MSSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { char, mssqlTable } from "drizzle-orm/mssql-core";
@@ -353,7 +353,7 @@ export const table = mssqlTable('table', {
   char2: char({ length: 256 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 char: char({ enum: ["value1", "value2"] }),
 ```
 
@@ -368,13 +368,13 @@ CREATE TABLE [table] (
 ### nchar
 `nchar(n)`  
 
-Fixed-size string data. n defines the string size in byte-pairs, and must be a value from 1 through 4,000
+固定大小字符串数据。n 以字节对为单位定义字符串大小，其值必须为 1 到 4,000
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/nchar-and-nvarchar-transact-sql?view=sql-server-ver17#nchar---n--)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/nchar-and-nvarchar-transact-sql?view=sql-server-ver17#nchar---n--)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
-The `length` parameter is optional according to MSSQL docs.
+根据 MSSQL 文档，`length` 参数是可选的。
 <Section>
 ```typescript
 import { nchar, mssqlTable } from "drizzle-orm/mssql-core";
@@ -384,7 +384,7 @@ export const table = mssqlTable('table', {
   nchar2: nchar({ length: 256 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 nchar: nchar({ enum: ["value1", "value2"] }),
 ```
 
@@ -400,7 +400,7 @@ CREATE TABLE [table] (
 
 ### binary
 
-Fixed-length binary data with a length of n bytes, where n is a value from 1 through 8,000. The storage size is n bytes.
+固定长度二进制数据，长度为 n 字节，其中 n 为 1 到 8,000 的值。存储大小为 n 字节。
 
 <Section>
 ```typescript
@@ -422,7 +422,7 @@ CREATE TABLE [table] (
 
 ### varbinary
 
-Variable-length binary data. n can be a value from 1 through 8,000. max indicates that the maximum storage size is 2^31-1 bytes
+可变长度二进制数据。n 可以为 1 到 8,000 的值。max 表示最大存储大小为 2^31-1 字节
 
 <Section>
 ```typescript
@@ -449,9 +449,9 @@ CREATE TABLE [table] (
 ### numeric
 `numeric`
 
-Fixed precision and scale numbers. When maximum precision is used, valid values are from -10^38 + 1 through 10^38 - 1
+固定精度和小数位数的数字。当使用最大精度时，有效值为 -10^38 + 1 到 10^38 - 1
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/decimal-and-numeric-transact-sql?view=sql-server-ver17#decimal---p---s----and-numeric---p---s---)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/decimal-and-numeric-transact-sql?view=sql-server-ver17#decimal---p---s----and-numeric---p---s---)**
 
 <Section>
 ```typescript
@@ -476,13 +476,13 @@ CREATE TABLE [table] (
 </Section>
 
 ### decimal
-An alias of **[numeric.](#numeric)**
+**[numeric.](#numeric)** 的别名
 
 ### real
 
-The ISO synonym for real is float(24).
+real 的 ISO 同义词是 float(24)。
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/float-and-real-transact-sql?view=sql-server-ver17)**  
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/float-and-real-transact-sql?view=sql-server-ver17)**  
 
 <Section>
 ```typescript
@@ -505,9 +505,9 @@ CREATE TABLE [table] (
 
 ### float
 
-float [ (n) ] Where n is the number of bits that are used to store the mantissa of the float number in scientific notation and, therefore, dictates the precision and storage size. If n is specified, it must be a value between 1 and 53. The default value of n is 53.
+float [ (n) ] 其中 n 是用于以科学记数法存储浮点数尾数的位数，因此决定了精度和存储大小。如果指定了 n，其值必须介于 1 到 53 之间。n 的默认值为 53。
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/float-and-real-transact-sql?view=sql-server-ver17#syntax)**  
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/float-and-real-transact-sql?view=sql-server-ver17#syntax)**  
 
 <Section>
 ```typescript
@@ -533,9 +533,9 @@ CREATE TABLE [table] (
 ### time
 `time`
 
-Defines a time of a day. The time is without time zone awareness and is based on a 24-hour clock.
+定义一天中的时间。该时间不涉及时区，且基于 24 小时制。
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/time-transact-sql?view=sql-server-ver17#time-description)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/time-transact-sql?view=sql-server-ver17#time-description)**
 
 <Section>
 ```typescript
@@ -562,9 +562,9 @@ CREATE TABLE [table] (
 ### date
 `date`  
 
-Calendar date (year, month, day)
+日历日期（年、月、日）
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-transact-sql?view=sql-server-ver17#date-description)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/date-transact-sql?view=sql-server-ver17#date-description)**
 <Section>
 ```typescript
 import { date, mssqlTable } from "drizzle-orm/mssql-core";
@@ -580,25 +580,25 @@ CREATE TABLE [table] (
 );
 ```
 </Section>
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 将推断为 date
 date: date({ mode: "date" }),
 
-// will infer as string
+// 将推断为 string
 date: date({ mode: "string" }),
 ```
 
 ### datetime
 `datetime`  
 
-Defines a date that is combined with a time of day with fractional seconds that is based on a 24-hour clock.
+定义一个日期，它由基于 24 小时制的带小数秒的一天中的时间组合而成。
 
-<Callout title='MSSQL docs'>
-Avoid using datetime for new work. Instead, use the time, date, datetime2, and datetimeoffset data types. These types align with the SQL Standard, and are more portable. time, datetime2 and datetimeoffset provide more seconds precision. datetimeoffset provides time zone support for globally deployed applications.
+<Callout title='MSSQL 文档'>
+在新工作中避免使用 datetime。而应使用 time、date、datetime2 和 datetimeoffset 数据类型。这些类型符合 SQL 标准，且更具可移植性。time、datetime2 和 datetimeoffset 提供更高的秒精度。datetimeoffset 为全球部署的应用程序提供时区支持。
 </Callout>
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver17#description)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime-transact-sql?view=sql-server-ver17#description)**
 <Section>
 ```typescript
 import { datetime, mssqlTable } from "drizzle-orm/mssql-core";
@@ -614,21 +614,21 @@ CREATE TABLE [table] (
 );
 ```
 </Section>
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 将推断为 date
 datetime: datetime({ mode: "date" }),
 
-// will infer as string
+// 将推断为 string
 datetime: datetime({ mode: "string" }),
 ```
 
 ### datetime2
 `datetime2`  
 
-Defines a date that is combined with a time of day that is based on 24-hour clock. datetime2 can be considered as an extension of the existing datetime type that has a larger date range, a larger default fractional precision, and optional user-specified precision.
+定义一个日期，它由基于 24 小时制的一天中的时间组合而成。datetime2 可视为现有 datetime 类型的扩展，具有更大的日期范围、更大的默认小数精度，以及可选的用户指定精度。
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime2-transact-sql?view=sql-server-ver17#datetime2-description)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetime2-transact-sql?view=sql-server-ver17#datetime2-description)**
 <Section>
 ```typescript
 import { datetime2, mssqlTable } from "drizzle-orm/mssql-core";
@@ -644,21 +644,21 @@ CREATE TABLE [table] (
 );
 ```
 </Section>
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 将推断为 date
 datetime2: datetime2({ mode: "date" }),
 
-// will infer as string
+// 将推断为 string
 datetime2: datetime2({ mode: "string" }),
 ```
 
 ### datetimeoffset
 `datetimeoffset`  
 
-Defines a date that is combined with a time of a day based on a 24-hour clock like datetime2, and adds time zone awareness based on Coordinated Universal Time (UTC).
+定义一个日期，它像 datetime2 一样由基于 24 小时制的一天中的时间组合而成，并添加基于协调世界时（UTC）的时区感知。
 
-For more info please refer to the official MSSQL **[docs.](https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetimeoffset-transact-sql?view=sql-server-ver17#datetimeoffset-description)**
+更多信息请参阅 MSSQL 官方 **[文档。](https://learn.microsoft.com/en-us/sql/t-sql/data-types/datetimeoffset-transact-sql?view=sql-server-ver17#datetimeoffset-description)**
 <Section>
 ```typescript
 import { datetimeoffset, mssqlTable } from "drizzle-orm/mssql-core";
@@ -674,21 +674,21 @@ CREATE TABLE [table] (
 );
 ```
 </Section>
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 将推断为 date
 datetimeoffset: datetimeoffset({ mode: "date" }),
 
-// will infer as string
+// 将推断为 string
 datetimeoffset: datetimeoffset({ mode: "string" }),
 ```
 
 ## ---
 
-### Customizing data type
-Every column builder has a `.$type()` method, which allows you to customize the data type of the column. 
+### 自定义数据类型
+每个列构建器都有一个 `.$type()` 方法，允许你自定义列的数据类型。 
 
-This is useful, for example, with unknown or branded types:
+例如，对于未知类型或品牌类型（branded types），这很有用：
 ```ts
 type UserId = number & { __brand: 'user_id' };
 type Data = {
@@ -702,14 +702,13 @@ const users = mssqlTable('users', {
 });
 ```
 
-### Default value
-The `DEFAULT` clause specifies a default value to use for the column if no value
-is explicitly provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+### 默认值
+`DEFAULT` 子句指定当用户执行 `INSERT` 时未显式提供值时该列使用的默认值。
+如果列定义上没有附加显式的 `DEFAULT` 子句，
+则该列的默认值为 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以将默认值指定为 `NULL`、
+字符串常量、blob 常量、带符号数字，或任何括号内的常量表达式。
 
 <Section>
 ```typescript
@@ -730,11 +729,11 @@ CREATE TABLE [table] (
 ```
 </Section>
 
-When using `$default()` or `$defaultFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all insert queries. 
+当使用 `$default()` 或 `$defaultFn()`（它们只是同一函数的不同别名）时，
+你可以在运行时生成默认值，并在所有插入查询中使用这些值。 
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 的运行时使用
 </Callout>
 
 ```ts
@@ -746,16 +745,16 @@ const table = mssqlTable('table', {
 });
 ```
 
-When using `$onUpdate()` or `$onUpdateFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all update queries. 
+当使用 `$onUpdate()` 或 `$onUpdateFn()`（它们只是同一函数的不同别名）时，
+你可以在运行时生成默认值，并在所有更新查询中使用这些值。 
 
-Adds a dynamic update value to the column. The function will be called when the row is updated, 
-and the returned value will be used as the column value if none is provided.
-If no default (or $defaultFn) value is provided, the function will be called
-when the row is inserted as well, and the returned value will be used as the column value.
+为列添加动态更新值。当行被更新时会调用该函数，
+如果未提供列值，则将返回值用作列值。
+如果未提供默认值（或 $defaultFn）值，则在插入行时也会调用该函数，
+并将返回值用作列值。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 的运行时使用
 </Callout>
 
 ```ts
@@ -770,7 +769,7 @@ const table = mssqlTable('table', {
 
 
 ### Not null
-`NOT NULL` constraint dictates that the associated column may not contain a `NULL` value.
+`NOT NULL` 约束规定关联的列不能包含 `NULL` 值。
 
 <Section>
 ```typescript
@@ -789,9 +788,9 @@ CREATE TABLE [table] (
 </Section>
 
 
-### Primary key
-A primary key constraint indicates that a column, or group of columns, can be used as a unique identifier for rows in the table. 
-This requires that the values be both unique and not null.
+### 主键
+主键约束表示一个列或一组列可以作为表中行的唯一标识符。 
+这要求这些值既唯一又非空。
 <Section>
 ```typescript
 import { int, mssqlTable } from "drizzle-orm/mssql-core";

@@ -9,23 +9,23 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> Effect Postgres
 
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- Effect - [website](https://effect.website/docs)
-- **@effect/sql-pg** - A PostgreSQL toolkit for Effect - [read here](https://effect-ts.github.io/effect/docs/sql-pg)
+- 使用 Drizzle 的数据库[连接基础](/docs/connect-overview)
+- Effect - [网站](https://effect.website/docs)
+- **@effect/sql-pg** - 面向 Effect 的 PostgreSQL 工具包 - [在此阅读](https://effect-ts.github.io/effect/docs/sql-pg)
 </Prerequisites>
 
-Drizzle has native support for Effect PostgreSQL connections with the `@effect/sql-pg` driver.
+Drizzle 通过 `@effect/sql-pg` 驱动原生支持 Effect PostgreSQL 连接。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <Npm>
  drizzle-orm@rc effect @effect/sql-pg pg
  -D drizzle-kit@rc @types/pg
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 
-Drizzle provides an Effect-native API that integrates with Effect's service pattern. Use `PgDrizzle.makeWithDefaults()` 
-to quickly create a Drizzle database instance with sensible defaults (no logging, no caching).
+Drizzle 提供了一个与 Effect 的服务模式集成的 Effect 原生 API。使用 `PgDrizzle.makeWithDefaults()`
+可通过合理的默认配置（无日志、无缓存）快速创建 Drizzle 数据库实例。
 
 ```typescript copy
 import 'dotenv/config';
@@ -36,12 +36,12 @@ import * as Redacted from 'effect/Redacted';
 import { sql } from 'drizzle-orm';
 import { types } from 'pg';
 
-// Configure the PgClient layer with type parsers
+// 使用类型解析器配置 PgClient layer
 const PgClientLive = PgClient.layer({
   url: Redacted.make(process.env.DATABASE_URL!),
   types: {
     getTypeParser: (typeId, format) => {
-      // Return raw values for date/time types to let Drizzle handle parsing
+      // 为 date/time 类型返回原始值，交由 Drizzle 处理解析
       if ([1184, 1114, 1082, 1186, 1231, 1115, 1185, 1187, 1182].includes(typeId)) {
         return (val: any) => val;
       }
@@ -51,22 +51,22 @@ const PgClientLive = PgClient.layer({
 });
 
 const program = Effect.gen(function*() {
-  // Create the database with default services (no logging, no caching)
+  // 使用默认服务（无日志、无缓存）创建数据库
   const db = yield* PgDrizzle.makeWithDefaults();
 
-  // Execute queries
+  // 执行查询
   const result = yield* db.execute<{ id: number }>(sql`SELECT 1 as id`);
   console.log(result);
 });
 
-// Run the program with the PgClient layer
+// 使用 PgClient layer 运行程序
 Effect.runPromise(program.pipe(Effect.provide(PgClientLive)));
 ```
 
-#### Step 3 - Create a DB Layer for dependency injection
+#### 第 3 步 - 为依赖注入创建 DB Layer
 
-For larger applications, create a reusable DB layer that can be composed with other services. This follows Effect's 
-recommended pattern for dependency injection:
+对于较大的应用，可创建一个可复用的 DB layer，以便与其他服务组合。这遵循 Effect 推荐的
+依赖注入模式：
 
 ```typescript copy
 import * as PgDrizzle from 'drizzle-orm/effect-postgres';
@@ -78,7 +78,7 @@ import * as Redacted from 'effect/Redacted';
 import { types } from 'pg';
 import * as relations from './schema/relations';
 
-// Configure the PgClient layer
+// 配置 PgClient layer
 const PgClientLive = PgClient.layer({
   url: Redacted.make(process.env.DATABASE_URL!),
   types: {
@@ -91,15 +91,15 @@ const PgClientLive = PgClient.layer({
   },
 });
 
-// Create the DB effect with default services
+// 使用默认服务创建 DB effect
 const dbEffect = PgDrizzle.make({ relations }).pipe(
   Effect.provide(PgDrizzle.DefaultServices)
 );
 
-// Define a DB service tag for dependency injection
+// 定义用于依赖注入的 DB 服务 tag
 class DB extends Context.Tag('DB')<DB, Effect.Effect.Success<typeof dbEffect>>() {}
 
-// Create a layer that provides the DB service
+// 创建提供 DB 服务的 layer
 const DBLive = Layer.effect(
   DB,
   Effect.gen(function*() {
@@ -107,28 +107,28 @@ const DBLive = Layer.effect(
   }),
 );
 
-// Compose all layers together
+// 将所有 layer 组合在一起
 const AppLive = Layer.provideMerge(DBLive, PgClientLive);
 
-// Use the DB service in your application
+// 在应用中使用 DB 服务
 const program = Effect.gen(function*() {
   const db = yield* DB;
   const users = yield* db.select().from(usersTable);
   return users;
 });
 
-// Run with all dependencies provided
+// 在提供所有依赖的情况下运行
 Effect.runPromise(program.pipe(Effect.provide(AppLive)));
 ```
 
-#### Advanced: Custom logger and cache configuration
+#### 进阶：自定义 logger 和 cache 配置
 
-For more control over logging and caching, use `PgDrizzle.make()` directly and provide your own service implementations.
+若想更精细地控制日志和缓存，请直接使用 `PgDrizzle.make()` 并提供你自己的服务实现。
 
-##### Logger configuration
+##### Logger 配置
 
-By default, `makeWithDefaults()` uses a no-op logger (no logging). You can enable logging by providing 
-a different `EffectLogger` implementation:
+默认情况下，`makeWithDefaults()` 使用 no-op logger（不记录日志）。你可以通过提供
+不同的 `EffectLogger` 实现来启用日志：
 
 ```typescript copy
 import * as PgDrizzle from 'drizzle-orm/effect-postgres';
@@ -137,9 +137,9 @@ import * as Effect from 'effect/Effect';
 
 const program = Effect.gen(function*() {
   const db = yield* PgDrizzle.make({ /* schema, relations, casing */ }).pipe(
-    // Enable Effect-based logging (uses Effect.log with annotations)
+    // 启用基于 Effect 的日志（使用带注解的 Effect.log）
     Effect.provide(EffectLogger.layer),
-    // Provide remaining default services (cache)
+    // 提供剩余的默认服务（cache）
     Effect.provide(PgDrizzle.DefaultServices),
   );
 
@@ -148,18 +148,18 @@ const program = Effect.gen(function*() {
 });
 ```
 
-**Available logger options:**
-- `EffectLogger.Default` - No-op logger (no logging occurs) - this is the default
-- `EffectLogger.layer` - Logs queries using Effect's `Effect.log()` with annotations for query SQL and parameters. Integrates with Effect's logging infrastructure.
-- `EffectLogger.fromDrizzle(logger)` - Wraps a Drizzle `Logger` instance for use with Effect
-- `EffectLogger.layerFromDrizzle(logger)` - Creates an Effect Layer from a Drizzle logger
+**可用的 logger 选项：**
+- `EffectLogger.Default` - no-op logger（不记录任何日志）- 这是默认值
+- `EffectLogger.layer` - 使用 Effect 的 `Effect.log()` 记录查询，并带有查询 SQL 和参数的注解。与 Effect 的日志基础设施集成。
+- `EffectLogger.fromDrizzle(logger)` - 包装 Drizzle `Logger` 实例以便与 Effect 一起使用
+- `EffectLogger.layerFromDrizzle(logger)` - 从 Drizzle logger 创建 Effect Layer
 
 <Callout type='info'>
-When using `EffectLogger.layer`, queries are logged via Effect's logging system. You can configure the output 
-format by providing a different Effect logger layer (e.g., `Logger.pretty` for development, `Logger.json` for production).
+使用 `EffectLogger.layer` 时，查询会通过 Effect 的日志系统记录。你可以通过提供不同的 Effect logger layer 来配置输出
+格式（例如开发环境用 `Logger.pretty`，生产环境用 `Logger.json`）。
 </Callout>
 
-**Using a Drizzle logger:**
+**使用 Drizzle logger：**
 
 ```typescript copy
 import * as PgDrizzle from 'drizzle-orm/effect-postgres';
@@ -169,9 +169,9 @@ import { DefaultLogger } from 'drizzle-orm';
 
 const program = Effect.gen(function*() {
   const db = yield* PgDrizzle.make({ /* schema, relations, casing */ }).pipe(
-    // Use a Drizzle logger wrapped for Effect
+    // 使用为 Effect 包装的 Drizzle logger
     Effect.provide(EffectLogger.layerFromDrizzle(new DefaultLogger())),
-    // Provide remaining default services (cache)
+    // 提供剩余的默认服务（cache）
     Effect.provide(PgDrizzle.DefaultServices),
   );
 
@@ -180,9 +180,9 @@ const program = Effect.gen(function*() {
 });
 ```
 
-##### Cache configuration
+##### Cache 配置
 
-Similarly, you can provide a custom cache implementation:
+同样地，你也可以提供自定义的缓存实现：
 
 ```typescript copy
 import * as PgDrizzle from 'drizzle-orm/effect-postgres';
@@ -193,9 +193,9 @@ import { MyCustomCache } from './cache';
 
 const program = Effect.gen(function*() {
   const db = yield* PgDrizzle.make({ /* schema, relations, casing */ }).pipe(
-    // Provide a custom cache wrapped for Effect
+    // 提供为 Effect 包装的自定义 cache
     Effect.provide(EffectCache.layerFromDrizzle(new MyCustomCache())),
-    // Provide remaining default services (logger)
+    // 提供剩余的默认服务（logger）
     Effect.provide(PgDrizzle.DefaultServices),
   );
 
@@ -204,11 +204,11 @@ const program = Effect.gen(function*() {
 });
 ```
 
-**Available cache options:**
-- `EffectCache.Default` - No-op cache (no caching occurs) - this is the default
-- `EffectCache.fromDrizzle(cache)` - Wraps a Drizzle `Cache` instance for use with Effect
-- `EffectCache.layerFromDrizzle(cache)` - Creates an Effect Layer from a Drizzle cache (useful for composing with other layers)
+**可用的 cache 选项：**
+- `EffectCache.Default` - no-op cache（不进行任何缓存）- 这是默认值
+- `EffectCache.fromDrizzle(cache)` - 包装 Drizzle `Cache` 实例以便与 Effect 一起使用
+- `EffectCache.layerFromDrizzle(cache)` - 从 Drizzle cache 创建 Effect Layer（便于与其他 layer 组合）
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres/>

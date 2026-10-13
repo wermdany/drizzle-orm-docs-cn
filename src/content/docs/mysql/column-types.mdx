@@ -1,29 +1,29 @@
 ---
-title: MySQL column types
+title: MySQL 列类型
 ---
 import Section from '@mdx/Section.astro';
 import Callout from '@mdx/Callout.astro';
 
-We have native support for all of them, yet if that's not enough for you, feel free to create **[custom types](/docs/mysql/custom-types)**.
+我们对所有这些类型都有原生支持，但如果这还不够，你也可以随时创建 **[自定义类型](/docs/mysql/custom-types)**。
 
-<Callout title='important' type='warning'>
-All examples in this part of the documentation do not use database column name aliases, and column names are generated from TypeScript keys. 
+<Callout title='重要' type='warning'>
+本文档这一部分的所有示例都不使用数据库列名别名，列名由 TypeScript 键生成。
 
-You can use database aliases in column names if you want, and you can also use the `casing API` to define a mapping strategy for Drizzle.
+如果你愿意，也可以在列名中使用数据库别名，还可以使用 `casing API` 为 Drizzle 定义映射策略。
 
-You can read more about it [here](/docs/mysql/sql-schema-declaration#shape-your-data-schema)
+你可以在 [这里](/docs/mysql/sql-schema-declaration#塑造你的数据-schema) 了解更多。
 </Callout>
 
-<Callout title='important' type='info'>
-All integer types (`int`, `tinyint`, `smallint`, `mediumint`, `bigint`) are `signed` by default, allowing both negative and positive values. 
-Adding `{ unsigned: true }` restricts the column to non-negative values only but doubles the upper range.
+<Callout title='重要' type='info'>
+所有整数类型（`int`、`tinyint`、`smallint`、`mediumint`、`bigint`）默认都是 `signed`（有符号），允许负值和正值。
+添加 `{ unsigned: true }` 会将列限制为仅非负值，但会把上限范围翻倍。
 </Callout>
 
 ### integer
 
-A `4`-byte integer with a range of `-2,147,483,648` to `2,147,483,647` signed, or `0` to `4,294,967,295` unsigned
+一个 `4` 字节整数，有符号范围为 `-2,147,483,648` 到 `2,147,483,647`，无符号范围为 `0` 到 `4,294,967,295`
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
 
 <Section>
 ```typescript
@@ -45,9 +45,9 @@ CREATE TABLE `table` (
 
 ### tinyint
 
-A `1`-byte integer with a range of `-128` to `127` signed, or `0` to `255` unsigned
+一个 `1` 字节整数，有符号范围为 `-128` 到 `127`，无符号范围为 `0` 到 `255`
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
 
 <Section>
 ```typescript
@@ -69,9 +69,9 @@ CREATE TABLE `table` (
 
 ### smallint
 
-A `2`-byte integer with a range of `-32,768` to `32,767` signed, or `0` to `65,535` unsigned
+一个 `2` 字节整数，有符号范围为 `-32,768` 到 `32,767`，无符号范围为 `0` 到 `65,535`
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
 
 <Section>
 ```typescript
@@ -93,9 +93,9 @@ CREATE TABLE `table` (
 
 ### mediumint
 
-A `3`-byte integer with a range of `-8,388,608` to `8,388,607` signed, or `0` to `16,777,215` unsigned
+一个 `3` 字节整数，有符号范围为 `-8,388,608` 到 `8,388,607`，无符号范围为 `0` 到 `16,777,215`
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
 
 <Section>
 ```typescript
@@ -117,9 +117,9 @@ CREATE TABLE `table` (
 
 ### bigint
 
-An `8`-byte integer with a range of `-2^63` to `2^63-1` signed, or `0` to `2^64-1` unsigned
+一个 `8` 字节整数，有符号范围为 `-2^63` 到 `2^63-1`，无符号范围为 `0` 到 `2^64-1`
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/integer-types.html)**
 
 <Section>
 ```typescript
@@ -132,7 +132,7 @@ export const table = mysqlTable('table', {
 
 bigint("...", { mode: 'number' | 'bigint' | 'string' });
 
-// You can also specify unsigned option for bigint
+// 你也可以为 bigint 指定 unsigned 选项
 bigint("...", { mode: 'number' | 'bigint' | 'string', unsigned: true });
 ```
 
@@ -144,15 +144,15 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-We've omitted config of `M` in `bigint(M)`, since it indicates the display width of the numeric type 
+我们省略了 `bigint(M)` 中 `M` 的配置，因为它表示数字类型的显示宽度
 
 ## ---
 
 ### real
 
-A floating-point number
+一个浮点数
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/floating-point-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/floating-point-types.html)**
 
 <Section>
 ```typescript
@@ -190,9 +190,9 @@ CREATE TABLE `table` (
 
 ### decimal
 
-An exact fixed-point number. `DECIMAL(M, D)` stores up to `M` total digits with `D` digits after the decimal point. Maximum precision is `65` digits
+一个精确的定点数。`DECIMAL(M, D)` 最多存储 `M` 位总数字，其中小数点后有 `D` 位数字。最大精度为 `65` 位
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/fixed-point-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/fixed-point-types.html)**
 
 <Section>
 ```typescript
@@ -218,9 +218,9 @@ CREATE TABLE `table` (
 
 ### double
 
-An `8`-byte double-precision floating-point number representing approximate numeric data values
+一个 `8` 字节双精度浮点数，表示近似数值数据
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/floating-point-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/floating-point-types.html)**
 
 <Section>
 ```typescript
@@ -258,9 +258,9 @@ CREATE TABLE `table` (
 
 ### float
 
-A `4`-byte single-precision floating-point number representing approximate numeric data values
+一个 `4` 字节单精度浮点数，表示近似数值数据
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/floating-point-types.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/floating-point-types.html)**
 
 <Section>
 ```typescript
@@ -284,9 +284,9 @@ CREATE TABLE `table` (
 
 <Section>
 
-`SERIAL` is an alias for `BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE`.
+`SERIAL` 是 `BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE` 的别名。
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/numeric-type-syntax.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/numeric-type-syntax.html)**
 
 ```typescript
 import { serial, mysqlTable } from "drizzle-orm/mysql-core";
@@ -306,11 +306,11 @@ CREATE TABLE `table` (
 ## ---
 
 ### binary
-`BINARY(M)` stores a fixed-length byte string of exactly M bytes (If omitted, M defaults to 1).  
-On insert, shorter values are right-padded with `0x00` bytes to reach M bytes; on retrieval, no padding is stripped.
-All bytes are significant in comparisons, including `ORDER BY` and `DISTINCT` operations
+`BINARY(M)` 存储一个固定长度的字节串，正好 M 个字节（如果省略，M 默认为 1）。  
+插入时，较短的值会用 `0x00` 字节右填充以达到 M 个字节；检索时不会去除填充。
+在比较（包括 `ORDER BY` 和 `DISTINCT` 操作）中所有字节都是有效的
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/binary-varbinary.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/binary-varbinary.html)**
 <Section>
 ```typescript
 import { binary, mysqlTable } from "drizzle-orm/mysql-core";
@@ -330,11 +330,11 @@ CREATE TABLE `table` (
 </Section>
 
 ### varbinary
-`VARBINARY(M)` stores a variable-length byte string of up to M bytes (M as required).  
-For `VARBINARY`, there is no padding for inserts and no bytes are stripped for retrievals.
-All bytes are significant in comparisons, including `ORDER BY` and `DISTINCT` operations
+`VARBINARY(M)` 存储一个变长字节串，最多 M 个字节（M 按需指定）。  
+对于 `VARBINARY`，插入时没有填充，检索时也不会去除任何字节。
+在比较（包括 `ORDER BY` 和 `DISTINCT` 操作）中所有字节都是有效的
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/binary-varbinary.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/binary-varbinary.html)**
 <Section>
 ```typescript
 import { varbinary, mysqlTable } from "drizzle-orm/mysql-core";
@@ -355,9 +355,9 @@ CREATE TABLE `table` (
 
 ### blob
 
-A `BLOB` is a binary large object that can hold a variable amount of data with a maximum length of `65,535` bytes (`64` KB)
+`BLOB` 是一个二进制大对象，可以保存可变数量的数据，最大长度为 `65,535` 字节（`64` KB）
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 <Section>
 ```typescript
 import { blob, mysqlTable } from "drizzle-orm/mysql-core";
@@ -375,28 +375,28 @@ CREATE TABLE `table` (
 </Section>
 
 <Section>
-You can specify either `buffer` or `string` mode:
+你可以指定 `buffer` 或 `string` 模式：
 ```typescript
-// will be inferred as `Buffer`
+// 将被推断为 `Buffer`
 blob: blob({ mode: "buffer" }),
 
-// will be inferred as `string`
+// 将被推断为 `string`
 blob: blob({ mode: "string" }),
 ```
 </Section>
 
-> The `buffer` mode is the default way to work with blobs.
-> Drizzle will represent the blob value as a `Buffer` instance
+> `buffer` 模式是处理 blob 的默认方式。
+> Drizzle 会将 blob 值表示为 `Buffer` 实例
 
-> The `string` mode represents blob values as UTF-8 encoded strings,
-> which can be useful when storing text data in blob columns
+> `string` 模式将 blob 值表示为 UTF-8 编码的字符串，
+> 在 blob 列中存储文本数据时会很有用
 
 
 ### tinyblob
 
-A `BLOB` column with a maximum length of `255` bytes
+一个最大长度为 `255` 字节的 `BLOB` 列
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 <Section>
 ```typescript
 import { tinyblob, mysqlTable } from "drizzle-orm/mysql-core";
@@ -414,27 +414,27 @@ CREATE TABLE `table` (
 </Section>
 
 <Section>
-You can specify either `buffer` or `string` mode:
+你可以指定 `buffer` 或 `string` 模式：
 ```typescript
-// will be inferred as `Buffer`
+// 将被推断为 `Buffer`
 tinyblob: tinyblob({ mode: "buffer" }),
 
-// will be inferred as `string`
+// 将被推断为 `string`
 tinyblob: tinyblob({ mode: "string" }),
 ```
 </Section>
 
-> The `buffer` mode is the default way to work with blobs.
-> Drizzle will represent the blob value as a `Buffer` instance
+> `buffer` 模式是处理 blob 的默认方式。
+> Drizzle 会将 blob 值表示为 `Buffer` 实例
 
-> The `string` mode represents blob values as UTF-8 encoded strings,
-> which can be useful when storing text data in blob columns
+> `string` 模式将 blob 值表示为 UTF-8 编码的字符串，
+> 在 blob 列中存储文本数据时会很有用
 
 ### mediumblob
 
-A `BLOB` column with a maximum length of `16,777,215` bytes (`16` MB)
+一个最大长度为 `16,777,215` 字节（`16` MB）的 `BLOB` 列
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 <Section>
 ```typescript
 import { mediumblob, mysqlTable } from "drizzle-orm/mysql-core";
@@ -452,28 +452,28 @@ CREATE TABLE `table` (
 </Section>
 
 <Section>
-You can specify either `buffer` or `string` mode:
+你可以指定 `buffer` 或 `string` 模式：
 ```typescript
-// will be inferred as `Buffer`
+// 将被推断为 `Buffer`
 mediumblob: mediumblob({ mode: "buffer" }),
 
-// will be inferred as `string`
+// 将被推断为 `string`
 mediumblob: mediumblob({ mode: "string" }),
 ```
 </Section>
 
-> The `buffer` mode is the default way to work with blobs.
-> Drizzle will represent the blob value as a `Buffer` instance
+> `buffer` 模式是处理 blob 的默认方式。
+> Drizzle 会将 blob 值表示为 `Buffer` 实例
 
-> The `string` mode represents blob values as UTF-8 encoded strings,
-> which can be useful when storing text data in blob columns
+> `string` 模式将 blob 值表示为 UTF-8 编码的字符串，
+> 在 blob 列中存储文本数据时会很有用
 
 
 ### longblob
 
-A `BLOB` column with a maximum length of `4,294,967,295` bytes (`4` GB)
+一个最大长度为 `4,294,967,295` 字节（`4` GB）的 `BLOB` 列
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 <Section>
 ```typescript
 import { longblob, mysqlTable } from "drizzle-orm/mysql-core";
@@ -491,32 +491,32 @@ CREATE TABLE `table` (
 </Section>
 
 <Section>
-You can specify either `buffer` or `string` mode:
+你可以指定 `buffer` 或 `string` 模式：
 ```typescript
-// will be inferred as `Buffer`
+// 将被推断为 `Buffer`
 longblob: longblob({ mode: "buffer" }),
 
-// will be inferred as `string`
+// 将被推断为 `string`
 longblob: longblob({ mode: "string" }),
 ```
 </Section>
 
-> The `buffer` mode is the default way to work with blobs.
-> Drizzle will represent the blob value as a `Buffer` instance
+> `buffer` 模式是处理 blob 的默认方式。
+> Drizzle 会将 blob 值表示为 `Buffer` 实例
 
-> The `string` mode represents blob values as UTF-8 encoded strings,
-> which can be useful when storing text data in blob columns
+> `string` 模式将 blob 值表示为 UTF-8 编码的字符串，
+> 在 blob 列中存储文本数据时会很有用
 
 ## ---
 
 ### char
 
-The length of a `CHAR(M)` column is fixed to the length that you declare when you create the table. `M` can be any value from `0` to `255`, default is `1`
-When `CHAR` values are stored, they are right-padded with spaces to the specified length. When `CHAR` values are retrieved, trailing spaces are removed unless the [PAD_CHAR_TO_FULL_LENGTH](https://dev.mysql.com/doc/refman/9.7/en/sql-mode.html#sqlmode_pad_char_to_full_length) SQL mode is enabled.
+`CHAR(M)` 列的长度固定为你创建表时声明的长度。`M` 可以是 `0` 到 `255` 之间的任意值，默认为 `1`
+存储 `CHAR` 值时，它们会用空格右填充到指定长度。检索 `CHAR` 值时，会移除尾随空格，除非启用了 [PAD_CHAR_TO_FULL_LENGTH](https://dev.mysql.com/doc/refman/9.7/en/sql-mode.html#sqlmode_pad_char_to_full_length) SQL 模式。
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/char.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/char.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer insert and select types, it won't check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断插入和查询类型，它不会检查运行时值。
 
 <Section>
 ```typescript
@@ -526,7 +526,7 @@ export const table = mysqlTable('table', {
 	char: char(),
 });
 
-// will be inferred as char: "value1" | "value2" | null
+// 将被推断为 char: "value1" | "value2" | null
 char: char({ enum: ["value1", "value2"] })
 ```
 
@@ -539,13 +539,13 @@ CREATE TABLE `table` (
 
 ### varchar
 
-Values in `VARCHAR` columns are variable-length strings.  
-`VARCHAR(M)` stores up to `M` characters, where `M` ranges from `0` to `65,535`
-`VARCHAR` values are not padded when they are stored. Trailing spaces are retained when values are stored and retrieved, in conformance with standard SQL
+`VARCHAR` 列中的值是变长字符串。  
+`VARCHAR(M)` 最多存储 `M` 个字符，其中 `M` 的范围是 `0` 到 `65,535`
+存储 `VARCHAR` 值时不会进行填充。存储和检索值时尾随空格都会被保留，符合标准 SQL
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/char.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/char.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 <Section>
 ```typescript
 import { varchar, mysqlTable } from "drizzle-orm/mysql-core";
@@ -554,7 +554,7 @@ export const table = mysqlTable('table', {
 	varchar: varchar({ length: 2 }),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 varchar: varchar({ length: 6, enum: ["value1", "value2"] })
 ```
 
@@ -567,11 +567,11 @@ CREATE TABLE `table` (
 
 ### text
 
-A `TEXT` column with a maximum length of `65,535` characters (`64` KB)
+一个最大长度为 `65,535` 个字符（`64` KB）的 `TEXT` 列
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
 <Section>
 ```typescript
@@ -581,7 +581,7 @@ export const table = mysqlTable('table', {
 	text: text(),
 });
 
-// will be inferred as text: "value1" | "value2" | null
+// 将被推断为 text: "value1" | "value2" | null
 text: text({ enum: ["value1", "value2"] });
 ```
 
@@ -594,11 +594,11 @@ CREATE TABLE `table` (
 
 ### tinytext
 
-A `TEXT` column with a maximum length of `255` characters
+一个最大长度为 `255` 个字符的 `TEXT` 列
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
 <Section>
 ```typescript
@@ -608,7 +608,7 @@ export const table = mysqlTable('table', {
 	tinytext: tinytext(),
 });
 
-// will be inferred as tinytext: "value1" | "value2" | null
+// 将被推断为 tinytext: "value1" | "value2" | null
 tinytext: tinytext({ enum: ["value1", "value2"] });
 ```
 
@@ -621,11 +621,11 @@ CREATE TABLE `table` (
 
 ### mediumtext
 
-A `TEXT` column with a maximum length of `16,777,215` characters (`16` MB)
+一个最大长度为 `16,777,215` 个字符（`16` MB）的 `TEXT` 列
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
 <Section>
 ```typescript
@@ -635,7 +635,7 @@ export const table = mysqlTable('table', {
 	mediumtext: mediumtext(),
 });
 
-// will be inferred as mediumtext: "value1" | "value2" | null
+// 将被推断为 mediumtext: "value1" | "value2" | null
 mediumtext: mediumtext({ enum: ["value1", "value2"] });
 ```
 
@@ -648,11 +648,11 @@ CREATE TABLE `table` (
 
 ### longtext
 
-A `TEXT` column with a maximum length of `4,294,967,295` characters (`4` GB)
+一个最大长度为 `4,294,967,295` 个字符（`4` GB）的 `TEXT` 列
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/blob.html)**
 
-You can define `{ enum: ["value1", "value2"] }` config to infer `insert` and `select` types, it **won't** check runtime values.
+你可以定义 `{ enum: ["value1", "value2"] }` 配置来推断 `insert` 和 `select` 类型，它**不会**检查运行时值。
 
 <Section>
 ```typescript
@@ -662,7 +662,7 @@ export const table = mysqlTable('table', {
 	longtext: longtext(),
 });
 
-// will be inferred as longtext: "value1" | "value2" | null
+// 将被推断为 longtext: "value1" | "value2" | null
 longtext: longtext({ enum: ["value1", "value2"] });
 ```
 
@@ -677,9 +677,9 @@ CREATE TABLE `table` (
 
 ### boolean
 
-`BOOLEAN` is a synonym for `TINYINT(1)`. A value of `0` is considered false, non-zero values are considered true
+`BOOLEAN` 是 `TINYINT(1)` 的同义词。值为 `0` 视为 false，非零值视为 true
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/numeric-type-syntax.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/numeric-type-syntax.html)**
 
 <Section>
 ```typescript
@@ -701,9 +701,9 @@ CREATE TABLE `table` (
 
 ### date
 
-A date value in `'YYYY-MM-DD'` format, with a range of `'1000-01-01'` to `'9999-12-31'`
+一个 `'YYYY-MM-DD'` 格式的日期值，范围为 `'1000-01-01'` 到 `'9999-12-31'`
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/datetime.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/datetime.html)**
 
 <Section>
 ```typescript
@@ -721,20 +721,20 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-You can specify either `date` or `string` infer modes:
+你可以指定 `date` 或 `string` 推断模式：
 ```typescript
-// will infer as date
+// 将推断为 date
 date: date({ mode: "date" }),
 
-// will infer as string
+// 将推断为 string
 date: date({ mode: "string" }),
 ```
 
 ### datetime
 
-A date and time value in `'YYYY-MM-DD hh:mm:ss'` format, with a range of `'1000-01-01 00:00:00'` to `'9999-12-31 23:59:59'`. Supports fractional seconds up to `6` digits
+一个 `'YYYY-MM-DD hh:mm:ss'` 格式的日期和时间值，范围为 `'1000-01-01 00:00:00'` 到 `'9999-12-31 23:59:59'`。支持最多 `6` 位小数秒
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/datetime.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/datetime.html)**
 
 <Section>
 ```typescript
@@ -773,9 +773,9 @@ CREATE TABLE `table` (
 
 ### time 
 
-A time value in `'hh:mm:ss'` format, with a range of `'-838:59:59'` to `'838:59:59'`. Can represent time of day or elapsed time. Supports fractional seconds up to `6` digits
+一个 `'hh:mm:ss'` 格式的时间值，范围为 `'-838:59:59'` 到 `'838:59:59'`。可以表示一天中的时间或经过的时间。支持最多 `6` 位小数秒
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/time.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/time.html)**
 
 <Section>
 ```typescript
@@ -799,9 +799,9 @@ CREATE TABLE `table` (
 
 ### year
 
-A `1`-byte type for year values in `YYYY` format, with a range of `1901` to `2155` and `0000`
+一个 `1` 字节的年份值类型，格式为 `YYYY`，范围为 `1901` 到 `2155` 以及 `0000`
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/year.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/year.html)**
 
 <Section>
 ```typescript
@@ -821,9 +821,9 @@ CREATE TABLE `table` (
 
 ### timestamp
 
-A date and time value in `'YYYY-MM-DD hh:mm:ss'` format, with a range of `'1970-01-01 00:00:01'` UTC to `'2038-01-19 03:14:07'` UTC. MySQL converts `TIMESTAMP` values from the current time zone to UTC for storage, and back from UTC to the current time zone for retrieval. Supports fractional seconds up to `6` digits
+一个 `'YYYY-MM-DD hh:mm:ss'` 格式的日期和时间值，范围从 UTC `'1970-01-01 00:00:01'` 到 UTC `'2038-01-19 03:14:07'`。MySQL 在存储时会把 `TIMESTAMP` 值从当前时区转换为 UTC，在检索时再把 UTC 转换回当前时区。支持最多 `6` 位小数秒
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/datetime.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/datetime.html)**
 
 <Section>
 ```typescript
@@ -880,9 +880,9 @@ CREATE TABLE `table` (
 
 ### json
 
-A native `JSON` data type that enables efficient access to data in JSON documents. JSON documents are automatically validated and stored in an optimized binary format that permits quick read access to document elements
+一个原生 `JSON` 数据类型，可以高效访问 JSON 文档中的数据。JSON 文档会被自动校验，并以优化的二进制格式存储，从而可以快速读取文档元素
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/json.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/json.html)**
 
 <Section>
 ```typescript
@@ -901,16 +901,16 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-You can specify `.$type<..>()` for json object inference, it **won't** check runtime values. 
-It provides compile time protection for default values, insert and select schemas.
+你可以指定 `.$type<..>()` 用于 json 对象推断，它**不会**检查运行时值。
+它为默认值、插入和查询 schema 提供编译时保护。
 ```typescript
-// will be inferred as { foo: string }
+// 将被推断为 { foo: string }
 json: json().$type<{ foo: string }>();
 
-// will be inferred as string[]
+// 将被推断为 string[]
 json: json().$type<string[]>();
 
-// won't compile
+// 将无法通过编译
 json: json().$type<string[]>().default({});
 ```
 
@@ -918,9 +918,9 @@ json: json().$type<string[]>().default({});
 
 ### enum
 
-A string object with a value chosen from a list of permitted values that are enumerated at table creation time.
+一个字符串对象，其值从建表时枚举的一组允许值中选择。
 
-For more info please refer to the official MySQL **[docs.](https://dev.mysql.com/doc/refman/8.0/en/enum.html)**
+更多信息请参考 MySQL 官方 **[文档。](https://dev.mysql.com/doc/refman/8.0/en/enum.html)**
 
 <Section>
 ```typescript
@@ -940,9 +940,9 @@ CREATE TABLE `table` (
 
 ## ---
 
-### Customizing data type
+### 自定义数据类型
 
-Every column builder has a `.$type()` method, which allows you to customize the data type of the column. This is useful, for example, with unknown or branded types.
+每个列构建器都有一个 `.$type()` 方法，允许你自定义列的数据类型。例如，在不明确或带品牌（branded）的类型上会很有用。
 
 ```ts
 import { int, json, mysqlTable } from "drizzle-orm/mysql-core";
@@ -960,7 +960,7 @@ export const users = mysqlTable("users", {
 ```
 
 ### Not null
-`NOT NULL` constraint dictates that the associated column may not contain a `NULL` value.
+`NOT NULL` 约束规定关联的列不能包含 `NULL` 值。
 
 <Section>
 ```typescript
@@ -978,15 +978,14 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-### Default value
+### 默认值
 
-The `DEFAULT` clause specifies a default value to use for the column if no value
-is explicitly provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+如果在执行 `INSERT` 时用户没有显式提供值，`DEFAULT` 子句指定该列使用的默认值。
+如果列定义没有附加显式的 `DEFAULT` 子句，
+那么该列的默认值为 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以指定默认值为 `NULL`、
+字符串常量、blob 常量、带符号数字，或任何用括号括起来的常量表达式。
 
 <Section>
 ```typescript
@@ -1007,12 +1006,12 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-When using `$default()` or `$defaultFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all insert queries. 
-These functions can assist you in utilizing various implementations such as `uuid`, `cuid`, `cuid2`, and many more.
+使用 `$default()` 或 `$defaultFn()`（它们只是同一个函数的不同别名）时，
+你可以在运行时生成默认值，并在所有插入查询中使用这些值。
+这些函数可以帮助你使用 `uuid`、`cuid`、`cuid2` 等各种实现。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不会影响 `drizzle-kit` 的行为，它只在 `drizzle-orm` 的运行时中使用
 </Callout>
 
 ```ts
@@ -1024,16 +1023,16 @@ export const table = mysqlTable('table', {
 });
 ```
 
-When using `$onUpdate()` or `$onUpdateFn()`, which are simply different aliases for the same function, 
-you can generate defaults at runtime and use these values in all update queries. 
+使用 `$onUpdate()` 或 `$onUpdateFn()`（它们只是同一个函数的不同别名）时，
+你可以在运行时生成默认值，并在所有更新查询中使用这些值。
 
-Adds a dynamic update value to the column. The function will be called when the row is updated, 
-and the returned value will be used as the column value if none is provided.
-If no default (or $defaultFn) value is provided, the function will be called
-when the row is inserted as well, and the returned value will be used as the column value.
+为列添加动态更新值。当行被更新时会调用该函数，
+如果没有提供值，则返回的值将用作列值。
+如果没有提供默认值（或 $defaultFn）值，那么当行被插入时也会调用该函数，
+返回的值将用作列值。
 
 <Callout type="info" emoji="ℹ️">
-	Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`
+	注意：此值不会影响 `drizzle-kit` 的行为，它只在 `drizzle-orm` 的运行时中使用
 </Callout>
 
 ```ts
@@ -1044,7 +1043,7 @@ export const table = mysqlTable('table', {
 });
 ```
 
-### Primary key 
+### 主键 
 
 <Section>
 ```typescript
@@ -1062,7 +1061,7 @@ CREATE TABLE `table` (
 ```
 </Section>
 
-### Auto increment
+### 自动递增
 
 <Section>
 ```typescript

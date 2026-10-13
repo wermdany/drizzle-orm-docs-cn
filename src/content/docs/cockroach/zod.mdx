@@ -3,7 +3,7 @@ import Callout from '@mdx/Callout.astro';
 
 # zod
 
-### Install the dependencies
+### 安装依赖
 
 <Npm>
 drizzle-orm@rc zod
@@ -11,7 +11,7 @@ drizzle-orm@rc zod
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询的数据的形状 —— 可用于校验 API 响应。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -26,13 +26,13 @@ const users = cockroachTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // Error: `age` is not returned in the above query
+const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // 错误：上述查询中未返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // Will parse successfully
+const parsed: { id: number; name: string; age: number } = userSelectSchema.parse(rows[0]); // 将成功解析
 ```
 
-Enums are also supported.
+也支持枚举。
 
 ```ts copy
 import { cockroachEnum } from 'drizzle-orm/cockroach-core';
@@ -45,7 +45,7 @@ const parsed: 'admin' | 'basic' = rolesSchema.parse(...);
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据的形状 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -60,16 +60,16 @@ const users = cockroachTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: { name: string, age: number } = userInsertSchema.parse(user); // Error: `age` is not defined
+const parsed: { name: string, age: number } = userInsertSchema.parse(user); // 错误：`age` 未定义
 
 const user = { name: 'Jane', age: 30 };
-const parsed: { name: string, age: number } = userInsertSchema.parse(user); // Will parse successfully
+const parsed: { name: string, age: number } = userInsertSchema.parse(user); // 将成功解析
 await db.insert(users).values(parsed);
 ```
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据的形状 —— 可用于校验 API 请求。
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -84,13 +84,13 @@ const users = cockroachTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { age: 35 };
-const parsed: { name?: string | undefined, age?: number | undefined } = userUpdateSchema.parse(user); // Will parse successfully
+const parsed: { name?: string | undefined, age?: number | undefined } = userUpdateSchema.parse(user); // 将成功解析
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a Zod schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，用于扩展、修改或完全覆盖字段的 schema。定义回调函数会扩展或修改，而提供 Zod schema 会覆盖它。
 
 ```ts copy
 import { int4, jsonb, cockroachTable, text } from 'drizzle-orm/cockroach-core';
@@ -105,9 +105,9 @@ const users = cockroachTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => schema.max(20), // Extends schema
-  bio: (schema) => schema.max(1000), // Extends schema before becoming nullable/optional
-  preferences: z.object({ theme: z.string() }) // Overwrites the field, including its nullability
+  name: (schema) => schema.max(20), // 扩展 schema
+  bio: (schema) => schema.max(1000), // 在变为可空/可选之前扩展 schema
+  preferences: z.object({ theme: z.string() }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: {
@@ -120,16 +120,16 @@ const parsed: {
 } = userSelectSchema.parse(...);
 ```
 
-### Factory functions
+### 工厂函数
 
-For more advanced use cases, you can use the `createSchemaFactory` function.
+对于更高级的用例，你可以使用 `createSchemaFactory` 函数。
 
-**Use case: Using an extended Zod instance**
+**用例：使用扩展的 Zod 实例**
 
 ```ts copy
 import { int4, cockroachTable, text } from 'drizzle-orm/cockroach-core';
 import { createSchemaFactory } from 'drizzle-orm/zod';
-import { z } from '@hono/zod-openapi'; // Extended Zod instance
+import { z } from '@hono/zod-openapi'; // 扩展的 Zod 实例
 
 const users = cockroachTable('users', {
   id: int4().primaryKey().generatedAlwaysAsIdentity(),
@@ -140,12 +140,12 @@ const users = cockroachTable('users', {
 const { createInsertSchema } = createSchemaFactory({ zodInstance: z });
 
 const userInsertSchema = createInsertSchema(users, {
-  // We can now use the extended instance
+  // 现在我们可以使用扩展实例
   name: (schema) => schema.openapi({ example: 'John' })
 });
 ```
 
-**Use case: Type coercion**
+**用例：类型强制转换**
 
 ```ts copy
 import { cockroachTable, timestamp } from 'drizzle-orm/cockroach-core';
@@ -158,20 +158,20 @@ const users = cockroachTable('users', {
 });
 
 const { createInsertSchema } = createSchemaFactory({
-  // This configuration will only coerce dates. Set `coerce` to `true` to coerce all data types or specify others
+  // 此配置只会强制转换日期。将 `coerce` 设置为 `true` 可强制转换所有数据类型，或指定其他类型
   coerce: {
     date: true
   }
 });
 
 const userInsertSchema = createInsertSchema(users);
-// The above is the same as this:
+// 上述写法等同于：
 const userInsertSchema = z.object({
   ...,
   createdAt: z.coerce.date()
 });
 ```
 
-### Data type reference
+### 数据类型参考
 
-CockroachDB data type mappings follow the CockroachDB column builders. See the [CockroachDB data types](/docs/cockroach/column-types) page for the full column reference.
+CockroachDB 数据类型映射遵循 CockroachDB 列构建器。完整的列参考请参见 [CockroachDB 数据类型](/docs/cockroach/column-types) 页面。

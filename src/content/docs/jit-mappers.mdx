@@ -1,6 +1,6 @@
-# JIT Mappers
+# JIT 映射器
 
-JIT mappers are **disabled by default**. Enable them with the `jit` option:
+JIT mapper **默认禁用**。通过 `jit` 选项启用它们：
 
 ```ts
 import { drizzle } from 'drizzle-orm/...';
@@ -8,28 +8,28 @@ import { drizzle } from 'drizzle-orm/...';
 const db = drizzle({ client, jit: true });
 ```
 
-On initialization, Drizzle runs a compatibility check that tests whether the `Function` constructor works in the current runtime. If it doesn't (e.g. some edge runtimes or CSP-restricted environments), it falls back to regular mappers with a console warning.
+初始化时，Drizzle 会运行一次兼容性检查，测试 `Function` 构造函数在当前运行时中是否可用。如果不可用（例如某些边缘运行时或受 CSP 限制的环境），它会回退到常规 mapper，并给出一个控制台警告。
 
-The `jit` option is available in every driver's config
+`jit` 选项在每个驱动的配置中都可用
 
-## What are JIT mappers?
+## 什么是 JIT 映射器？
 
-JIT (Just-In-Time) mappers are dynamically generated JavaScript functions that transform database rows into JS objects. Instead of interpreting column metadata at runtime for every row, JIT mappers **compile a specialized function once** and reuse it for all rows in the result set.
+JIT（Just-In-Time，即时）mapper 是动态生成的 JavaScript 函数，用于将数据库行转换为 JS 对象。JIT mapper 不会在运行时为每一行解释列元数据，而是**一次性编译一个专用函数**，并在结果集的所有行中复用它。
 
-## Why are they needed?
+## 为什么需要它们？
 
-The regular Drizzle ORM mapper loops through column metadata for every single row:
+常规的 Drizzle ORM mapper 会为每一行循环遍历列元数据：
 
 ```
-For each row:
-  For each column:
-    → look up decoder
-    → check if codec exists
-    → check if value is null
-    → apply codec if needed
-    → apply decoder if needed
-    → navigate nested path
-    → assign to result object
+对于每一行：
+  对于每一列：
+    → 查找 decoder
+    → 检查 codec 是否存在
+    → 检查值是否为 null
+    → 如有需要则应用 codec
+    → 如有需要则应用 decoder
+    → 导航嵌套路径
+    → 赋值到结果对象
 ```
 
-With thousands of rows, this interpretive overhead adds up. JIT mappers eliminate it by generating a function where all the metadata lookups, null checks, and nested object construction are hardcoded into the function body at generation time
+当成千上万行时，这种解释执行的开销会不断累积。JIT mapper 通过在生成时将所有的元数据查找、null 检查和嵌套对象构造都硬编码到函数体中，从而消除了这种开销

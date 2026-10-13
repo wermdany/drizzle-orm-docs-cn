@@ -1,17 +1,17 @@
 ---
-title: DrizzleORM v0.16.2 release
+title: DrizzleORM v0.16.2 发布
 pubDate: 2023-01-21
-description: Drizzle ORM - is an idiomatic TypeScript ORM which can be used as query builder and as an ORM being the source of truth for SQL schema and CLI for automatic migrations generation.
+description: Drizzle ORM - 是一个符合习惯用法的 TypeScript ORM，既可作为查询构建器使用，也可作为 ORM 使用，它是 SQL schema 的单一事实来源，并提供用于自动生成迁移的 CLI。
 ---
 import Section from "@mdx/Section.astro";
 
-Drizzle ORM - is an idiomatic TypeScript ORM which can be used as query builder and as an ORM being the source of truth for SQL schema and CLI for automatic migrations generation.
+Drizzle ORM - 是一个符合习惯用法的 TypeScript ORM，既可作为查询构建器使用，也可作为 ORM 使用，它是 SQL schema 的单一事实来源，并提供用于自动生成迁移的 CLI。
 
-Since last major update we've added numerous requested features 🚀
+自上次重大更新以来，我们添加了大量备受期待的特性 🚀
 
 ### 🎉 PostgreSQL schemas
 
-You can now declare [PostgreSQL schemas](https://www.postgresql.org/docs/current/ddl-schemas.html) and tables to be created within this schema
+你现在可以声明 [PostgreSQL schemas](https://www.postgresql.org/docs/current/ddl-schemas.html)，并在该 schema 中创建表
 
 <Section>
 ```ts copy
@@ -37,15 +37,15 @@ CREATE TABLE IF NOT EXISTS "my_schema"."users" (
 ```
 </Section>
 
-[drizzle-kit](https://driz.link/kit) will automatically generate all needed SQL migrations
+[drizzle-kit](https://driz.link/kit) 将自动生成所有需要的 SQL 迁移
 
  ```shell 
 drizzle-kit generate:pg --schema=src/schema.ts --out=migrations/ 
  ```
 
-### 🎉 MySQL databases/schemas
+### 🎉 MySQL 数据库/schemas
 
-You can now declare [MySQL databases/schemas](https://dev.mysql.com/doc/refman/8.0/en/create-database.html) and tables to be created within it
+你现在可以声明 [MySQL databases/schemas](https://dev.mysql.com/doc/refman/8.0/en/create-database.html)，并在其中创建表
 
 ```ts copy
 // schema.ts
@@ -60,10 +60,10 @@ const users = mySchema("users", {
 });
 ```
 
-[drizzle-kit](https://driz.link/kit) will automatically generate all needed SQL migrations ```shell drizzle-kit
+[drizzle-kit](https://driz.link/kit) 将自动生成所有需要的 SQL 迁移 ```shell drizzle-kit
 generate:mysql --schema=src/schema.ts --out=migrations/ ```
 
-which will automatically generate you SQL migration
+它会自动为你生成 SQL 迁移
 
 ```sql
 CREATE DATABASE `my_schema`;
@@ -77,20 +77,20 @@ CREATE TABLE `my_schema`.`users` (
 
 ### 🎉 PostgreSQL introspect
 
-You can now pull database schema from your existing PostgreSQL database within seconds with [drizzle-kit](https://driz.link/kit), this vanishes mostly any friction for you to switch from any existing orm or vanilla SQL.
-It supports:
+你现在可以使用 [drizzle-kit](https://driz.link/kit) 在几秒钟内从现有的 PostgreSQL 数据库中拉取数据库 schema，这基本上消除了你从任何现有 ORM 或原生 SQL 迁移过来的所有阻碍。
+它支持：
 
 - enums
-- tables with all native and non-native columns
-- indexes
-- foreign keys, self references and cyclic fks
+- 包含所有原生和非原生列的表
+- 索引
+- 外键、自引用和循环外键
 - schemas
 
 ```shell
 drizzle-kit introspect:pg --out=migrations/ --connectionString=postgresql://user:pass@host:port/db_name
 ```
 
-it will print you `schema.ts`
+它会为你打印出 `schema.ts`
 
 ```ts copy
 export const myEnum = pgEnum("my_enum", ["one", "two", "three"]);
@@ -181,9 +181,9 @@ export const example = pgTable(
 );
 ```
 
-### 🎉 Postgres.js driver support
+### 🎉 支持 Postgres.js 驱动
 
-We've added full support for [postgres.js](https://github.com/porsager/postgres), it is lightweight and it is fast 🚀
+我们添加了对 [postgres.js](https://github.com/porsager/postgres) 的完整支持，它轻量且快速 🚀
 
 ```ts copy
 // schema.ts
@@ -205,11 +205,11 @@ const db: PostgresJsDatabase = drizzle(client);
 const allUsers = await db.select(users);
 ```
 
-Full PostgreSQL docs see [here](https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm-pg)
+完整的 PostgreSQL 文档见 [此处](https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-orm-pg)
 
-### 🎉 PostgreSQL and MySQL types
+### 🎉 PostgreSQL 与 MySQL 类型
 
-We've added useful operators for you to create any needed non-native PostgreSQL or MySQL types
+我们添加了有用的操作符，供你创建任何需要的非原生 PostgreSQL 或 MySQL 类型
 
 ```ts copy
 // PostgreSQL

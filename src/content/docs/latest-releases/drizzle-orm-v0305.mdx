@@ -1,18 +1,18 @@
 ---
-title: DrizzleORM v0.30.5 release
+title: DrizzleORM v0.30.5 发布
 pubDate: 2024-03-27
-description: Added '$onUpdate' functionality for PostgreSQL, MySQL and SQLite and fixed insertions on columns with the smallserial datatype.
+description: 为 PostgreSQL、MySQL 和 SQLite 添加了 '$onUpdate' 功能，并修复了 smallserial 数据类型列的插入问题。
 ---
 
-## New Features
+## 新特性
 
-### `$onUpdate` functionality for PostgreSQL, MySQL and SQLite
+### PostgreSQL、MySQL 和 SQLite 的 `$onUpdate` 功能
 
-Adds a dynamic update value to the column.
-The function will be called when the row is updated, and the returned value will be used as the column value if none is provided.
-If no `default` (or `$defaultFn`) value is provided, the function will be called when the row is inserted as well, and the returned value will be used as the column value.
+为列添加动态更新值。
+该函数会在行更新时被调用；如果没有提供列值，则返回的值将用作列值。
+如果没有提供 `default`（或 `$defaultFn`）值，则函数也会在行插入时被调用，返回的值将用作列值。
 
-> Note: This value does not affect the `drizzle-kit` behavior, it is only used at runtime in `drizzle-orm`.
+> 注意：该值不会影响 `drizzle-kit` 的行为，它仅在 `drizzle-orm` 的运行时中使用。
 
 ```ts copy {4,5,6}
 const usersOnUpdate = pgTable('users_on_update', {
@@ -24,6 +24,6 @@ const usersOnUpdate = pgTable('users_on_update', {
 });
 ```
 
-## Fixes
+## 修复
 
-- Insertions on columns with the smallserial datatype are not optional - [#1848](https://github.com/drizzle-team/drizzle-orm/issues/1848)
+- smallserial 数据类型列的插入不是可选的 - [#1848](https://github.com/drizzle-team/drizzle-orm/issues/1848)

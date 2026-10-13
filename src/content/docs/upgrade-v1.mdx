@@ -2,43 +2,43 @@ import Npm from "@mdx/Npm.astro";
 import Npx from "@mdx/Npx.astro";
 import Prerequisites from "@mdx/Prerequisites.astro";
 
-# Upgrading to Drizzle v1
+# 升级到 Drizzle v1
 
 <Npm>
  drizzle-orm@rc
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 1 - Run `drizzle-kit up`
+#### 步骤 1 - 运行 `drizzle-kit up`
 
-> v3 migration folder discussion: https://github.com/drizzle-team/drizzle-orm/discussions/2832  
+> v3 迁移文件夹讨论：https://github.com/drizzle-team/drizzle-orm/discussions/2832  
 
-We've updated the migrations folder structure by:
-- removing `journal.json`
-- grouping SQL files and snapshots into separate migration folders
-- removing the `drizzle-kit drop` command
+我们通过以下方式更新了迁移文件夹结构：
+- 移除了 `journal.json`
+- 将 SQL 文件和快照分组到独立的迁移文件夹中
+- 移除了 `drizzle-kit drop` 命令
 
-These changes eliminate potential Git conflicts with the journal file and simplify the process of dropping or fixing conflicted migrations
+这些变更消除了与 journal 文件之间潜在的 Git 冲突，并简化了删除或修复冲突迁移的过程
 
-The drizzle-kit has been architecturally redesigned:
-- Migrated from database snapshots to DDL snapshots
+drizzle-kit 已在架构上重新设计：
+- 从数据库快照迁移到 DDL 快照
 
-Commutativity checks were added:
-- Detecting non-commutative migrations across branches
-> Commutativity discussion: https://github.com/drizzle-team/drizzle-orm/discussions/5005
+新增了交换性检查：
+- 检测跨分支的非交换迁移
+> 交换性讨论：https://github.com/drizzle-team/drizzle-orm/discussions/5005
 
-To migrate from old structure to a new one you would need to run
+要从旧结构迁移到新结构，你需要运行
 
 <Npx>
 drizzle-kit up
 </Npx>
 
-#### Step 2 - Review breaking changes
+#### 步骤 2 - 检查破坏性变更
 
-You can find out the full list of breaking changes [here](/docs/v0-v1-changes#breaking-changes) and make sure to update your code accordingly
+你可以在[这里](/docs/v0-v1-changes#破坏性变更)找到完整的破坏性变更列表，并确保相应地更新你的代码
 
-If you were using Relational Queries, you need to upgrade to v2:
-- [How to migrate relations definition from v1 to v2](/docs/relations-v1-v2#how-to-migrate-relations-schema-definition-from-v1-to-v2)
-- [How to migrate queries from v1 to v2](/docs/relations-v1-v2#how-to-migrate-queries-from-v1-to-v2)
+如果你之前使用了 Relational Queries，则需要升级到 v2：
+- [如何将关系定义从 v1 迁移到 v2](/docs/relations-v1-v2#如何将关系-schema-定义从-v1-迁移到-v2)
+- [如何将查询从 v1 迁移到 v2](/docs/relations-v1-v2#如何将查询从-v1-迁移到-v2)
 
-#### Step 3 - Done ✅
+#### 步骤 3 - 完成 ✅

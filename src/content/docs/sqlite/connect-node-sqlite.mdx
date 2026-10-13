@@ -9,24 +9,24 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> Node SQLite
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
-- Node - [website](https://nodejs.org/)
-- Node SQLite driver - [docs](https://nodejs.org/api/sqlite.html)
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
+- Node - [网站](https://nodejs.org/)
+- Node SQLite 驱动 - [文档](https://nodejs.org/api/sqlite.html)
 </Prerequisites>
 
-Drizzle ORM natively supports **[`node:sqlite`](https://nodejs.org/api/sqlite.html)** module
+Drizzle ORM 原生支持 **[`node:sqlite`](https://nodejs.org/api/sqlite.html)** 模块
 
-We embrace SQL dialects and dialect specific drivers and syntax and unlike any other ORM, 
-for synchronous drivers like `node:sqlite` we have both **async** and **sync** APIs and we mirror most popular 
-SQLite-like `all`, `get`, `values` and `run` query methods syntax.
+我们拥抱 SQL 方言以及方言特定的驱动和语法，与其它任何 ORM 不同，
+对于像 `node:sqlite` 这样的同步驱动，我们同时提供 **async** 和 **sync** API，并且我们仿照了最流行的
+类 SQLite 的 `all`、`get`、`values` 和 `run` 查询方法语法。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
  drizzle-orm@rc
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并执行查询
 ```typescript copy
 import { drizzle } from 'drizzle-orm/node-sqlite';
 
@@ -35,7 +35,7 @@ const db = drizzle("sqlite.db");
 const result = await db.select().from(...);
 ```
 
-If you need to provide your existing driver:
+如果你需要提供已有的驱动：
 ```typescript copy
 import { drizzle } from 'drizzle-orm/node-sqlite';
 import { DatabaseSync } from 'node:sqlite';
@@ -46,7 +46,7 @@ const db = drizzle({ client: sqlite });
 const result = await db.select().from(...);
 ```
 
-If you want to use **sync** APIs:
+如果你想要使用 **sync** API：
 ```typescript copy
 import { drizzle } from 'drizzle-orm/node-sqlite';
 import { DatabaseSync } from 'node:sqlite';
@@ -60,6 +60,6 @@ const result = db.select().from(users).values();
 const result = db.select().from(users).run();
 ```
 
-#### What's next?
+#### 下一步？
 
 <WhatsNextSQLite/>

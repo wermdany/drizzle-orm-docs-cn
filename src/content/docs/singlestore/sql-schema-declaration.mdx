@@ -7,15 +7,15 @@ import LinksList from "@mdx/LinksList.astro"
 
 # Drizzle schema
 
-Drizzle lets you define a schema in TypeScript with various models and properties supported by the underlying database. 
-When you define your schema, it serves as the source of truth for future modifications in queries (using Drizzle-ORM)
-and migrations (using Drizzle-Kit).
+Drizzle 让你可以使用底层数据库支持的各种模型和属性在 TypeScript 中定义 schema。
+当你定义 schema 时，它将成为未来查询（使用 Drizzle-ORM）
+和迁移（使用 Drizzle-Kit）修改的真相来源。
 
 <Callout> 
-If you are using Drizzle-Kit for the migration process, make sure to export all the models defined in your schema files so that Drizzle-Kit can import them and use them in the migration diff process. 
+如果你使用 Drizzle-Kit 进行迁移流程，请确保导出 schema 文件中定义的所有模型，以便 Drizzle-Kit 可以导入它们并在迁移差异（diff）过程中使用它们。
 </Callout>
 
-<CodeTabs items={["Using imports", "Using callback", "Using import *"]}>
+<CodeTabs items={["使用 imports", "使用 callback", "使用 import *"]}>
 ```ts
 import { int, singlestoreTable, varchar } from "drizzle-orm/singlestore-core";
 
@@ -48,18 +48,18 @@ export const usersTable = t.singlestoreTable("users", {
 ```
 </CodeTabs>
 
-## Organize your schema files 
-You can declare your SQL schema directly in TypeScript either in a single `schema.ts` file,
-or you can spread them around — whichever you prefer, all the freedom!
+## 组织你的 schema 文件 
+你可以直接在 TypeScript 中在单个 `schema.ts` 文件中声明 SQL schema，
+或者将它们分散放置——随你喜欢，完全自由！
 
-#### Schema in 1 file
-The most common way to declare your schema with Drizzle is to put all your tables into one `schema.ts` file.
+#### 单文件中的 schema
+使用 Drizzle 声明 schema 最常见的方式是将所有表放入一个 `schema.ts` 文件中。
 
-> Note: You can name your schema file whatever you like. For example, it could be `models.ts`, or something else.
+> 注意：你可以随意命名你的 schema 文件。例如，它可以叫 `models.ts` 或其他名字。
 
-This approach works well if you don't have too many table models defined, or if you're okay with keeping them all in one file
+如果你没有定义太多的表模型，或者你不介意将它们都放在一个文件中，这种方法效果很好
 
-Example:
+示例：
 ```plaintext
 📦 <project root>
  └ 📂 src
@@ -67,9 +67,9 @@ Example:
        └ 📜 schema.ts
 ```
 
-In the `drizzle.config.ts` file, you need to specify the path to your schema file. With this configuration, Drizzle will 
-read from the `schema.ts` file and use this information during the migration generation process. For more information 
-about the `drizzle.config.ts` file and migrations with Drizzle, please check: [link](/docs/singlestore/drizzle-config-file)
+在 `drizzle.config.ts` 文件中，你需要指定 schema 文件的路径。使用此配置，Drizzle 将
+从 `schema.ts` 文件读取，并在迁移生成过程中使用这些信息。关于
+`drizzle.config.ts` 文件以及使用 Drizzle 进行迁移的更多信息，请查看：[链接](/docs/singlestore/drizzle-config-file)
 ```ts
 import { defineConfig } from "drizzle-kit";
 
@@ -79,13 +79,13 @@ export default defineConfig({
 })
 ```
 
-#### Schema in multiple files
+#### 多个文件中的 schema
 
-You can place your Drizzle models — such as tables, enums, sequences, etc. — not only in one file but in any file you prefer. 
-The only thing you must ensure is that you export all the models from those files so that the Drizzle kit can import 
-them and use them in migrations.
+你可以将你的 Drizzle 模型——例如表、enum、序列等——不仅放在一个文件中，而是放在任何你喜欢的文件中。
+你唯一必须确保的是从这些文件中导出所有模型，以便 Drizzle kit 可以导入
+它们并在迁移中使用。
 
-One use case would be to separate each table into its own file.
+一个用例是将每个表分离到各自的文件中。
 ```plaintext
 📦 <project root>
  └ 📂 src
@@ -99,9 +99,9 @@ One use case would be to separate each table into its own file.
           └ 📜 etc.ts
 ```
 
-In the `drizzle.config.ts` file, you need to specify the path to your schema folder. With this configuration, Drizzle will 
-read from the `schema` folder and find all the files recursively and get all the drizzle tables from there. For more information 
-about the `drizzle.config.ts` file and migrations with Drizzle, please check: [link](/docs/singlestore/drizzle-config-file)
+在 `drizzle.config.ts` 文件中，你需要指定 schema 文件夹的路径。使用此配置，Drizzle 将
+从 `schema` 文件夹读取，递归找到所有文件并从中获取所有 drizzle 表。关于
+`drizzle.config.ts` 文件以及使用 Drizzle 进行迁移的更多信息，请查看：[链接](/docs/singlestore/drizzle-config-file)
 
 ```ts
 import { defineConfig } from "drizzle-kit";
@@ -112,7 +112,7 @@ export default defineConfig({
 })
 ```
 
-You can also group them in any way you like, such as creating groups for user-related tables, messaging-related tables, product-related tables, etc. 
+你也可以按任何你喜欢的方式对它们进行分组，例如为用户相关的表、消息相关的表、产品相关的表等创建分组。
 ```plaintext
 📦 <project root>
  └ 📂 src
@@ -123,21 +123,21 @@ You can also group them in any way you like, such as creating groups for user-re
           └ 📜 products.ts
 ```
 
-## Shape your data schema
+## 构建你的数据 schema
 
-Drizzle schema consists of several model types from database you are using. With drizzle you can specify:
-- Tables with columns, constraints, etc.
-- Schemas, which are equivalent to databases in SingleStore
+Drizzle schema 由你所使用数据库的若干模型类型组成。使用 drizzle 你可以指定：
+- 带有列、约束等的表
+- Schema，在 SingleStore 中它等同于数据库
 - Enums
 - Views
-- etc.
+- 等等。
 
-Let's go one by one and check how the schema should be defined with drizzle
+让我们逐一检查如何使用 drizzle 定义 schema
 
-#### **Tables and columns declaration** 
+#### **表和列的声明** 
 
-A table in Drizzle should be defined with at least 1 column, the same as it should be done in database. There is one important thing to know,
-there is no such thing as a common table object in Drizzle. You need to choose the SingleStore table object.
+在 Drizzle 中定义表时至少需要 1 列，与在数据库中的做法相同。有一件重要的事情需要知道，
+Drizzle 中没有通用表对象这种东西。你需要选择 SingleStore 表对象。
 
 ![](@/assets/images/table-structure.svg)
 
@@ -149,15 +149,15 @@ export const users = singlestoreTable('users', {
 });
 ```
 
-By default, Drizzle will use the TypeScript key names for columns in database queries. 
-Therefore, the schema and query from the example will generate the SQL query shown below
+默认情况下，Drizzle 会在数据库查询中对列使用 TypeScript 键名。
+因此，示例中的 schema 和查询将生成如下所示的 SQL 查询
 
 <Callout>
-This example uses a db object, whose initialization is not covered in this part of the documentation. To learn how to connect to the database, please refer to the [Connections Docs](/docs/singlestore/get-started-singlestore)
+此示例使用了一个 db 对象，其初始化未在本文档的这一部分中涵盖。要了解如何连接数据库，请参阅 [Connections Docs](/docs/singlestore/get-started-singlestore)
 </Callout>
 
 \
-**TypeScript key = database key**
+**TypeScript 键 = 数据库键**
 <Section>
 ```ts
 // schema.ts
@@ -177,7 +177,7 @@ SELECT `id`, `first_name` FROM `users`;
 ```
 </Section>
 
-If you want to use different names in your TypeScript code and in the database, you can use column aliases
+如果你想在 TypeScript 代码和数据库中使用不同的名称，可以使用列别名
 
 <Section>
 ```ts
@@ -198,14 +198,14 @@ SELECT `id`, `first_name` FROM `users`;
 ```
 </Section>
 
-### Camel and Snake casing
+### 驼峰与蛇形命名
 
-Database model names often use `snake_case` conventions, while in TypeScript, it is common to use `camelCase` for naming models. 
-This can lead to a lot of alias definitions in the schema. To address this, Drizzle provides a way to automatically 
-map `camelCase` from TypeScript to `snake_case` in the database by including one optional parameter during Drizzle database initialization
+数据库模型名称通常使用 `snake_case` 约定，而在 TypeScript 中，常用 `camelCase` 来命名模型。
+这可能导致 schema 中出现大量别名定义。为了解决这个问题，Drizzle 提供了一种方式，通过在 Drizzle 数据库初始化时包含一个可选参数，自动将
+TypeScript 中的 `camelCase` 映射到数据库中的 `snake_case`
 
-For such mapping, you can use the `casing` option in the Drizzle DB declaration. This parameter will 
-help you specify the database model naming convention and will attempt to map all JavaScript keys accordingly
+对于此类映射，你可以在 Drizzle DB 声明中使用 `casing` 选项。此参数将
+帮助你指定数据库模型命名约定，并会尝试相应地映射所有 JavaScript 键
 
 <Section>
 ```ts
@@ -232,16 +232,16 @@ SELECT `id`, `first_name` FROM `users`;
 ```
 </Section>
 
-### Advanced
+### 进阶
 
-There are a few tricks you can use with Drizzle ORM. As long as Drizzle is entirely in TypeScript files, 
-you can essentially do anything you would in a simple TypeScript project with your code.
+使用 Drizzle ORM 时你可以使用一些技巧。只要 Drizzle 完全位于 TypeScript 文件中，
+你的代码基本上可以做在任何简单 TypeScript 项目中能做的任何事情。
 
-One common feature is to separate columns into different places and then reuse them. 
-For example, consider the `updated_at`, `created_at`, and `deleted_at` columns. Many tables/models may need these 
-three fields to track and analyze the creation, deletion, and updates of entities in a system
+一个常见的特性是将列分离到不同的地方然后复用它们。
+例如，考虑 `updated_at`、`created_at` 和 `deleted_at` 列。许多表/模型可能需要这
+三个字段来跟踪和分析系统中实体的创建、删除和更新
 
-We can define those columns in a separate file and then import and spread them across all the table objects you have
+我们可以在单独的文件中定义这些列，然后导入并将它们展开到你所拥有的所有表对象中
 
 <Section>
 ```ts
@@ -268,23 +268,23 @@ export const posts = singlestoreTable('posts', {
 ```
 </Section>
 
-#### **Schemas**
+#### **Schema**
 
 \
-In SingleStore, there is an entity called `Schema`, but in SingleStore terms, this is equivalent to a `Database`. 
+在 SingleStore 中，有一种称为 `Schema` 的实体，但在 SingleStore 术语中，它等同于 `Database`。
 
-You can define them with `drizzle-orm` and use them in queries, but they won't be detected by `drizzle-kit` or included in the migration flow
+你可以使用 `drizzle-orm` 定义它们并在查询中使用它们，但它们不会被 `drizzle-kit` 检测到，也不会包含在迁移流程中
 
 ![](@/assets/images/mysql-db-structure.png)
 
-Define the schema you want to manage using Drizzle
+使用 Drizzle 定义你想管理的 schema
 ```ts
 import { singlestoreSchema } from "drizzle-orm/singlestore-core"
 
 export const customSchema = singlestoreSchema('custom');
 ```
 
-Then place the table inside the schema object
+然后将表放入 schema 对象内
 ```ts {5-7}
 import { int, singlestoreSchema } from "drizzle-orm/singlestore-core";
 
@@ -295,11 +295,11 @@ export const users = customSchema.table('users', {
 })
 ```
 
-### Example
+### 示例
 
-Once you know the basics, let's define a schema example for a real project to get a better view and understanding
+了解了基础知识后，让我们为一个真实项目定义一个 schema 示例，以便获得更好的视角和理解
 
-> All examples will use `generateUniqueString`. The implementation for it will be provided after all the schema examples
+> 所有示例都将使用 `generateUniqueString`。它的实现将在所有 schema 示例之后提供
 
 ```ts copy
 import { singlestoreTable as table } from "drizzle-orm/singlestore-core";
@@ -343,7 +343,7 @@ export const comments = table("comments", {
 });
 ```
 
-**`generateUniqueString` implementation:**
+**`generateUniqueString` 实现：**
 ```ts
 function generateUniqueString(length: number = 12): string {
   const characters =
@@ -359,23 +359,23 @@ function generateUniqueString(length: number = 12): string {
 }
 ```
 
-#### What's next?
+#### 下一步？
 <br/>
 <Flex>
   <LinksList 
-    title='Manage schema'
+    title='管理 schema'
     links={[
-        ["Column types", "/docs/singlestore/column-types"], 
-        ["Indexes and Constraints", "/docs/singlestore/indexes-constraints"],
-        ["Database Schemas", "/docs/singlestore/schemas"],
+        ["列类型", "/docs/singlestore/column-types"], 
+        ["索引与约束", "/docs/singlestore/indexes-constraints"],
+        ["数据库 Schema", "/docs/singlestore/schemas"],
       ]}
   />
   <LinksList 
-    title='Zero to Hero'
+    title='从零到精通'
     links={[
-        ["Database connection", "/docs/singlestore/connect-overview"], 
-        ["Data querying", "/docs/singlestore/data-querying"], 
-        ["Migrations", "/docs/singlestore/migrations"], 
+        ["数据库连接", "/docs/singlestore/connect-overview"], 
+        ["数据查询", "/docs/singlestore/data-querying"], 
+        ["迁移", "/docs/singlestore/migrations"], 
       ]}
   />
 </Flex>

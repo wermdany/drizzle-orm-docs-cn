@@ -9,9 +9,9 @@ await db.update(users)
   .where(eq(users.name, 'Dan'));
 ```
 
-The object that you pass to `update` should have keys that match column names in your database schema.
-Values of `undefined` are ignored in the object: to set a column to `null`, pass `null`.
-You can pass SQL as a value to be used in the update object, like this:
+你传给 `update` 的对象，其键应与数据库 schema 中的列名匹配。
+值为 `undefined` 的项会被忽略：若要将某列设为 `null`，请传入 `null`。
+你可以将 SQL 作为值传给 update 对象使用，像这样：
 
 ```typescript copy
 await db.update(users)
@@ -20,7 +20,7 @@ await db.update(users)
 ```
 
 ### Limit
-Use `.limit()` to add `limit` clause to the query - for example:
+使用 `.limit()` 为查询添加 `limit` 子句 - 例如：
 <Section>
 ```typescript
 await db.update(usersTable).set({ verified: true }).limit(2);
@@ -31,7 +31,7 @@ update `users` set `verified` = ? limit ?;
 </Section>
 
 ### Order By
-Use `.orderBy()` to add `order by` clause to the query, sorting the results by the specified fields:
+使用 `.orderBy()` 为查询添加 `order by` 子句，按指定字段对结果排序：
 <Section>
 ```typescript
 import { asc, desc } from 'drizzle-orm';
@@ -39,7 +39,7 @@ import { asc, desc } from 'drizzle-orm';
 await db.update(usersTable).set({ verified: true }).orderBy(usersTable.name);
 await db.update(usersTable).set({ verified: true }).orderBy(desc(usersTable.name));
 
-// order by multiple fields
+// 按多个字段排序
 await db.update(usersTable).set({ verified: true }).orderBy(usersTable.name, usersTable.name2);
 await db.update(usersTable).set({ verified: true }).orderBy(asc(usersTable.name), desc(usersTable.name2));
 ```
@@ -51,4 +51,3 @@ update `users` set `verified` = ? order by `name`, `name2`;
 update `users` set `verified` = ? order by `name` asc, `name2` desc;
 ```
 </Section>
-

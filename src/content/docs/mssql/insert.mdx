@@ -6,12 +6,12 @@ import Tabs from '@mdx/Tabs.astro';
 # SQL Insert
 
 <Callout type='info'>
-All the values provided to `.values()`are parameterized automatically.
-For example, this query:
+传给 `.values()` 的所有值都会自动参数化。
+例如，这个查询：
 ```ts
 await db.insert(users).values({ name: 'Andrew' });
 ```
-will be translated to:
+会被转换成：
 ```sql
 insert into [users] ([name]) values (@par0); -- params: ['Andrew']
 ```
@@ -19,9 +19,9 @@ insert into [users] ([name]) values (@par0); -- params: ['Andrew']
 
 <br/>
 
-Drizzle ORM provides you the most SQL-like way to insert rows into the database tables.
+Drizzle ORM 为你提供了最接近 SQL 的方式，将行插入数据库表中。
 
-Inserting data with Drizzle is extremely straightforward and sql-like. See for yourself:
+使用 Drizzle 插入数据非常直观且贴近 SQL。你自己看看：
 
 <Section>
 ```typescript copy 
@@ -33,7 +33,7 @@ insert into [users] ([name], [age]) values ('Andrew', default)
 ```
 </Section>
 
-If you need insert type for a particular table you can use `typeof usersTable.$inferInsert` syntax. 
+如果你需要为某个特定表获取插入类型，可以使用 `typeof usersTable.$inferInsert` 语法。 
 ```typescript copy 
 type NewUser = typeof users.$inferInsert;
 
@@ -45,8 +45,8 @@ const newUser: NewUser = { name: "Alef" };
 await insertUser(newUser);
 ```
 
-## Insert with output
-MSSQL supports the `OUTPUT` clause for returning inserted rows. Drizzle exposes it through the `.output()` method.
+## 带 Output 的 Insert
+MSSQL 支持使用 `OUTPUT` 子句返回插入的行。Drizzle 通过 `.output()` 方法暴露了该能力。
 
 ```typescript copy
 const result = await db
@@ -56,21 +56,21 @@ const result = await db
 //    ^? { id: number }[]
 ```
 
-You can also return all inserted columns by calling `.output()` without arguments.
+你也可以通过不带参数调用 `.output()` 来返回所有插入的列。
 
 ```ts
 const result = await db.insert(usersTable).output().values({ name: 'John' });
 //    ^? typeof usersTable.$inferSelect[]
 ```
 
-## Insert multiple rows
+## 插入多行
 ```typescript copy
 await db.insert(users).values([{ name: 'Andrew' }, { name: 'Dan' }]);
 ```
 
-## Upserts and conflicts
-MSSQL does not support PostgreSQL-style `ON CONFLICT` or MySQL-style `ON DUPLICATE KEY UPDATE` clauses. For upsert workflows, use a transaction with explicit `select`/`update`/`insert` logic or execute a dialect-specific `MERGE` statement with the `sql` operator.
+## Upserts 与冲突
+MSSQL 不支持 PostgreSQL 风格的 `ON CONFLICT` 或 MySQL 风格的 `ON DUPLICATE KEY UPDATE` 子句。对于 upsert 工作流，请使用带显式 `select`/`update`/`insert` 逻辑的事务，或使用 `sql` 操作符执行方言特定的 `MERGE` 语句。
 
 ## Insert into ... select
 
-Currently not supported
+目前不支持

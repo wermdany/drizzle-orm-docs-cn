@@ -1,5 +1,5 @@
 ---
-title: SQL Increment value
+title: SQL 递增值
 ---
 import Section from "@mdx/Section.astro";
 import IsSupportedChipGroup from "@mdx/IsSupportedChipGroup.astro";
@@ -8,12 +8,12 @@ import Prerequisites from "@mdx/Prerequisites.astro";
 <IsSupportedChipGroup chips={{PostgreSQL: true, MySQL: true, SQLite: true, MSSQL: true, Cockroach: true}}/>
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql), [SQLite](/docs/sqlite/get-started-sqlite), [MSSQL](/docs/mssql/get-started-mssql) and [Cockroach](/docs/cockroach/get-started-cockroach)
-- [Update statement](/docs/update)
-- [Filters](/docs/operators) and [sql operator](/docs/sql)
+- 从 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql)、[SQLite](/docs/sqlite/get-started-sqlite)、[MSSQL](/docs/mssql/get-started-mssql) 和 [Cockroach](/docs/cockroach/get-started-cockroach) 开始
+- [更新语句](/docs/update)
+- [过滤器](/docs/operators) 和 [sql 操作符](/docs/sql)
 </Prerequisites>
 
-To increment a column value you can use `update().set()` method like below:
+要递增列值，你可以像下面这样使用 `update().set()` 方法：
 
 <Section>
 ```ts copy {8}
@@ -34,7 +34,7 @@ update "table" set "counter" = "counter" + 1 where "id" = 1;
 ```
 </Section>
 
-Drizzle has simple and flexible API, which lets you easily create custom solutions. This is how you do custom increment function:
+Drizzle 拥有简单灵活的 API，可以让你轻松创建自定义方案。以下是如何实现自定义递增函数：
 
 ```ts copy {4,10,11}
 import { AnyColumn } from 'drizzle-orm';

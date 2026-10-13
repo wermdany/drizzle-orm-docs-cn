@@ -1,24 +1,24 @@
 ---
-title: DrizzleORM v0.27.2 release
+title: DrizzleORM v0.27.2 发布
 pubDate: 2023-07-12
-description: Added support for unique constraints in PostgreSQL, MySQL, SQLite.
+description: 新增对 PostgreSQL、MySQL、SQLite 中唯一约束（UNIQUE constraints）的支持。
 ---
 
-## 🎉 Added support for `UNIQUE` constraints in PostgreSQL, MySQL, SQLite
+## 🎉 增加了对 PostgreSQL、MySQL、SQLite 中 `UNIQUE` 约束的支持
 
-For PostgreSQL, unique constraints can be defined at the column level for single-column constraints, and in the third parameter for multi-column constraints. In both cases, it will be possible to define a custom name for the constraint. Additionally, PostgreSQL will receive the `NULLS NOT DISTINCT` option to restrict having more than one NULL value in a table. [Reference](https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS)
+对于 PostgreSQL，唯一约束可以在列级别定义以用于单列约束，也可以在第三个参数中定义以用于多列约束。在这两种情况下，都可以为约束定义自定义名称。此外，PostgreSQL 还将获得 `NULLS NOT DISTINCT` 选项，用于限制表中出现多个 NULL 值。[参考文档](https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS)
 
-Examples that just shows a different `unique` usage. Please don't search a real usage for those tables
+以下示例仅展示了 `unique` 的不同用法。请不要为这些表寻找实际用途
 
 ```ts copy
-// single column
+// 单列
 const table = pgTable('table', {
   id: serial('id').primaryKey(),
   name: text('name').notNull().unique(),
   state: char('state', { length: 2 }).unique('custom'),
   field: char('field', { length: 2 }).unique('custom_field', { nulls: 'not distinct' }),
 });
-// multiple columns
+// 多列
 const table = pgTable('table', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
@@ -29,19 +29,19 @@ const table = pgTable('table', {
 }));
 ```
 
-For MySQL, everything will be the same except for the `NULLS NOT DISTINCT` option. It appears that MySQL does not support it
+对于 MySQL，除了 `NULLS NOT DISTINCT` 选项之外，其它一切相同。看起来 MySQL 不支持该选项
 
-Examples that just shows a different `unique` usage. Please don't search a real usage for those tables
+以下示例仅展示了 `unique` 的不同用法。请不要为这些表寻找实际用途
 
 ```ts copy
-// single column
+// 单列
 const table = mysqlTable('table', {
     id: serial('id').primaryKey(),
     name: text('name').notNull().unique(),
     state: text('state').unique('custom'),
     field: text('field').unique('custom_field'),
 });
-// multiple columns
+// 多列
 const table = mysqlTable('cities1', {
     id: serial('id').primaryKey(),
     name: text('name').notNull(),
@@ -52,17 +52,17 @@ const table = mysqlTable('cities1', {
 }));
 ```
 
-In SQLite unique constraints are the same as unique indexes. As long as you can specify a name for the unique index in SQLite - we will treat all unique constraints as unique indexes in internal implementation
+在 SQLite 中，唯一约束与唯一索引相同。既然在 SQLite 中你可以为唯一索引指定名称——在内部实现中我们会将所有唯一约束视为唯一索引
 
 ```ts copy
-// single column
+// 单列
 const table = sqliteTable('table', {
     id: int('id').primaryKey(),
     name: text('name').notNull().unique(),
     state: text('state').unique('custom'),
     field: text('field').unique(),
 });
-// multiple columns
+// 多列
 const table = sqliteTable('table', {
     id: int('id').primaryKey(),
     name: text('name').notNull(),

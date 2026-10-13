@@ -1,19 +1,19 @@
 ---
-title: Empty array as a default value
+title: 空数组作为默认值
 ---
 
 import Section from "@mdx/Section.astro";
 import Prerequisites from "@mdx/Prerequisites.astro";
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql), [MySQL](/docs/mysql/get-started-mysql) and [SQLite](/docs/sqlite/get-started-sqlite)
-- Learn about column data types for [PostgreSQL](/docs/column-types), [MySQL](/docs/mysql/column-types) and [SQLite](/docs/sqlite/column-types)
-- [sql operator](/docs/sql)
+- 快速上手 [PostgreSQL](/docs/get-started-postgresql)、[MySQL](/docs/mysql/get-started-mysql) 和 [SQLite](/docs/sqlite/get-started-sqlite)
+- 了解 [PostgreSQL](/docs/column-types)、[MySQL](/docs/mysql/column-types) 和 [SQLite](/docs/sqlite/column-types) 的列数据类型
+- [sql 操作符](/docs/sql)
 </Prerequisites>
 
 ### PostgreSQL
 
-To set an empty array as a default value in PostgreSQL, you can use `sql` operator with `'{}'` or `ARRAY[]` syntax:
+要在 PostgreSQL 中将空数组设置为默认值，你可以使用带 `'{}'` 或 `ARRAY[]` 语法的 `sql` 操作符：
 
 <Section>
 ```ts copy {10,14}
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 
 ### MySQL
 
-MySQL doesn't have an array data type, but you can use `json` data type for the same purpose. To set an empty array as a default value in MySQL, you can use `JSON_ARRAY()` function or `sql` operator with `('[]')` syntax:
+MySQL 没有数组数据类型，但你可以使用 `json` 数据类型来达到相同目的。要在 MySQL 中将空数组设置为默认值，你可以使用 `JSON_ARRAY()` 函数或带 `('[]')` 语法的 `sql` 操作符：
 
 <Section>
 ```ts copy {7,11,15}
@@ -61,7 +61,7 @@ export const users = mysqlTable('users', {
   tags2: json('tags2')
     .$type<string[]>()
     .notNull()
-    .default(sql`('[]')`), // the same as default([])
+    .default(sql`('[]')`), // 等同于 default([])
   tags3: json('tags3')
     .$type<string[]>()
     .notNull()
@@ -81,13 +81,13 @@ CREATE TABLE `users` (
 ```
 </Section>
 
-The `mode` option defines how values are handled in the application. With `json` mode, values are treated as JSON object literal. 
+`mode` 选项定义了值在应用程序中如何处理。使用 `json` 模式时，值会被当作 JSON 对象字面量处理。
 
-You can specify `.$type<..>()` for json object inference, it will not check runtime values. It provides compile time protection for default values, insert and select schemas.
+你可以为 json 对象推断指定 `.$type<..>()`，它不会检查运行时值。它为默认值、插入和查询 schema 提供编译时保护。
 
 ### SQLite
 
-SQLite doesn't have an array data type, but you can use `text` data type for the same purpose. To set an empty array as a default value in SQLite, you can use `json_array()` function or `sql` operator with `'[]'` syntax:
+SQLite 没有数组数据类型，但你可以使用 `text` 数据类型来达到相同目的。要在 SQLite 中将空数组设置为默认值，你可以使用 `json_array()` 函数或带 `'[]'` 语法的 `sql` 操作符：
 
 <Section>
 ```ts copy {9,13}
@@ -116,6 +116,6 @@ CREATE TABLE `users` (
 ```
 </Section>
 
-The `mode` option defines how values are handled in the application. With `json` mode, values are treated as JSON object literal. 
+`mode` 选项定义了值在应用程序中如何处理。使用 `json` 模式时，值会被当作 JSON 对象字面量处理。
 
-You can specify `.$type<..>()` for json object inference, it will not check runtime values. It provides compile time protection for default values, insert and select schemas.
+你可以为 json 对象推断指定 `.$type<..>()`，它不会检查运行时值。它为默认值、插入和查询 schema 提供编译时保护。

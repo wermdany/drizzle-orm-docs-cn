@@ -10,28 +10,28 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> TiDB Serverless
 
 <Prerequisites>
-- Database [connection basics](/docs/mysql/connect-overview) with Drizzle
-- TiDB database - [website](https://docs.pingcap.com/)
-- TiDB HTTP Driver - [website](https://docs.pingcap.com/developer/serverless-driver)
-- Drizzle MySQL drivers - [docs](/docs/mysql/get-started-mysql)
+- 使用 Drizzle 连接数据库[基础](/docs/mysql/connect-overview)
+- TiDB 数据库 - [网站](https://docs.pingcap.com/)
+- TiDB HTTP 驱动 - [网站](https://docs.pingcap.com/developer/serverless-driver)
+- Drizzle MySQL 驱动 - [文档](/docs/mysql/get-started-mysql)
 </Prerequisites>
 
-According to the **[official website](https://www.pingcap.com/tidb-serverless/)**, 
-TiDB Serverless is a fully-managed, autonomous DBaaS with split-second cluster provisioning and consumption-based pricing.
+根据 **[官方网站](https://www.pingcap.com/tidb-serverless/)** 所述，
+TiDB Serverless 是一个全托管、自治的 DBaaS，具备秒级集群开通能力和基于用量的计费方式。
 
 <Callout type="info" emoji="ℹ️">
-TiDB Serverless is compatible with MySQL, so you can use [MySQL connection guide](/docs/mysql/get-started-mysql) to connect to it.
+TiDB Serverless 兼容 MySQL，因此你可以使用 [MySQL 连接指南](/docs/mysql/get-started-mysql) 来连接它。
 </Callout>
 
-TiDB Serverless provides an [HTTP driver](https://docs.pingcap.com/developer/serverless-driver/) for edge environments. It is natively supported by Drizzle ORM via `drizzle-orm/tidb-serverless` package.
+TiDB Serverless 为边缘环境提供了 [HTTP 驱动](https://docs.pingcap.com/developer/serverless-driver/)。Drizzle ORM 通过 `drizzle-orm/tidb-serverless` 包原生支持它。
 
-#### Step 1 - Install packages
+#### 步骤 1 - 安装软件包
 <Npm>
  drizzle-orm@rc @tidbcloud/serverless
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 步骤 2 - 初始化驱动并执行查询
 ```typescript copy filename="index.ts"
 import { drizzle } from 'drizzle-orm/tidb-serverless';
 
@@ -40,7 +40,7 @@ const db = drizzle({ connection: { url: process.env.TIDB_URL }});
 const response = await db.select().from(...)
 ```
 
-If you need to provide your existing driver:
+如果你需要提供已有的驱动：
 ```typescript copy"
 import { connect } from '@tidbcloud/serverless';
 import { drizzle } from 'drizzle-orm/tidb-serverless';
@@ -49,6 +49,6 @@ const client = connect({ url: process.env.TIDB_URL });
 const db = drizzle({ client });
 ```
 
-#### What's next?
+#### 接下来做什么？
 
 <WhatsNextMySQL/>

@@ -1,4 +1,4 @@
-Create a `index.ts` file in the `src` directory and initialize the connection:
+在 `src` 目录中创建 `index.ts` 文件并初始化连接：
 
 ```typescript copy
 import 'dotenv/config';
@@ -8,12 +8,12 @@ import * as Effect from 'effect/Effect';
 import * as Redacted from 'effect/Redacted';
 import { types } from 'pg';
 
-// Configure the PgClient layer with type parsers
+// 使用类型解析器配置 PgClient layer
 const PgClientLive = PgClient.layer({
   url: Redacted.make(process.env.DATABASE_URL!),
   types: {
     getTypeParser: (typeId, format) => {
-      // Return raw values for date/time types to let Drizzle handle parsing
+      // 对 date/time 类型返回原始值，交由 Drizzle 处理解析
       if ([1184, 1114, 1082, 1186, 1231, 1115, 1185, 1187, 1182].includes(typeId)) {
         return (val: any) => val;
       }
@@ -23,12 +23,12 @@ const PgClientLive = PgClient.layer({
 });
 
 const program = Effect.gen(function*() {
-  // Create the database with default services
+  // 使用默认服务创建数据库
   const db = yield* PgDrizzle.makeWithDefaults();
 
-  // Your queries here...
+  // 你的查询写在这里...
 });
 
-// Run the program with the PgClient layer
+// 使用 PgClient layer 运行该程序
 Effect.runPromise(program.pipe(Effect.provide(PgClientLive)));
 ```

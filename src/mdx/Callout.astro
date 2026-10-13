@@ -17,10 +17,10 @@ const isCollapsed = !!collapsed || hasTitleSlot;
 ---
 <>
   {type === 'warning' && !title && (
-    <div class:list={["callout-label", type]}>{"IMPORTANT"}</div>
+    <div class:list={["callout-label", type]}>{"重要"}</div>
   )}
   {type === 'error' && !title && (
-    <div class:list={["callout-label", type]}>{"WARNING"}</div>
+    <div class:list={["callout-label", type]}>{"警告"}</div>
   )}
   {!!title && (
     <div class:list={["callout-label", type]}>{title}</div>
@@ -33,7 +33,7 @@ const isCollapsed = !!collapsed || hasTitleSlot;
             data-callout-collapse-btn
             type="button"
             class:list={["button-wrap"]}
-            aria-label="Copy"
+            aria-label="复制"
           >
             <div class="collapse-icon">
               <svg

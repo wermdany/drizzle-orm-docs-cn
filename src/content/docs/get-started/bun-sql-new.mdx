@@ -19,53 +19,53 @@ import ConnectBun from '@mdx/get-started/postgresql/ConnectBun.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and Bun:SQLite
+# Drizzle 和 Bun:SQLite 入门
 
 <Prerequisites>  
-  - **bun** - javaScript all-in-one toolkit - [read here](https://bun.sh/)
-  - **Bun SQL** - native bindings for working with PostgreSQL databases - [read here](https://bun.sh/docs/api/sql)
+  - **bun** - JavaScript 一体化工具包 - [阅读此处](https://bun.sh/)
+  - **Bun SQL** - 用于处理 PostgreSQL 数据库的原生绑定 - [阅读此处](https://bun.sh/docs/api/sql)
 </Prerequisites>
 
 <Callout type='error'>
-In version `1.2.0`, Bun has issues with executing concurrent statements, which may lead to errors if you try to run several queries simultaneously.
-We've created a [github issue](https://github.com/oven-sh/bun/issues/16774) that you can track. Once it's fixed, you should no longer encounter any such errors on Bun's SQL side
+在 `1.2.0` 版本中，Bun 在执行并发语句时存在问题，如果你尝试同时运行多个查询，可能会导致错误。
+我们创建了一个你可以跟踪的 [github issue](https://github.com/oven-sh/bun/issues/16774)。一旦修复，你在 Bun 的 SQL 侧就不应该再遇到此类错误了
 </Callout>
 
 <FileStructure />
 
-#### Step 1 - Install required packages
+#### 第 1 步 - 安装所需的软件包
 <Npm>
     drizzle-orm@rc
     -D drizzle-kit@rc @types/bun
 </Npm>
 
-#### Step 2 - Setup connection variables
+#### 第 2 步 - 设置连接变量
 
 <SetupEnv env_variable='DATABASE_URL' />
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 第 3 步 - 将 Drizzle ORM 连接到数据库
 
 <ConnectBun/>
 
-#### Step 4 - Create a table
+#### 第 4 步 - 创建表
 
 <CreateTable/>
 
-#### Step 5 - Setup Drizzle config file
+#### 第 5 步 - 设置 Drizzle 配置文件
 
 <SetupConfig dialect='postgresql' env_variable='DATABASE_URL'/>
 
-#### Step 6 - Applying changes to the database
+#### 第 6 步 - 将更改应用到数据库
 
 <ApplyChanges />
 
-#### Step 7 - Seed and Query the database
+#### 第 7 步 - 填充并查询数据库
 
 <QueryDatabase dialect='bun-sql' env_variable='DATABASE_URL'/>
 
-#### Step 8 - Run index.ts file
+#### 第 8 步 - 运行 index.ts 文件
 
-To run a script with `bun`, use the following command:
+要使用 `bun` 运行脚本，请使用以下命令：
 ```bash copy
 bun src/index.ts
 ```

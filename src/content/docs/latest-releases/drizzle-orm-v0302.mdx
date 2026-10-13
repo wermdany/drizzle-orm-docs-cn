@@ -1,19 +1,19 @@
 ---
-title: DrizzleORM v0.30.2 release
+title: DrizzleORM v0.30.2 发布
 pubDate: 2024-03-14
-description: Updated LibSQL migrations to utilize batch execution instead of transactions and fixed findFirst query for bun:sqlite.
+description: 更新了 LibSQL 迁移以使用批处理执行而不是事务，并修复了 bun:sqlite 的 findFirst 查询。
 ---
 
-## Improvements
+## 改进
 
-LibSQL migrations have been updated to utilize batch execution instead of transactions. As stated in the [documentation](https://docs.turso.tech/sdk/ts/reference#batch-transactions), LibSQL now supports batch operations
+LibSQL 迁移已更新为使用批处理执行而不是事务。如[文档](https://docs.turso.tech/sdk/ts/reference#batch-transactions)所述，LibSQL 现在支持批处理操作
 
-> A batch consists of multiple SQL statements executed sequentially within an implicit transaction. The backend handles the transaction: success commits all changes, while any failure results in a full rollback with no modifications.
+> 一个批处理由多条 SQL 语句组成，它们在一个隐式事务中按顺序执行。后端负责处理事务：成功则提交所有更改，任何失败都会导致完全回滚且不做任何修改。
 
-To get started with Turso and Drizzle follow the [documentation](/docs/sqlite/get-started-sqlite#turso)
+要开始使用 Turso 和 Drizzle，请遵循[文档](/docs/sqlite/get-started-sqlite#turso)
 
-## Fixes
+## 修复
 
-- [Sqlite] Fix findFirst query for bun:sqlite ([#1885](https://github.com/drizzle-team/drizzle-orm/pull/1885))
+- [Sqlite] 修复 bun:sqlite 的 findFirst 查询（[#1885](https://github.com/drizzle-team/drizzle-orm/pull/1885)）
 
-To get started with Bun SQLite and Drizzle follow the [documentation](/docs/sqlite/get-started-sqlite#bun-sqlite)
+要开始使用 Bun SQLite 和 Drizzle，请遵循[文档](/docs/sqlite/get-started-sqlite#bun-sqlite)

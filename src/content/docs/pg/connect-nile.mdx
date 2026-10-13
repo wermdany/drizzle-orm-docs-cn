@@ -10,28 +10,28 @@ import WhatsNextPostgres from "@mdx/WhatsNextPostgres.astro";
 # Drizzle \<\> Nile
 
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- Nile Database - [website](https://thenile.dev)
-- Drizzle PostgreSQL drivers - [docs](/docs/get-started-postgresql)
+- 使用 Drizzle 的数据库[连接基础](/docs/connect-overview)
+- Nile Database - [网站](https://thenile.dev)
+- Drizzle PostgreSQL 驱动 - [文档](/docs/get-started-postgresql)
 </Prerequisites>
 
-According to the **[official website](https://thenile.dev)**, Nile is PostgreSQL re-engineered for multi-tenant apps.
+根据 **[官方网站](https://thenile.dev)**，Nile 是为多租户应用重新设计的 PostgreSQL。
 
-Checkout official **[Nile + Drizzle Quickstart](https://www.thenile.dev/docs/getting-started/languages/drizzle)** and **[Migration](https://www.thenile.dev/docs/getting-started/schema_migrations/drizzle)** docs.
+请查看官方 **[Nile + Drizzle 快速开始](https://www.thenile.dev/docs/getting-started/languages/drizzle)** 和 **[迁移](https://www.thenile.dev/docs/getting-started/schema_migrations/drizzle)** 文档。
 
-You can use Nile with any of Drizzle's Postgres drivers, we'll be showing the use of `node-postgres` below.
+你可以将 Nile 与 Drizzle 的任意 Postgres 驱动一起使用，下面我们将演示 `node-postgres` 的用法。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 
 <Npm>
  drizzle-orm@rc pg
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 
 ```typescript copy filename="index.ts"
-// Make sure to install the 'pg' package
+// 确保安装 'pg' 包
 import { drizzle } from 'drizzle-orm/node-postgres'
 
 const db = drizzle(process.env.NILEDB_URL);
@@ -39,10 +39,10 @@ const db = drizzle(process.env.NILEDB_URL);
 const response = await db.select().from(...);
 ```
 
-If you need to provide your existing driver:
+如果你需要提供自己已有的驱动：
 
 ```typescript copy filename="index.ts"
-// Make sure to install the 'pg' package
+// 确保安装 'pg' 包
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -55,13 +55,13 @@ const db = drizzle({ client: pool });
 const response = await db.select().from(...);
 ```
 
-#### Connecting to a virtual tenant database
+#### 连接到虚拟租户数据库
 
-Nile provides virtual tenant databases, when you set the tenant context, Nile will direct your queries to the virtual database for this particular tenant and all queries will apply to that tenant (i.e. `select * from table` will result records only for this tenant). 
+Nile 提供虚拟租户数据库。当你设置租户上下文后，Nile 会把你的查询引导到该特定租户的虚拟数据库，所有查询都会作用于该租户（即 `select * from table` 只会返回该租户的记录）。
 
-In order to set the tenant context, we wrap each query in a transaction that sets the appropriate tenant context before running the transaction.
+为了设置租户上下文，我们把每个查询包装在一个事务中，在运行事务前先设置相应的租户上下文。
 
-The tenant ID can simply be passed into the wrapper as an argument:
+租户 ID 只需作为参数传入该包装函数即可：
 
 ```typescript copy filename="index.ts"
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -81,18 +81,18 @@ function tenantDB<T>(tenantId: string, cb: (tx: any) => T | Promise<T>): Promise
   }) as Promise<T>;
 }
 
-// In a webapp, you'll likely get it from the request path parameters or headers
+// 在 web 应用中，你可能会从请求的路径参数或请求头中获取它
 const tenantId = '01943e56-16df-754f-a7b6-6234c368b400'
 
 const response = await tenantDB(tenantId, async (tx) => {
-    // No need for a "where" clause here
+    // 这里不需要 "where" 子句
     return await tx.select().from(todosTable);
 });
 
 console.log(response);
 ```
 
-If you are using a web framwork that supports it, you can set up [AsyncLocalStorage](https://nodejs.org/api/async_context.html) and use middleware to populate it with the tenant ID. In this case, your Drizzle client setup will be:
+如果你使用的 web 框架支持，可以设置 [AsyncLocalStorage](https://nodejs.org/api/async_context.html)，并使用中间件在其中填充租户 ID。这种情况下，你的 Drizzle 客户端设置将是：
 
 ```typescript copy filename="db/index.ts
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -107,7 +107,7 @@ export function tenantDB<T>(cb: (tx: any) => T | Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
     const tenantId = tenantContext.getStore();
     console.log("executing query with tenant: " + tenantId);
-    // if there's a tenant ID, set it in the transaction context
+    // 如果有租户 ID，则在事务上下文中设置它
     if (tenantId) {
       await tx.execute(sql`set local nile.tenant_id = '${sql.raw(tenantId)}'`);
     }
@@ -117,17 +117,17 @@ export function tenantDB<T>(cb: (tx: any) => T | Promise<T>): Promise<T> {
 }
 ```
 
-And then, configure a middleware to populate the the AsyncLocalStorage and use `tenantDB` method when handling requests:
+然后，配置一个中间件来填充 AsyncLocalStorage，并在处理请求时使用 `tenantDB` 方法：
 
 ```typescript copy filename="app.ts"
-// Middleware to set tenant context
+// 用于设置租户上下文的中间件
 app.use("/api/tenants/:tenantId/*", async (c, next) => {
   const tenantId = c.req.param("tenantId");
   console.log("setting context to tenant: " + tenantId);
   return tenantContext.run(tenantId, () => next());
 });
 
-// Route handler
+// 路由处理器
 app.get("/api/tenants/:tenantId/todos", async (c) => {
     const todos = await tenantDB(c, async (tx) => {
       return await tx
@@ -144,7 +144,6 @@ app.get("/api/tenants/:tenantId/todos", async (c) => {
 ```
 
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres/>
-

@@ -1,11 +1,11 @@
 import Section from '@mdx/Section.astro';
 
-# Aliases
-Drizzle supports aliasing for tables, columns, subqueries and CTEs — mapping directly to the SQL `AS` keyword.
+# 别名
+Drizzle 支持为表、列、子查询和 CTE 设置别名 —— 直接映射到 SQL 的 `AS` 关键字。
 
-### Table aliasing
-You can alias tables using the `alias` function. This is useful when you need to join the same table multiple times, 
-for example in self-referencing relationships like employees and their managers:
+### 表别名
+你可以使用 `alias` 函数为表设置别名。当你需要多次连接同一个表时会很有用，
+例如在员工及其经理这类自引用关系中：
 
 <Section>
 ```ts copy {9}
@@ -33,9 +33,9 @@ left join `employees` `manager` on `employees`.`manager_id` = `manager`.`id`;
 ```
 </Section>
 
-### Column aliasing
-You can alias columns using the `.as()` method on columns and `sql` expressions.
-This maps directly to the SQL `AS` keyword and lets you control the name of a column in the query result:
+### 列别名
+你可以使用列和 `sql` 表达式上的 `.as()` 方法为列设置别名。
+这直接映射到 SQL 的 `AS` 关键字，让你可以控制查询结果中列的名称：
 
 <Section>
 ```ts {3}
@@ -49,7 +49,7 @@ select `id`, `name` as `lower_name` from `users`;
 ```
 </Section>
 
-You can also use `.as()` with `sql` expressions:
+你也可以在 `sql` 表达式上使用 `.as()`：
 
 <Section>
 ```ts {3}
@@ -63,9 +63,9 @@ select `id`, lower(`name`) as `lower_name` from `users`;
 ```
 </Section>
 
-### Subquery aliasing
-When using a subquery as a data source, you must provide an alias using `.as()`. 
-This lets you reference the subquery's columns in the outer query:
+### 子查询别名
+当把子查询用作数据源时，你必须使用 `.as()` 提供一个别名。
+这让你可以在外层查询中引用子查询的列：
 
 <Section>
 ```ts
@@ -78,7 +78,7 @@ select `id`, `name`, `age` from (select `id`, `name`, `age` from `users` where `
 ```
 </Section>
 
-Subqueries can also be used in joins:
+子查询也可以在连接中使用：
 
 <Section>
 ```ts
@@ -94,9 +94,9 @@ select `users`.`id`, `users`.`name`, `users`.`age`, `sq`.`id`, `sq`.`name`, `sq`
 ```
 </Section>
 
-### CTE aliasing
-Common table expressions (CTEs) are aliased using `db.$with('alias')`. 
-The alias name is used to reference the CTE in the main query:
+### CTE 别名
+公共表表达式（CTE）使用 `db.$with('alias')` 设置别名。
+别名用于在主查询中引用该 CTE：
 
 <Section>
 ```ts
@@ -110,7 +110,7 @@ select `id`, `name`, `age` from `sq`;
 ```
 </Section>
 
-When using `sql` expressions inside a CTE, you need to alias them with `.as()` to be able to reference them in the outer query:
+在 CTE 内部使用 `sql` 表达式时，你需要用 `.as()` 为它们设置别名，以便在外层查询中引用它们：
 
 <Section>
 ```ts

@@ -1,5 +1,5 @@
 ---
-title: PostGIS geometry point
+title: PostGIS 几何点
 ---
 
 import Section from "@mdx/Section.astro";
@@ -9,16 +9,16 @@ import Callout from "@mdx/Callout.astro";
 import CodeTab from '@mdx/CodeTab.astro';
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql)
-- [Postgis extension](/docs/extensions#postgis)
-- [Indexes](/docs/indexes-constraints#indexes)
-- [Filtering in select statement](/docs/select#filtering)
-- [sql operator](/docs/sql)
+- 从 [PostgreSQL](/docs/get-started-postgresql) 开始
+- [Postgis 扩展](/docs/extensions#postgis)
+- [索引](/docs/indexes-constraints#索引)
+- [在查询语句中过滤](/docs/select#filtering)
+- [sql 操作符](/docs/sql)
 </Prerequisites>
 
-`PostGIS` extends the capabilities of the PostgreSQL relational database by adding support for storing, indexing, and querying geospatial data. 
+`PostGIS` 通过增加对地理空间数据的存储、索引和查询支持，扩展了 PostgreSQL 关系数据库的能力。
 
-As for now, Drizzle doesn't create extension automatically, so you need to create it manually. Create an empty migration file and add SQL query:
+目前，Drizzle 不会自动创建扩展，因此你需要手动创建。创建一个空的迁移文件并添加 SQL 查询：
 
 <Section>
 ```bash
@@ -30,7 +30,7 @@ CREATE EXTENSION postgis;
 ```
 </Section>
 
-This is how you can create table with `geometry` datatype and spatial index in Drizzle:
+以下是如何在 Drizzle 中创建带有 `geometry` 数据类型和空间索引的表：
 
 <CodeTabs items={["schema.ts", "migration.sql"]}>
   <CodeTab>
@@ -61,8 +61,8 @@ This is how you can create table with `geometry` datatype and spatial index in D
   ```
 </CodeTabs>
  
-This is how you can insert `geometry` data into the table in Drizzle. `ST_MakePoint()` in PostGIS creates a geometric object of type `point` using the specified coordinates.
-`ST_SetSRID()` sets the `SRID` (unique identifier associated with a specific coordinate system, tolerance, and resolution) on a geometry to a particular integer value:
+以下是如何在 Drizzle 中向表中插入 `geometry` 数据。PostGIS 中的 `ST_MakePoint()` 使用指定的坐标创建一个 `point` 类型的几何对象。
+`ST_SetSRID()` 将几何对象上的 `SRID`（与特定坐标系、容差和分辨率相关联的唯一标识符）设置为特定的整数值：
 
 ```ts {4, 10, 16}
 // mode: 'xy'
@@ -77,19 +77,19 @@ await db.insert(stores).values({
   location: [-90.9, 18.7],
 });
 
-// sql raw
+// 原生 sql
 await db.insert(stores).values({
   name: 'Test',
   location: sql`ST_SetSRID(ST_MakePoint(-90.9, 18.7), 4326)`,
 });
 ```
 
-To compute the distance between the objects you can use `<->` operator and `ST_Distance()` function, which for `geometry types` returns the minimum planar distance between two geometries. This is how you can query for the nearest location by coordinates in Drizzle with PostGIS:
+要计算对象之间的距离，你可以使用 `<->` 操作符和 `ST_Distance()` 函数，对于 `geometry types`（几何类型），它返回两个几何对象之间的最小平面距离。以下是如何在 Drizzle 中使用 PostGIS 按坐标查询最近的位置：
 
 <Callout type='warning'>
-`getColumns` available starting from `drizzle-orm@1.0.0-beta.2`(read more [here](/docs/upgrade-v1))
+`getColumns` 从 `drizzle-orm@1.0.0-beta.2` 起可用（在[此处](/docs/upgrade-v1)阅读更多内容）
 
-If you are on pre-1 version(like `0.45.1`) then use `getTableColumns`
+如果你使用的是 1.0 之前的版本（如 `0.45.1`），请使用 `getTableColumns`
 </Callout>
 
 <Section>
@@ -121,7 +121,7 @@ limit 1;
 ```
 </Section>
 
-To filter stores located within a specified rectangular area, you can use `ST_MakeEnvelope()` and `ST_Within()` functions. `ST_MakeEnvelope()` creates a rectangular Polygon from the minimum and maximum values for X and Y. `ST_Within()` Returns TRUE if geometry A is within geometry B.
+要过滤位于指定矩形区域内的商店，你可以使用 `ST_MakeEnvelope()` 和 `ST_Within()` 函数。`ST_MakeEnvelope()` 根据 X 和 Y 的最小值和最大值创建一个矩形 Polygon。`ST_Within()` 如果几何对象 A 位于几何对象 B 内，则返回 TRUE。
 
 <Section>
 ```ts copy {13}

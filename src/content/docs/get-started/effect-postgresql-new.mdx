@@ -19,51 +19,51 @@ import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and Effect PostgreSQL
+# 使用 Drizzle 和 Effect PostgreSQL 快速上手
 
 <Prerequisites>
-  - **Effect** - Effect is a powerful TS library designed to help developers easily create complex, synchronous, and asynchronous programs. - [read more](https://effect.website/docs)
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **@effect/sql-pg** - A PostgreSQL toolkit for Effect - [read here](https://effect-ts.github.io/effect/docs/sql-pg)
+  - **Effect** - Effect 是一个强大的 TS 库，旨在帮助开发者轻松创建复杂的同步和异步程序。 - [阅读更多](https://effect.website/docs)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **@effect/sql-pg** - 面向 Effect 的 PostgreSQL 工具包 - [阅读文档](https://effect-ts.github.io/effect/docs/sql-pg)
 </Prerequisites>
 
-Drizzle has native support for Effect PostgreSQL connections with the `@effect/sql-pg` driver.
+Drizzle 通过 `@effect/sql-pg` 驱动原生支持连接 Effect PostgreSQL。
 
 <FileStructure/>
 
-#### Step 1 - Install required packages
+#### 步骤 1 - 安装所需包
 <InstallPackages lib='effect @effect/sql-pg pg' devlib=' @types/pg'/>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 配置连接变量
 
 <SetupEnv env_variable='DATABASE_URL' />
 
-<Callout title='tips'>
-If you don't have a PostgreSQL database yet and want to create one for testing, you can use our guide on how to set up PostgreSQL in Docker.
+<Callout title='提示'>
+如果你还没有 PostgreSQL 数据库，并且想创建一个用于测试，可以参考我们的指南了解如何在 Docker 中设置 PostgreSQL。
 
-The PostgreSQL in Docker guide is available [here](/docs/guides/postgresql-local-setup). Go set it up, generate a database URL (explained in the guide), and come back for the next steps
+Docker 中的 PostgreSQL 指南见[此处](/docs/guides/postgresql-local-setup)。去完成设置，生成一个数据库 URL（指南中有说明），然后回来继续后续步骤
 </Callout>
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 步骤 3 - 将 Drizzle ORM 连接到数据库
 
 <ConnectEffect />
 
-#### Step 4 - Create a table
+#### 步骤 4 - 创建表
 
 <CreateTable />
 
-#### Step 5 - Setup Drizzle config file
+#### 步骤 5 - 配置 Drizzle 配置文件
 
 <SetupConfig dialect='postgresql' env_variable='DATABASE_URL'/>
 
-#### Step 6 - Applying changes to the database
+#### 步骤 6 - 将变更应用到数据库
 
 <ApplyChanges />
 
-#### Step 7 - Seed and Query the database
+#### 步骤 7 - 填充数据并查询数据库
 
-Let's **update** the `src/index.ts` file with queries to create, read, update, and delete users
+让我们**更新** `src/index.ts` 文件，加入创建、读取、更新和删除用户的查询
 
 ```ts
 import 'dotenv/config';
@@ -125,6 +125,6 @@ const program = Effect.gen(function*() {
 Effect.runPromise(program.pipe(Effect.provide(PgClientLive)));
 ```
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>

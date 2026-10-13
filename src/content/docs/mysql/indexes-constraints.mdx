@@ -1,22 +1,22 @@
 import Callout from '@mdx/Callout.astro';
 import Section from '@mdx/Section.astro';
 
-# Indexes & Constraints
+# 索引与约束
 
-## Constraints
+## 约束
 
-SQL constraints are the rules enforced on table columns. They are used to prevent invalid data from being entered into the database.
+SQL 约束是强制施加在表列上的规则。它们用于防止无效数据被写入数据库。
 
-This ensures the accuracy and reliability of your data in the database.
+这确保了数据库中数据的准确性和可靠性。
 
-### Default
+### 默认值
 
-The `DEFAULT` clause specifies a default value to use for the column if no value provided by the user when doing an `INSERT`.
-If there is no explicit `DEFAULT` clause attached to a column definition,
-then the default value of the column is `NULL`.
+`DEFAULT` 子句指定当用户在执行 `INSERT` 时未提供值时该列使用的默认值。
+如果列定义上没有附加显式的 `DEFAULT` 子句，
+那么该列的默认值就是 `NULL`。
 
-An explicit `DEFAULT` clause may specify that the default value is `NULL`,
-a string constant, a blob constant, a signed-number, or any constant expression enclosed in parentheses.
+显式的 `DEFAULT` 子句可以指定默认值为 `NULL`、
+字符串常量、blob 常量、带符号数字，或任何用括号括起来的常量表达式。
 
 <Section>
     ```typescript
@@ -36,12 +36,12 @@ a string constant, a blob constant, a signed-number, or any constant expression 
     ```
     </Section>
 
-### Not null
+### 非空
 
-By default, a column can hold **NULL** values. The `NOT NULL` constraint enforces a column to **NOT** accept **NULL** values.  
+默认情况下，列可以保存 **NULL** 值。`NOT NULL` 约束强制列**不**接受 **NULL** 值。  
 
-This enforces a field to always contain a value, which means that you cannot insert a new record,
-or update a record without adding a value to this field.
+这强制字段始终包含一个值，这意味着你不能插入一条新记录，
+或在不给该字段添加值的情况下更新一条记录。
 
 <Section>
       ```typescript
@@ -59,31 +59,31 @@ or update a record without adding a value to this field.
       ```
     </Section>
 
-### Unique
+### 唯一
 
-The `UNIQUE` constraint ensures that all values in a column are different.  
+`UNIQUE` 约束确保列中的所有值都不相同。  
 
-Both the `UNIQUE` and `PRIMARY KEY` constraints provide a guarantee for uniqueness for a column or set of columns.
+`UNIQUE` 和 `PRIMARY KEY` 约束都为列或列组合提供唯一性保证。
 
-A `PRIMARY KEY` constraint automatically has a `UNIQUE` constraint.  
+`PRIMARY KEY` 约束自动带有 `UNIQUE` 约束。  
 
 <Callout type="info" emoji="ℹ️">
-  You can have many `UNIQUE` constraints per table, but only one `PRIMARY KEY` constraint per table.
+  每张表可以有多个 `UNIQUE` 约束，但每张表只能有一个 `PRIMARY KEY` 约束。
 </Callout>
 
-In MySQL, a `unique constraint` and a `unique index` are essentially the same thing.  
-Under the hood, MySQL implements a unique constraint as a unique index. 
-There is no separate constraint object like you might find in some other databases.
+在 MySQL 中，`unique constraint` 和 `unique index` 本质上是同一回事。  
+在底层，MySQL 将唯一约束实现为唯一索引。
+不存在像其他一些数据库中那样的独立约束对象。
 ```sql
--- These three all produce the exact same result in MySQL:
+-- 这三条语句在 MySQL 中产生完全相同的结果：
 ALTER TABLE users ADD CONSTRAINT uq_email UNIQUE (email);
 ALTER TABLE users ADD UNIQUE INDEX uq_email (email);
 CREATE UNIQUE INDEX uq_email ON users(email);
 ```
 
-To drop a `unique constraint`, the same syntax is used as dropping an index: `ALTER TABLE users DROP INDEX uq_email;`. There's no separate `DROP CONSTRAINT statement` for it in MySQL.
+要删除 `unique constraint`，使用的语法与删除索引相同：`ALTER TABLE users DROP INDEX uq_email;`。MySQL 中没有单独的 `DROP CONSTRAINT statement`。
 
-That is why Drizzle always treats any `.unique()` as `UNIQUE INDEX`
+这就是为什么 Drizzle 始终把任何 `.unique()` 视为 `UNIQUE INDEX`
 
 <Section>
       ```typescript
@@ -126,13 +126,13 @@ That is why Drizzle always treats any `.unique()` as `UNIQUE INDEX`
       ```
     </Section>
 
-### Check
+### 检查
 
-The `CHECK` constraint is used to limit the value range that can be placed in a column.
+`CHECK` 约束用于限制可以放入列中的值范围。
 
-If you define a `CHECK` constraint on a column it will allow only certain values for this column.  
+如果你在列上定义 `CHECK` 约束，它只允许该列取特定值。  
 
-If you define a `CHECK` constraint on a table it can limit the values in certain columns based on values in other columns in the row.
+如果你在表上定义 `CHECK` 约束，它可以根据行中其他列的值来限制某些列的值。
 
 <Section>
       ```typescript copy
@@ -161,12 +161,12 @@ If you define a `CHECK` constraint on a table it can limit the values in certain
       ```
     </Section>
 
-### Primary Key
+### 主键
 
-The `PRIMARY KEY` constraint uniquely identifies each record in a table.  
-Primary keys must contain `UNIQUE` values, and cannot contain `NULL` values.  
+`PRIMARY KEY` 约束唯一标识表中的每条记录。  
+主键必须包含 `UNIQUE` 值，且不能包含 `NULL` 值。  
 
-A table can have only **ONE** primary key; and in the table, this primary key can consist of single or multiple columns (fields).
+一张表只能有**一个**主键；并且在表中，这个主键可以由单个或多个列（字段）组成。
 
 <Section>
       ```typescript
@@ -192,11 +192,11 @@ A table can have only **ONE** primary key; and in the table, this primary key ca
       ```
     </Section>
 
-### Composite Primary Key
+### 复合主键
 
-Just like `PRIMARY KEY`, composite primary key uniquely identifies each record in a table using multiple fields.
+就像 `PRIMARY KEY` 一样，复合主键使用多个字段唯一标识表中的每条记录。
 
-Drizzle ORM provides a standalone `primaryKey` operator for that:
+Drizzle ORM 为此提供了独立的 `primaryKey` 操作符：
 
 <Section>
       ```typescript {18, 19}
@@ -217,7 +217,7 @@ Drizzle ORM provides a standalone `primaryKey` operator for that:
         bookId: int(),
       }, (table) => [
         primaryKey({ columns: [table.bookId, table.authorId] }),
-        // Or PK with custom name
+        // 或使用自定义名称的主键
         primaryKey({ name: 'custom_name', columns: [table.bookId, table.authorId] })
       ]);
       ```
@@ -233,14 +233,14 @@ Drizzle ORM provides a standalone `primaryKey` operator for that:
       ```
     </Section>
 
-### Foreign key
+### 外键
 
-The `FOREIGN KEY` constraint is used to prevent actions that would destroy links between tables.
-A `FOREIGN KEY` is a field (or collection of fields) in one table, that refers to the `PRIMARY KEY` in another table.
-The table with the foreign key is called the child table, and the table with the primary key is called the referenced or parent table.
+`FOREIGN KEY` 约束用于防止破坏表之间链接的操作。
+`FOREIGN KEY` 是一张表中的一个字段（或一组字段），它引用另一张表中的 `PRIMARY KEY`。
+带有外键的表称为子表，带有主键的表称为被引用表或父表。
 
-Drizzle ORM provides several ways to declare foreign keys.
-You can declare them in a column declaration statement:
+Drizzle ORM 提供了多种声明外键的方式。
+你可以在列声明语句中声明它们：
 
 	```typescript {11}
     import { int, text, mysqlTable } from "drizzle-orm/mysql-core";
@@ -257,8 +257,8 @@ You can declare them in a column declaration statement:
     });
     ```
 
-If you want to do a self reference, due to a TypeScript limitations you will have to either explicitly
-set return type for reference callback or use a standalone `foreignKey` operator.
+如果你想做自引用，由于 TypeScript 的限制，你必须要么为引用回调
+显式设置返回类型，要么使用独立的 `foreignKey` 操作符。
 
 	```typescript {6,15-19}
     import { int, text, foreignKey, type AnyMySqlColumn, mysqlTable } from "drizzle-orm/mysql-core";
@@ -283,7 +283,7 @@ set return type for reference callback or use a standalone `foreignKey` operator
     ]);
     ```
 
-To declare multi-column foreign keys you can use a dedicated `foreignKey` operator:
+要声明多列外键，你可以使用专用的 `foreignKey` 操作符：
 
 	```typescript copy {4-5,7,15-19}
     import { int, text, primaryKey, foreignKey, mysqlTable, type AnyMySqlColumn } from "drizzle-orm/mysql-core";
@@ -308,9 +308,9 @@ To declare multi-column foreign keys you can use a dedicated `foreignKey` operat
     ]);
     ```
 
-## Indexes
+## 索引
 
-Drizzle ORM provides API for both `index` and `unique index` declaration:
+Drizzle ORM 为 `index` 和 `unique index` 声明都提供了 API：
 
 <Section>
     ```typescript copy {8-9}
@@ -335,10 +335,10 @@ Drizzle ORM provides API for both `index` and `unique index` declaration:
     ```
     </Section>
 
-     Drizzle ORM provides set of all params for index creation:
+     Drizzle ORM 提供了创建索引所需的全部参数：
 
     ```typescript
-    // Index declaration reference
+    // 索引声明参考
     index("name")
       .on(table.name)
       .algorithm("default") // "default" | "copy" | "inplace"

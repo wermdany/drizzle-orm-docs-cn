@@ -11,35 +11,35 @@ import WhatsNextPostgres from "@mdx/WhatsNextPostgres.astro";
 
 # Drizzle \<\> Netlify Database
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- Netlify Database - [website](https://docs.netlify.com/build/data-and-storage/netlify-database/)
+- 使用 Drizzle 的数据库[连接基础](/docs/connect-overview)
+- Netlify Database - [网站](https://docs.netlify.com/build/data-and-storage/netlify-database/)
 </Prerequisites>
 
 <Callout type="warning">
-The Netlify Database driver is developed and maintained by the Netlify team.
+Netlify Database 驱动由 Netlify 团队开发和维护。
 </Callout>
 
-Drizzle has native support for Netlify Database connections, that intelligently selects the optimal underlying Postgres driver based on the runtime environment.
+Drizzle 原生支持 Netlify Database 连接，它会根据运行时环境智能选择最优的底层 Postgres 驱动。
 
-Netlify Database is a managed Postgres database. On Netlify's platform, the same application code runs in two very different contexts:
+Netlify Database 是一个托管的 Postgres 数据库。在 Netlify 平台上，同一份应用代码会在两种截然不同的上下文中运行：
 
-- Serverless functions: no persistent connections, best served by HTTP-based queries
-- Server mode: persistent connections via node-postgres
+- Serverless 函数：没有持久连接，最适合基于 HTTP 的查询
+- Server 模式：通过 node-postgres 建立持久连接
 
-This adapter abstracts that decision away so consumers can write `drizzle()` once and get the right driver automatically.
+该适配器把这部分决策抽象掉，让使用者只需编写一次 `drizzle()`，即可自动获得正确的驱动。
   
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <Npm>
  drizzle-orm@rc @netlify/database
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
-<CodeTabs items={["Zero config", "Connection string", "Explicit client"]}>
+#### 第 2 步 - 初始化驱动并发起查询
+<CodeTabs items={["零配置", "连接字符串", "显式客户端"]}>
 ```typescript
 import { drizzle } from 'drizzle-orm/netlify-db';
 
-// Connection string is set automatically by the platform
+// 连接字符串由平台自动设置
 const db = drizzle();
 
 const result = await db.execute('select 1');
@@ -56,13 +56,13 @@ const result = await db.execute('select 1');
 ```typescript
 import { drizzle } from 'drizzle-orm/netlify-db';
 
-// Explicit client — consumer controls the driver
+// 显式客户端 — 由使用者控制驱动
 const db = drizzle({ client: netlifyDbClient });
 
 const result = await db.execute('select 1');
 ```
 </CodeTabs>
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres/>

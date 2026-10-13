@@ -2,10 +2,10 @@ import Callout from '@mdx/Callout.astro';
 import Tab from "@mdx/Tab.astro";
 import Tabs from "@mdx/Tabs.astro";
 
-# Generators
+# 生成器
 
 <Callout title='warning'>
-For now, specifying `arraySize` along with `isUnique` in generators that support it will result in unique values being generated (not unique arrays), which will then be packed into arrays.
+目前，在支持 `arraySize` 的生成器中同时指定 `arraySize` 和 `isUnique`，会导致生成唯一值（而非唯一数组），随后这些值会被打包进数组。
 </Callout>
 
 ## ---
@@ -13,7 +13,7 @@ For now, specifying `arraySize` along with `isUnique` in generators that support
 ### `default`
 
 <rem025 />
-Generates the same given value each time the generator is called.
+每次调用生成器时都生成相同的给定值。
 
 |  | param          | default     | type
 |:-| :--------      | :--------   | :--------
@@ -29,11 +29,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   posts: {
     columns: {
       content: funcs.default({
-        // value you want to generate
+        // 你想要生成的值
         defaultValue: "post content",
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -45,7 +45,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `valuesFromArray`
 
 <rem025 />
-Generates values from given array
+从给定数组生成值
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -62,14 +62,14 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   posts: {
     columns: {
       title: funcs.valuesFromArray({
-        // Array of values you want to generate (can be an array of weighted values)
+        // 你想要生成的值数组（可以是加权值数组）
         values: ["Title1", "Title2", "Title3", "Title4", "Title5"],
 
-        // Property that controls whether the generated values will be unique or not
+        // 控制生成的值是否唯一的属性
         isUnique: true,
         
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -81,7 +81,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `intPrimaryKey`
 
 <rem025 />
-Generates sequential integers starting from 1.
+生成从 1 开始的连续整数。
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -105,7 +105,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `number`
 
 <rem025 />
-Generates numbers with a floating point within the given range
+在给定范围内生成浮点数
 
 |  | param      | default                                                                                               | type
 |:-| :--------  | :--------                                                                                             | :--------
@@ -123,22 +123,22 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   products: {
     columns: {
       unitPrice: funcs.number({
-        // lower border of range.
+        // 范围的下界。
         minValue: 10,
 
-        // upper border of range.
+        // 范围的上界。
         maxValue: 120,
         
-        // precision of generated number:
-        // precision equals 10 means that values will be accurate to one tenth (1.2, 34.6);
-        // precision equals 100 means that values will be accurate to one hundredth (1.23, 34.67).
+        // 生成数字的精度：
+        // 精度等于 10 意味着值将精确到十分位（1.2, 34.6）；
+        // 精度等于 100 意味着值将精确到百分位（1.23, 34.67）。
         precision: 100,
 
-        // property that controls if generated values gonna be unique or not.
+        // 控制生成的值是否唯一的属性。
         isUnique: false,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -150,7 +150,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `int`
 
 <rem025 />
-Generates integers within the given range
+在给定范围内生成整数
 
 |  | param      | default                                                                            | type
 |:-| :--------  | :--------                                                                          | :--------
@@ -167,17 +167,17 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   products: {
     columns: {
       unitsInStock: funcs.int({
-        // lower border of range.
+        // 范围的下界。
         minValue: 0,
 
-        // lower border of range.
+        // 范围的下界。
         maxValue: 100,
 
-        // property that controls if generated values gonna be unique or not.
+        // 控制生成的值是否唯一的属性。
         isUnique: false,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -189,7 +189,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `boolean`
 
 <rem025 />
-Generates boolean values (true or false)
+生成布尔值（true 或 false）
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -203,8 +203,8 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       isAvailable: funcs.boolean({
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -216,7 +216,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `date`
 
 <rem025 />
-Generates a date within the given range
+在给定范围内生成日期
 
 |  | param      | default                                                                                                   | type
 |:-| :--------  | :--------------                                                                                           | :--------
@@ -225,7 +225,7 @@ Generates a date within the given range
 |  |`arraySize` |--                                                                                                         |`number`
 
 <Callout type='warning'>
-If only one of the parameters (`minDate` or `maxDate`) is provided, the unspecified parameter will be calculated by adding or subtracting 8 years to/from the specified one
+如果只提供了其中一个参数（`minDate` 或 `maxDate`），未指定的参数将通过给已指定的参数加上或减去 8 年计算得出
 </Callout>
 
 <rem025 />
@@ -236,14 +236,14 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       birthDate: funcs.date({
-        // lower border of range.
+        // 范围的下界。
         minDate: "1990-01-01",
 
-        // upper border of range.
+        // 范围的上界。
         maxDate: "2010-12-31",
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -255,7 +255,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `time`
 
 <rem025 />
-Generates time in 24-hour format
+生成 24 小时制的时间
 
 |  | param      | default             | type
 |:-| :--------  | :--------           | :--------
@@ -271,14 +271,14 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       birthTime: funcs.time({
-        // lower border of range.
+        // 范围的下界。
         min: "11:12:13.141",
 
-        // upper border of range.
+        // 范围的上界。
         max: "15:16:17.181",
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -290,7 +290,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `timestamp`
 
 <rem025 />
-Generates timestamps
+生成时间戳
 
 |  | param           | default                                                                                       | type
 |:-| :--------       | :--------                                                                                     | :--------
@@ -306,14 +306,14 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   orders: {
     columns: {
       shippedDate: funcs.timestamp({
-        // lower border of range.
+        // 范围的下界。
         min: "2025-03-07T11:12:13.141",
 
-        // upper border of range.
+        // 范围的上界。
         max: "2025-03-08T15:16:17.181",
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -325,7 +325,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `datetime`
 
 <rem025 />
-Generates datetime objects
+生成 datetime 对象
 
 |  | param        | default                                                                                       | type
 |:-| :--------    | :--------                                                                                     | :--------
@@ -340,14 +340,14 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   orders: {
     columns: {
       shippedDate: funcs.datetime({
-        // lower border of range.
+        // 范围的下界。
         min: "2025-03-07 13:12:13Z",
         
-        // upper border of range.
+        // 范围的上界。
         max: "2025-03-09 15:12:13Z",
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -359,7 +359,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `year`
 
 <rem025 />
-Generates years in `YYYY` format
+以 `YYYY` 格式生成年份
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -373,8 +373,8 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       birthYear: funcs.year({
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -386,17 +386,17 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `json`
 
 <rem025 />
-Generates JSON objects with a fixed structure
+生成具有固定结构的 JSON 对象
 
 ```ts
 { email, name, isGraduated, hasJob, salary, startedWorking, visitedCountries}
 
-// or
+// 或者
 
 { email, name, isGraduated, hasJob, visitedCountries }
 ```
 
-> The JSON structure will be picked randomly
+> JSON 结构会被随机选取
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -410,8 +410,8 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       metadata: funcs.json({
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -423,9 +423,9 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `interval`
 
 <rem025 />
-Generates time intervals.
+生成时间间隔。
 
-Example of a generated value: `1 year 12 days 5 minutes`
+生成值的示例：`1 year 12 days 5 minutes`
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -440,11 +440,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       timeSpentOnWebsite: funcs.interval({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: true,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -456,7 +456,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `string`
 
 <rem025 />
-Generates random strings
+生成随机字符串
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -471,11 +471,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       hashedPassword: funcs.string({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: false,
         
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -487,7 +487,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `uuid`
 
 <rem025 />
-Generates v4 UUID strings
+生成 v4 UUID 字符串
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -500,8 +500,8 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   products: {
     columns: {
       id: funcs.uuid({
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -512,7 +512,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `firstName`
 
 <rem025 />
-Generates a person's first name
+生成人名（名）
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -527,11 +527,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       firstName: funcs.firstName({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: true,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -543,7 +543,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `lastName`
 
 <rem025 />
-Generates a person's last name
+生成人名（姓）
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -558,11 +558,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       lastName: funcs.lastName({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: false,
         
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -574,7 +574,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `fullName`
 
 <rem025 />
-Generates a person's full name
+生成人的全名
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -589,11 +589,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       fullName: funcs.fullName({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: true,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -605,7 +605,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `email`
 
 <rem025 />
-Generates unique email addresses
+生成唯一的电子邮箱地址
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -619,8 +619,8 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       email: funcs.email({
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -632,12 +632,12 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `phoneNumber`
 
 <rem025 />
-Generates unique phone numbers
+生成唯一的电话号码
 
 |  | param                    | default                                         | type
 |:-| :--------                | :--------                                       | :--------
 |  |`template`                |--                                               |`string`
-|  |`prefixes`                |[Used dataset for prefixes](https://github.com/OleksiiKH0240/drizzle-orm/blob/main/drizzle-seed/src/datasets/phonesInfo.ts)   |`string[]`
+|  |`prefixes`                |[用于前缀的数据集](https://github.com/OleksiiKH0240/drizzle-orm/blob/main/drizzle-seed/src/datasets/phonesInfo.ts)   |`string[]`
 |  |`generatedDigitsNumbers`  | `7` - `if prefixes was defined`                 |`number \| number[]`
 |  |`arraySize`               |--                                               |`number`
 
@@ -645,16 +645,16 @@ Generates unique phone numbers
 ```ts 
 import { seed } from "drizzle-seed";
 
-//generate phone number using template property
+//使用 template 属性生成电话号码
 await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       phoneNumber: funcs.phoneNumber({ 
-        // `template` - phone number template, where all '#' symbols will be substituted with generated digits.
+        // `template` - 电话号码模板，其中所有 '#' 符号都会被替换为生成的数字。
         template: "+(380) ###-####",
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -665,19 +665,19 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ```ts 
 import { seed } from "drizzle-seed";
 
-//generate phone number using prefixes and generatedDigitsNumbers properties
+//使用 prefixes 和 generatedDigitsNumbers 属性生成电话号码
 await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       phoneNumber: funcs.phoneNumber({
-        // `prefixes` - array of any string you want to be your phone number prefixes.(not compatible with `template` property)
+        // `prefixes` - 你希望作为电话号码前缀的任意字符串数组。（与 `template` 属性不兼容）
         prefixes: ["+380 99", "+380 67"],
 
-        // `generatedDigitsNumbers` - number of digits that will be added at the end of prefixes.(not compatible with `template` property)
+        // `generatedDigitsNumbers` - 将在前缀末尾添加的数字位数。（与 `template` 属性不兼容）
         generatedDigitsNumbers: 7,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -688,19 +688,19 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ```ts 
 import { seed } from "drizzle-seed";
 
-// generate phone number using prefixes and generatedDigitsNumbers properties but with different generatedDigitsNumbers for prefixes
+// 使用 prefixes 和 generatedDigitsNumbers 属性生成电话号码，但为不同前缀使用不同的 generatedDigitsNumbers
 await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       phoneNumber: funcs.phoneNumber({
-        // `prefixes` - array of any string you want to be your phone number prefixes.(not compatible with `template` property)
+        // `prefixes` - 你希望作为电话号码前缀的任意字符串数组。（与 `template` 属性不兼容）
         prefixes: ["+380 99", "+380 67", "+1"],
 
-        // `generatedDigitsNumbers` - number of digits that will be added at the end of prefixes.(not compatible with `template` property)
+        // `generatedDigitsNumbers` - 将在前缀末尾添加的数字位数。（与 `template` 属性不兼容）
         generatedDigitsNumbers: [7, 7, 10],
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -711,7 +711,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `country`
 
 <rem025 />
-Generates country's names
+生成国家名称
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -727,11 +727,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       country: funcs.country({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: false,
         
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -743,7 +743,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `city`
 
 <rem025 />
-Generates city's names
+生成城市名称
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -759,11 +759,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       city: funcs.city({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: false,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -775,7 +775,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `streetAddress`
 
 <rem025 />
-Generates street address
+生成街道地址
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -791,11 +791,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       streetAddress: funcs.streetAddress({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: false,
         
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3 
       }),
     },
@@ -807,7 +807,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `jobTitle`
 
 <rem025 />
-Generates job titles
+生成职位名称
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -822,8 +822,8 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       jobTitle: funcs.jobTitle({
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -835,7 +835,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `postcode`
 
 <rem025 />
-Generates postal codes
+生成邮政编码
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -851,11 +851,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       postcode: funcs.postcode({
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: true,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -867,7 +867,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `state`
 
 <rem025 />
-Generates US states
+生成美国州名
 
 |  | param      | default    | type
 |:-| :--------  | :--------  | :--------
@@ -882,8 +882,8 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       state: funcs.state({
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -895,7 +895,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `companyName`
 
 <rem025 />
-Generates random company's names
+生成随机的公司名称
 
 |  | param      | default                     | type
 |:-| :--------  | :--------                   | :--------
@@ -911,11 +911,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   users: {
     columns: {
       company: funcs.companyName({ 
-        // `isUnique` - property that controls whether the generated values will be unique or not
+        // `isUnique` - 控制生成的值是否唯一的属性
         isUnique: true,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -926,7 +926,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `loremIpsum`
 
 <rem025 />
-Generates `lorem ipsum` text sentences.
+生成 `lorem ipsum` 文本句子。
 
 |  | param            | default    | type
 |:-| :--------        | :--------  | :--------
@@ -942,11 +942,11 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   posts: {
     columns: {
       content: funcs.loremIpsum({
-        // `sentencesCount` - number of sentences you want to generate as one generated value(string).
+        // `sentencesCount` - 你希望作为一个生成值（字符串）生成的句子数量。
         sentencesCount: 2,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -958,7 +958,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `point`
 
 <rem025 />
-Generates 2D points within specified ranges for x and y coordinates.
+在指定的 x 和 y 坐标范围内生成 2D 点。
 
 |  | param       | default                                                                                 | type
 |:-| :--------   | :--------                                                                               | :--------
@@ -979,23 +979,23 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   triangles: {
     columns: {
       pointCoords: funcs.point({
-        // `isUnique` - property that controls if generated values gonna be unique or not.
+        // `isUnique` - 控制生成的值是否唯一的属性。
         isUnique: true,
 
-        // `minXValue` - lower bound of range for x coordinate.
+        // `minXValue` - x 坐标范围的下界。
         minXValue: -5,
 
-        // `maxXValue` - upper bound of range for x coordinate.
+        // `maxXValue` - x 坐标范围的上界。
         maxXValue: 20,
 
-        // `minYValue` - lower bound of range for y coordinate.
+        // `minYValue` - y 坐标范围的下界。
         minYValue: 0,
 
-        // `maxYValue` - upper bound of range for y coordinate.
+        // `maxYValue` - y 坐标范围的上界。
         maxYValue: 30,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -1007,7 +1007,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `line`
 
 <rem025 />
-Generates 2D lines within specified ranges for a, b and c parameters of line.
+在指定的直线 a、b、c 参数范围内生成 2D 直线。
 
 ```
 line equation: a*x + b*y + c = 0
@@ -1032,29 +1032,29 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   lines: {
     columns: {
       lineParams: funcs.point({
-        // `isUnique` - property that controls if generated values gonna be unique or not.
+        // `isUnique` - 控制生成的值是否唯一的属性。
         isUnique: true,
 
-        // `minAValue` - lower bound of range for a parameter.
+        // `minAValue` - a 参数范围的下界。
         minAValue: -5,
 
-        // `maxAValue` - upper bound of range for x parameter.
+        // `maxAValue` - x 参数范围的上界。
         maxAValue: 20,
 
-        // `minBValue` - lower bound of range for y parameter.
+        // `minBValue` - y 参数范围的下界。
         minBValue: 0,
 
-        // `maxBValue` - upper bound of range for y parameter.
+        // `maxBValue` - y 参数范围的上界。
         maxBValue: 30,
 
-        // `minCValue` - lower bound of range for y parameter.
+        // `minCValue` - y 参数范围的下界。
         minCValue: 0,
 
-        // `maxCValue` - upper bound of range for y parameter.
+        // `maxCValue` - y 参数范围的上界。
         maxCValue: 10,
 
-        // number of elements in each one-dimensional array. 
-        // (If specified, arrays will be generated.)
+        // 每个一维数组中的元素数量。 
+        // （如果指定，将生成数组。）
         arraySize: 3
       }),
     },
@@ -1066,7 +1066,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `bitString`
 
 <rem025 />
-Generates bit strings based on specified parameters.
+根据指定参数生成位字符串。
 
 |  | param       | default                                                                                 | type
 |:-| :--------   | :--------                                                                               | :--------
@@ -1082,13 +1082,13 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   bitStringTable: {
     columns: {
       bit: funcs.bitString({
-        // desired length of each bit string (e.g., `dimensions = 3` produces values like `'010'`).
+        // 每个位字符串的期望长度（例如，`dimensions = 3` 会生成类似 `'010'` 的值）。
         dimensions: 12,
 
-        // property that controls if generated values gonna be unique or not;
+        // 控制生成的值是否唯一的属性；
         isUnique: true,
 
-        // number of elements in each one-dimensional array (If specified, arrays will be generated);
+        // 每个一维数组中的元素数量（如果指定，将生成数组）；
         arraySize: 3,
       }),
     },
@@ -1100,7 +1100,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `inet`
 
 <rem025 />
-Generates ip addresses based on specified parameters.
+根据指定参数生成 IP 地址。
 
 |  | param       | default                                                                                 | type
 |:-| :--------   | :--------                                                                               | :--------
@@ -1117,16 +1117,16 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   inetTable: {
     columns: {
       inet: funcs.inet({
-        // property that controls if generated values gonna be unique or not;
+        // 控制生成的值是否唯一的属性；
         isUnique: true,
 
-        // number of elements in each one-dimensional array (If specified, arrays will be generated);
+        // 每个一维数组中的元素数量（如果指定，将生成数组）；
         arraySize: 3,
 
-        // type of IP address to generate — either "ipv4" or "ipv6";
+        // 要生成的 IP 地址类型——"ipv4" 或 "ipv6"；
         ipAddress: "ipv4",
 
-        // determines whether generated IPs include a CIDR suffix.
+        // 决定生成的 IP 是否包含 CIDR 后缀。
         includeCidr: true,
       }),
     },
@@ -1137,16 +1137,16 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `geometry`
 
 <rem025 />
-Generates geometry objects based on the given parameters.
+根据给定参数生成几何对象。
 
 <Callout title='warnings'>
 <Tabs items={['arraySize', 'srid']}>
 <Tab>
-Currently, if you set arraySize to a value greater than 1 
-or try to insert more than one `geometry point` element into a `geometry(point, 0)[]` column in MySQL via drizzle-orm, 
-you’ll encounter an error.
+目前，如果你将 arraySize 设置为大于 1 的值，
+或者尝试通过 drizzle-orm 向 MySQL 中 `geometry(point, 0)[]` 列插入多个 `geometry point` 元素，
+你会遇到错误。
 
-This bug is already in the backlog.
+此 bug 已经在待办列表中。
 
 <Callout title="❌">
 ```ts {13}
@@ -1161,7 +1161,7 @@ await seed(db, { geometryTable }, { count: 1000 }).refine((funcs) => ({
   geometryTable: {
     columns: {
       geometryArray: funcs.geometry({
-        // currently arraySize with values > 1 are not supported
+        // 目前不支持值大于 1 的 arraySize
         arraySize: 3,
       }),
     },
@@ -1183,7 +1183,7 @@ await seed(db, { geometryTable }, { count: 1000 }).refine((funcs) => ({
   geometryTable: {
     columns: {
       geometryArray: funcs.geometry({
-        // will work as expected
+        // 会按预期工作
         arraySize: 1,
       }),
     },
@@ -1194,10 +1194,10 @@ await seed(db, { geometryTable }, { count: 1000 }).refine((funcs) => ({
 </Tab>
 
 <Tab>
-Currently, if you set the SRID of a `geometry(point)` column to anything other than 0 (for example, 4326) in your drizzle-orm table declaration, 
-you’ll encounter an error during the seeding process.
+目前，如果你在 drizzle-orm 表声明中将 `geometry(point)` 列的 SRID 设置为除 0 以外的任何值（例如 4326），
+在填充过程中你会遇到错误。
 
-This bug is already in the backlog.
+此 bug 已经在待办列表中。
 
 <Callout title="❌">
 ```ts {5}
@@ -1260,19 +1260,19 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   geometryTable: {
     columns: {
       geometryPointTuple: funcs.geometry({
-        // property that controls if generated values gonna be unique or not;
+        // 控制生成的值是否唯一的属性；
         isUnique: true,
 
-        // number of elements in each one-dimensional array (If specified, arrays will be generated);
+        // 每个一维数组中的元素数量（如果指定，将生成数组）；
         arraySize: 1,
 
-        // geometry type to generate; currently only `'point'` is supported;
+        // 要生成的几何类型；目前仅支持 `'point'`；
         type: "point",
 
-        // Spatial Reference System Identifier: determines what type of point will be generated - either `4326` or `3857`;
+        // 空间参考系统标识符：决定生成哪种类型的点——`4326` 或 `3857`；
         srid: 4326,
 
-        // number of decimal places for points when `srid` is `4326` (e.g., `decimalPlaces = 3` produces values like `'point(30.723 46.482)'`).
+        // 当 `srid` 为 `4326` 时点的十进制位数（例如，`decimalPlaces = 3` 会生成类似 `'point(30.723 46.482)'` 的值）。
         decimalPlaces: 5,
       }),
     },
@@ -1284,7 +1284,7 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
 ### `vector`
 
 <rem025 />
-Generates vectors based on the provided parameters.
+根据提供的参数生成向量。
 
 |  | param          | default                                                      | type
 |:-| :--------      | :--------                                                    | :--------
@@ -1303,22 +1303,22 @@ await seed(db, schema, { count: 1000 }).refine((funcs) => ({
   vectorTable: {
     columns: {
       vector: funcs.vector({
-        // property that controls if generated values gonna be unique or not;
+        // 控制生成的值是否唯一的属性；
         isUnique: true,
 
-        // number of elements in each one-dimensional array (If specified, arrays will be generated);
+        // 每个一维数组中的元素数量（如果指定，将生成数组）；
         arraySize: 3,
 
-        // number of decimal places for each vector element (e.g., `decimalPlaces = 3` produces values like `1.123`);
+        // 每个向量元素的十进制位数（例如，`decimalPlaces = 3` 会生成类似 `1.123` 的值）；
         decimalPlaces: 5,
 
-        // number of elements in each generated vector (e.g., `dimensions = 3` produces values like `[1,2,3]`);
+        // 每个生成向量中的元素数量（例如，`dimensions = 3` 会生成类似 `[1,2,3]` 的值）；
         dimensions: 12,
 
-        // minimum allowed value for each vector element;
+        // 每个向量元素允许的最小值；
         minValue: -100,
 
-        // maximum allowed value for each vector element.
+        // 每个向量元素允许的最大值。
         maxValue: 100,
       }),
     },

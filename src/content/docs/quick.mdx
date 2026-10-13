@@ -1,16 +1,16 @@
 import Npm from "@mdx/Npm.astro";
 
-# Quick start
-Lets build a quick start app with `PostgreSQL` + `postgresjs` and run our first migration.
+# 快速开始
+让我们用 `PostgreSQL` + `postgresjs` 快速构建一个入门应用，并运行我们的第一个迁移。
 
-The first thing we need to do is to install `drizzle-orm` and `drizzle-kit`:
+我们需要做的第一件事是安装 `drizzle-orm` 和 `drizzle-kit`：
 
 <Npm>
 drizzle-orm@rc postgres
 -D drizzle-kit@rc
 </Npm>
 
-Lets declare our `schema.ts`:
+让我们声明 `schema.ts`：
 
 ```plaintext {4}
 📦 <project root>
@@ -33,7 +33,7 @@ export const user = pgTable("user", {
 });
 ```
 
-Now lets add drizzle configuration file:
+现在让我们添加 drizzle 配置文件：
 ```plaintext {4}
 📦 <project root>
  ├ ...
@@ -51,7 +51,7 @@ export default defineConfig({
 });
 ```
 
-Add `generate` and `migrate` commands to `package.json` and run our first migrations generation:
+把 `generate` 和 `migrate` 命令添加到 `package.json`，然后运行我们第一次迁移生成：
 
 ```json filename="package.json" {5,6}
 {
@@ -70,7 +70,7 @@ $ npm run generate
 [✓] Your SQL migration file ➜ drizzle/20242409125510_pale_mister_fear/migration.sql 🚀
 ```
 
-Done! We now have our first SQL migration file 🥳
+完成！我们现在有了第一个 SQL 迁移文件 🥳
 ```plaintext {4}
 📦 <project root>
  ├ 📂 drizzle
@@ -79,12 +79,12 @@ Done! We now have our first SQL migration file 🥳
  ├ 📜 drizzle.config.ts
  └ 📜 package.json
 ```
-Now lets run our first migration to the database:
+现在让我们运行第一个迁移到数据库：
 
 ```shell filename="terminal"
 $ npm run migrate
 ```
 
-That's it, folks!  
+就这样，各位！
 
-**My personal congratulations 🎉**
+**我个人的祝贺 🎉**

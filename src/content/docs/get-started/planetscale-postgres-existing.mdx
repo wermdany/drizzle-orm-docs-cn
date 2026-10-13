@@ -22,72 +22,72 @@ import UpdateSchema from '@mdx/get-started/postgresql/UpdateSchema.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and PlanetScale Postgres in existing project
+# 在现有项目中使用 Drizzle 和 PlanetScale Postgres 快速上手
 
 <Prerequisites>
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **PlanetScale Postgres** - PostgreSQL database platform - [read here](https://planetscale.com/docs/postgres)
-  - **node-postgres** - package for querying your PostgreSQL database - [read here](https://node-postgres.com/)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **PlanetScale Postgres** - PostgreSQL 数据库平台 - [阅读文档](https://planetscale.com/docs/postgres)
+  - **node-postgres** - 用于查询 PostgreSQL 数据库的包 - [阅读文档](https://node-postgres.com/)
 </Prerequisites>
 
-<Callout title='PlanetScale also offers MySQL' type='info'>
-Looking for MySQL? Check out our [PlanetScale MySQL guide](/docs/get-started/planetscale-existing)
+<Callout title='PlanetScale 也提供 MySQL' type='info'>
+正在寻找 MySQL？请查看我们的 [PlanetScale MySQL 指南](/docs/get-started/planetscale-existing)
 </Callout>
 
-PlanetScale offers both MySQL (Vitess) and PostgreSQL databases. This guide covers connecting to PlanetScale Postgres using the standard `node-postgres` driver.
+PlanetScale 同时提供 MySQL（Vitess）和 PostgreSQL 数据库。本指南介绍如何使用标准的 `node-postgres` 驱动连接到 PlanetScale Postgres。
 
-For detailed instructions on creating a PlanetScale Postgres database and obtaining credentials, see the [PlanetScale Postgres documentation](https://planetscale.com/docs/postgres/tutorials/planetscale-postgres-drizzle).
+关于创建 PlanetScale Postgres 数据库和获取凭证的详细说明，请参阅 [PlanetScale Postgres 文档](https://planetscale.com/docs/postgres/tutorials/planetscale-postgres-drizzle)。
 
 <FileStructure/>
 
-#### Step 1 - Install **node-postgres** package
+#### 步骤 1 - 安装 **node-postgres** 包
 <InstallPackages lib='pg' devlib=' @types/pg'/>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 配置连接变量
 
-Create a `.env` file in the root of your project and add your database connection variable:
+在你的项目根目录下创建一个 `.env` 文件，并添加你的数据库连接变量：
 
 ```plaintext copy
 DATABASE_URL=postgresql://{username}:{password}@{host}:{port}/postgres?sslmode=verify-full
 ```
 
-<Callout title='tips'>
-You can obtain your connection credentials from the PlanetScale dashboard by navigating to your database, clicking **"Connect"**, and creating a **"Default role"**. See the [PlanetScale connection guide](https://planetscale.com/docs/postgres/tutorials/planetscale-postgres-drizzle#create-credentials-and-connect) for detailed steps.
+<Callout title='提示'>
+你可以从 PlanetScale 仪表板获取连接凭证：导航到你的数据库，点击 **"Connect"**，然后创建一个 **"Default role"**。详细步骤请参阅 [PlanetScale 连接指南](https://planetscale.com/docs/postgres/tutorials/planetscale-postgres-drizzle#create-credentials-and-connect)。
 </Callout>
 
-#### Step 3 - Setup Drizzle config file
+#### 步骤 3 - 配置 Drizzle 配置文件
 
 <SetupConfig dialect='postgresql' env_variable='DATABASE_URL'/>
 
-#### Step 4 - Introspect your database
+#### 步骤 4 - 内省数据库
 
 <IntrospectPostgreSQL/>
 
-#### Step 5 - Transfer code to your actual schema file
+#### 步骤 5 - 将代码迁移到实际的 schema 文件
 
 <TransferCode/>
 
-#### Step 6 - Connect Drizzle ORM to the database
+#### 步骤 6 - 将 Drizzle ORM 连接到数据库
 
 <ConnectPlanetScalePostgres/>
 
-#### Step 7 - Query the database
+#### 步骤 7 - 查询数据库
 
 <QueryDatabase dialect='node-postgres' env_variable='DATABASE_URL'/>
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>
 
-#### Step 9 - Update your table schema (optional)
+#### 步骤 9 - 更新表结构 schema（可选）
 
 <UpdateSchema/>
 
-#### Step 10 - Applying changes to the database (optional)
+#### 步骤 10 - 将变更应用到数据库（可选）
 
 <ApplyChanges />
 
-#### Step 11 - Query the database with a new field (optional)
+#### 步骤 11 - 使用新字段查询数据库（可选）
 
 <QueryDatabaseUpdated dialect='node-postgres' env_variable='DATABASE_URL' />

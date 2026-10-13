@@ -3,24 +3,24 @@ import Section from '@mdx/Section.astro';
 
 # SQL Delete
 
-You can delete all rows in the table:
+你可以删除表中的所有行：
 ```typescript copy
 await db.delete(users);
 ```
-And you can delete with filters and conditions:
+你也可以带过滤器（filters）和条件进行删除：
 ```typescript copy
 await db.delete(users).where(eq(users.name, 'Dan'));
 ```
 
 ### Returning
 
-You can delete a row and get it back in PostgreSQL:
+在 PostgreSQL 中，你可以删除一行并将其返回：
 ```typescript copy
 const deletedUser = await db.delete(users)
   .where(eq(users.name, 'Dan'))
   .returning();
 
-// partial return
+// 部分返回
 const deletedUserId = await db.delete(users)
   .where(eq(users.name, "Dan"))
   .returning({ deletedId: users.id });
@@ -33,13 +33,13 @@ delete from "users" where "users"."name" = 'Dan' returning "id", "name";
 delete from "users" where "users"."name" = 'Dan' returning "id";
 ```
 
-## WITH DELETE clause
+## WITH DELETE 子句
 
 <Callout>
-  Check how to use WITH statement with [select](/docs/select#with-clause), [insert](/docs/insert#with-insert-clause), [update](/docs/update#with-update-clause)
+  查看如何将 WITH 语句与 [select](/docs/select#with-子句)、[insert](/docs/insert#with-insert-子句)、[update](/docs/update#with-update-子句) 一起使用
 </Callout>
 
-Using the `with` clause can help you simplify complex queries by splitting them into smaller subqueries called common table expressions (CTEs):
+使用 `with` 子句可以帮助你将复杂查询拆分为更小的子查询（称为公共表表达式，CTE），从而简化查询：
 <Section>
 ```typescript copy
 const averageAmount = db.$with('average_amount').as(

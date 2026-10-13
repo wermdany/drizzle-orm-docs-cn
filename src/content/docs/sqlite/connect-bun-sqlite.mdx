@@ -9,26 +9,26 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 # Drizzle \<\> Bun SQLite
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
-- Bun - [website](https://bun.sh/docs)
-- Bun SQLite driver - [docs](https://bun.sh/docs/api/sqlite)
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
+- Bun - [官网](https://bun.sh/docs)
+- Bun SQLite 驱动 - [文档](https://bun.sh/docs/api/sqlite)
 </Prerequisites>
 
-According to the **[official website](https://bun.sh/)**, Bun is a fast all-in-one JavaScript runtime. 
+根据 **[官方网站](https://bun.sh/)** 的描述，Bun 是一个快速的一体化 JavaScript 运行时。
 
-Drizzle ORM natively supports **[`bun:sqlite`](https://bun.sh/docs/api/sqlite)** module and it's crazy fast 🚀  
+Drizzle ORM 原生支持 **[`bun:sqlite`](https://bun.sh/docs/api/sqlite)** 模块，而且快到飞起 🚀  
 
-We embrace SQL dialects and dialect specific drivers and syntax and unlike any other ORM, 
-for synchronous drivers like `bun:sqlite` we have both **async** and **sync** APIs and we mirror most popular 
-SQLite-like `all`, `get`, `values` and `run` query methods syntax.
+我们拥抱 SQL 方言以及特定方言的驱动和语法，与其它任何 ORM 不同，
+对于像 `bun:sqlite` 这样的同步驱动，我们同时提供了 **async** 和 **sync** API，并且镜像了最流行的
+类 SQLite 的 `all`、`get`、`values` 和 `run` 查询方法语法。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
  drizzle-orm@rc
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并执行查询
 ```typescript copy
 import { drizzle } from 'drizzle-orm/bun-sqlite';
 
@@ -37,7 +37,7 @@ const db = drizzle();
 const result = await db.select().from(...);
 ```
 
-If you need to provide your existing driver:
+如果你需要提供已有的驱动：
 ```typescript copy
 import { drizzle } from 'drizzle-orm/bun-sqlite';
 import { Database } from 'bun:sqlite';
@@ -48,7 +48,7 @@ const db = drizzle({ client: sqlite });
 const result = await db.select().from(...);
 ```
 
-If you want to use **sync** APIs:
+如果你想使用 **sync** API：
 ```typescript copy
 import { drizzle } from 'drizzle-orm/bun-sqlite';
 import { Database } from 'bun:sqlite';
@@ -62,6 +62,6 @@ const result = db.select().from(users).values();
 const result = db.select().from(users).run();
 ```
 
-#### What's next?
+#### 下一步？
 
 <WhatsNextSQLite/>

@@ -10,22 +10,22 @@ import WhatsNextPostgres from "@mdx/WhatsNextPostgres.astro";
 # Drizzle \<\> Supabase
 
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- Drizzle PostgreSQL drivers - [docs](/docs/get-started-postgresql)
+- 使用 Drizzle 进行[数据库连接基础](/docs/connect-overview)
+- Drizzle PostgreSQL 驱动 - [文档](/docs/get-started-postgresql)
 </Prerequisites>
 
-According to the **[official website](https://supabase.com/docs)**, Supabase is an open source Firebase alternative for building secure and performant Postgres backends with minimal configuration.
+根据**[官方网站](https://supabase.com/docs)**，Supabase 是一个开源的 Firebase 替代方案，用于以最少的配置构建安全且高性能的 Postgres 后端。
 
-Checkout official **[Supabase + Drizzle](https://supabase.com/docs/guides/database/drizzle)** docs.
+查看官方 **[Supabase + Drizzle](https://supabase.com/docs/guides/database/drizzle)** 文档。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 
 <Npm>
  drizzle-orm@rc postgres
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动程序并执行查询
 
 ```typescript copy filename="index.ts"
 import { drizzle } from 'drizzle-orm/postgres-js'
@@ -35,7 +35,7 @@ const db = drizzle(process.env.DATABASE_URL);
 const allUsers = await db.select().from(...);
 ```
 
-If you need to provide your existing driver:
+如果你需要提供已有的驱动：
 ```typescript copy filename="index.ts"
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
@@ -46,21 +46,21 @@ const db = drizzle({ client });
 const allUsers = await db.select().from(...);
 ```
 
-If you decide to use connection pooling via Supabase (described [here](https://supabase.com/docs/guides/database/connecting-to-postgres#poolers)), and have "Transaction" pool mode enabled, then ensure to turn off prepare, as prepared statements are not supported. 
+如果你决定通过 Supabase 使用连接池（[此处](https://supabase.com/docs/guides/database/connecting-to-postgres#poolers)有介绍），并且启用了 "Transaction" 池模式，那么请务必关闭 prepare，因为不支持预备语句（prepared statements）。
 
 ```typescript copy filename="index.ts"
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 
-// Disable prefetch as it is not supported for "Transaction" pool mode 
+// 禁用 prefetch，因为 "Transaction" 池模式不支持它 
 const client = postgres(process.env.DATABASE_URL, { prepare: false })
 const db = drizzle({ client });
 
 const allUsers = await db.select().from(...);
 ```
 
-Connect to your database using the Connection Pooler for **serverless environments**, and the Direct Connection for **long-running servers**.
+对于**无服务器环境**，请使用连接池器（Connection Pooler）连接到数据库；对于**长时间运行的服务器**，请使用直接连接（Direct Connection）。
 
-#### What's next?
+#### 接下来做什么？
 
 <WhatsNextPostgres/>

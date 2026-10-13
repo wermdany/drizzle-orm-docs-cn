@@ -19,56 +19,55 @@ import ConnectLibsql from '@mdx/get-started/sqlite/ConnectLibsql.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and SQLite
+# Drizzle 与 SQLite 入门
 
 <Prerequisites>  
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **libsql** - a fork of SQLite optimized for low query latency, making it suitable for global applications - [read here](https://docs.turso.tech/libsql)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **libsql** - SQLite 的一个分支，针对低查询延迟进行了优化，适合全球化应用 - [阅读文档](https://docs.turso.tech/libsql)
 </Prerequisites>
 
-Drizzle has native support for SQLite connections with the `libsql`, `node:sqlite` and `better-sqlite3` drivers.
+Drizzle 通过 `libsql`、`node:sqlite` 和 `better-sqlite3` 驱动原生支持 SQLite 连接。
 
-We will use `libsql` for this get started example. But if you want to find more ways to connect to SQLite check
-our [SQLite Connection](/docs/sqlite/get-started-sqlite) page 
+在本快速开始示例中，我们将使用 `libsql`。但如果你想了解更多连接 SQLite 的方式，请查看我们的 [SQLite 连接](/docs/sqlite/get-started-sqlite) 页面
 
 <FileStructure />
 
-#### Step 1 - Install required packages
+#### 步骤 1 - 安装所需的包
 <InstallPackages lib='@libsql/client'/>
 
-#### Step 2 - Setup connection variables
+#### 步骤 2 - 设置连接变量
 
 <SetupEnv env_variable='DB_FILE_NAME' />
 
-<Callout type='info' title='important'>
-For example, if you want to create an SQLite database file in the root of your project for testing purposes, you need to use `file:` before the actual filename, as this is the format required by `LibSQL`, like this:
+<Callout type='info' title='重要'>
+例如，如果你出于测试目的想在项目根目录创建一个 SQLite 数据库文件，你需要在实际文件名前使用 `file:`，因为这是 `LibSQL` 要求的格式，如下所示：
 ```plaintext copy
 DB_FILE_NAME=file:local.db
 ```
-You can check the **[LibSQL docs](https://docs.turso.tech/sdk/ts/reference#local-development)** for more info.
+你可以查看 **[LibSQL 文档](https://docs.turso.tech/sdk/ts/reference#local-development)** 了解更多信息。
 </Callout>
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 步骤 3 - 将 Drizzle ORM 连接到数据库
 
 <ConnectLibsql/>
 
-#### Step 4 - Create a table
+#### 步骤 4 - 创建表
 
 <CreateTable/>
 
-#### Step 5 - Setup Drizzle config file
+#### 步骤 5 - 设置 Drizzle 配置文件
 
 <SetupConfig dialect='sqlite' env_variable='DB_FILE_NAME'/>
 
-#### Step 6 - Applying changes to the database
+#### 步骤 6 - 将变更应用到数据库
 
 <ApplyChanges />
 
-#### Step 7 - Seed and Query the database
+#### 步骤 7 - 填充种子数据并查询数据库
 
 <QueryDatabase dialect='libsql' env_variable='DB_FILE_NAME'/>
 
-#### Step 8 - Run index.ts file
+#### 步骤 8 - 运行 index.ts 文件
 
 <RunFile/>

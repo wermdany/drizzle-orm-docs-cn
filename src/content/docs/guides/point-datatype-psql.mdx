@@ -1,5 +1,5 @@
 ---
-title: Point datatype in PostgreSQL
+title: PostgreSQL 中的 point 数据类型
 ---
 
 import Section from "@mdx/Section.astro";
@@ -9,14 +9,14 @@ import CodeTab from '@mdx/CodeTab.astro';
 import Callout from '@mdx/Callout.astro';
 
 <Prerequisites>
-- Get started with [PostgreSQL](/docs/get-started-postgresql)
-- [Point datatype](/docs/column-types#point)
-- [Filtering in select statement](/docs/select#filtering)
-- [sql operator](/docs/sql)
+- 从 [PostgreSQL](/docs/get-started-postgresql) 开始
+- [Point 数据类型](/docs/column-types#point)
+- [在查询语句中过滤](/docs/select#filtering)
+- [sql 操作符](/docs/sql)
 </Prerequisites>
 
-PostgreSQL has a special datatype to store geometric data called `point`. It is used to represent a point in a two-dimensional space. The point datatype is represented as a pair of `(x, y)` coordinates.
-The point expects to receive longitude first, followed by latitude.
+PostgreSQL 有一种用于存储几何数据的特殊数据类型，称为 `point`。它用于表示二维空间中的一个点。point 数据类型表示为一对 `(x, y)` 坐标。
+point 期望先接收经度，然后是纬度。
 
 <Section>
 ```ts copy {6}
@@ -38,7 +38,7 @@ await db.execute(
 ```
 </Section>
 
-This is how you can create table with `point` datatype in Drizzle:
+以下是如何在 Drizzle 中创建带有 `point` 数据类型的表：
 
 ```ts {6}
 import { pgTable, point, serial, text } from 'drizzle-orm/pg-core';
@@ -50,7 +50,7 @@ export const stores = pgTable('stores', {
 });
 ```
 
-This is how you can insert point data into the table in Drizzle:
+以下是如何在 Drizzle 中向表中插入 point 数据：
 
 ```ts {4, 10, 16}
 // mode: 'xy'
@@ -65,19 +65,19 @@ await db.insert(stores).values({
   location: [-90.9, 18.7],
 });
 
-// sql raw
+// 原生 sql
 await db.insert(stores).values({
   name: 'Test',
   location: sql`point(-90.9, 18.7)`,
 });
 ```
 
-To compute the distance between the objects you can use `<->` operator. This is how you can query for the nearest location by coordinates in Drizzle:
+要计算对象之间的距离，你可以使用 `<->` 操作符。以下是如何在 Drizzle 中按坐标查询最近的位置：
 
 <Callout type='warning'>
-`getColumns` available starting from `drizzle-orm@1.0.0-beta.2`(read more [here](/docs/upgrade-v1))
+`getColumns` 从 `drizzle-orm@1.0.0-beta.2` 起可用（在[此处](/docs/upgrade-v1)阅读更多内容）
 
-If you are on pre-1 version(like `0.45.1`) then use `getTableColumns`
+如果你使用的是 1.0 之前的版本（如 `0.45.1`），请使用 `getTableColumns`
 </Callout>
 
 <Section>
@@ -109,7 +109,7 @@ limit 1;
 ```
 </Section>
 
-To filter rows to include only those where a `point` type `location` falls within a specified rectangular boundary defined by two diagonal points you can user `<@` operator. It checks if the first object is contained in or on the second object:
+要过滤行，仅包含 `point` 类型 `location` 落在由两个对角点定义的指定矩形边界内的那些行，你可以使用 `<@` 操作符。它会检查第一个对象是否被包含在第二个对象内或其上：
 
 <Section>
 ```ts {12}
@@ -132,6 +132,3 @@ await db
 select * from stores where location <@ box(point(-88, 40), point(-73, 43));
 ```
 </Section>
-
-
-

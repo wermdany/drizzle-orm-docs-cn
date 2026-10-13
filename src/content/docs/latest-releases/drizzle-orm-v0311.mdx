@@ -1,17 +1,17 @@
 ---
-title: DrizzleORM v0.31.1 release
+title: DrizzleORM v0.31.1 发布
 pubDate: 2024-06-04
-description: React Live Queries 🎉
+description: React 实时查询 🎉
 ---
 
-# New Features
+# 新特性
 
 ## Live Queries 🎉
 
-> ### For a full explanation about Drizzle + Expo welcome to [discussions](https://github.com/drizzle-team/drizzle-orm/discussions/2447)
+> ### 关于 Drizzle + Expo 的完整说明，欢迎查看[讨论](https://github.com/drizzle-team/drizzle-orm/discussions/2447)
 
-As of `v0.31.1` Drizzle ORM now has native support for Expo SQLite Live Queries!
-We've implemented a native `useLiveQuery` React Hook which observes necessary database changes and automatically re-runs database queries. It works with both SQL-like and Drizzle Queries:
+从 `v0.31.1` 开始，Drizzle ORM 现在原生支持 Expo SQLite 实时查询！
+我们实现了一个原生的 `useLiveQuery` React Hook，它会监听必要的数据库变更并自动重新执行数据库查询。它同时适用于类 SQL 查询和 Drizzle 查询：
 
 ```tsx
 import { useLiveQuery, drizzle } from 'drizzle-orm/expo-sqlite';
@@ -19,11 +19,11 @@ import { openDatabaseSync } from 'expo-sqlite';
 import { users } from './schema';
 import { Text } from 'react-native';
 
-const expo = openDatabaseSync('db.db', { enableChangeListener: true }); // <-- enable change listeners
+const expo = openDatabaseSync('db.db', { enableChangeListener: true }); // <-- 启用变更监听器
 const db = drizzle(expo);
 
 const App = () => {
-  // Re-renders automatically when data changes
+  // 数据变更时自动重新渲染
   const { data } = useLiveQuery(db.select().from(users));
 
   // const { data, error, updatedAt } = useLiveQuery(db.query.users.findFirst());
@@ -36,6 +36,6 @@ const App = () => {
 export default App;
 ```
 
-We've intentionally not changed the API of ORM itself to stay with conventional React Hook API, so we have `useLiveQuery(databaseQuery)` as opposed to `db.select().from(users).useLive()` or `db.query.users.useFindMany()`
+我们有意没有修改 ORM 本身的 API，以遵循常规的 React Hook API，因此我们使用 `useLiveQuery(databaseQuery)`，而不是 `db.select().from(users).useLive()` 或 `db.query.users.useFindMany()`
 
-We've also decided to provide `data`, `error` and `updatedAt` fields as a result of hook for concise explicit error handling following practices of `React Query` and `Electric SQL`
+我们还决定将 `data`、`error` 和 `updatedAt` 字段作为 hook 的返回结果提供，以便按照 `React Query` 和 `Electric SQL` 的实践进行简洁明确的错误处理

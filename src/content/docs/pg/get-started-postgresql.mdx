@@ -10,31 +10,31 @@ import WhatsNextPostgres from "@mdx/WhatsNextPostgres.astro";
 
 # Drizzle \<\> PostgreSQL
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- node-postgres [basics](https://node-postgres.com/)
-- postgres.js [basics](https://github.com/porsager/postgres?tab=readme-ov-file#usage)
+- 使用 Drizzle 的数据库 [连接基础](/docs/connect-overview)
+- node-postgres [基础](https://node-postgres.com/)
+- postgres.js [基础](https://github.com/porsager/postgres?tab=readme-ov-file#usage)
 </Prerequisites>
 
-Drizzle has native support for PostgreSQL connections with the `node-postgres` and `postgres.js` drivers.
+Drizzle 通过 `node-postgres` 和 `postgres.js` 驱动原生支持 PostgreSQL 连接。
 
-There are a few differences between the `node-postgres` and `postgres.js` drivers that we discovered while using both and integrating them with the Drizzle ORM. For example:
+在使用这两个驱动并将它们与 Drizzle ORM 集成时，我们发现了 `node-postgres` 和 `postgres.js` 之间的一些差异。例如：
 
-- With `node-postgres`, you can install `pg-native` to boost the speed of both `node-postgres` and Drizzle by approximately 10%.
-- `node-postgres` supports providing type parsers on a per-query basis without globally patching things. For more details, see [Types Docs](https://node-postgres.com/features/queries#types).
-- `postgres.js` uses prepared statements by default, which you may need to opt out of. This could be a potential issue in AWS environments, among others, so please keep that in mind.
-- If there's anything else you'd like to contribute, we'd be happy to receive your PRs [here](https://github.com/drizzle-team/drizzle-orm-docs/pulls)
+- 使用 `node-postgres` 时，你可以安装 `pg-native`，将 `node-postgres` 和 Drizzle 的速度提升约 10%。
+- `node-postgres` 支持在每次查询的基础上提供类型解析器，而无需全局打补丁。更多细节，请参见 [类型文档](https://node-postgres.com/features/queries#types)。
+- `postgres.js` 默认使用预处理语句，你可能需要选择退出该行为。这在 AWS 等环境中可能是一个潜在问题，因此请留意。
+- 如果你还有其它想要贡献的内容，我们很乐意在 [这里](https://github.com/drizzle-team/drizzle-orm-docs/pulls) 接收你的 PR
 
 ## node-postgres
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <Npm>
  drizzle-orm@rc pg
  -D drizzle-kit@rc @types/pg
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
-<CodeTabs items={["node-postgres", "node-postgres with config"]}>
+#### 第 2 步 - 初始化驱动程序并执行查询
+<CodeTabs items={["node-postgres", "带配置的 node-postgres"]}>
 ```typescript copy
-// Make sure to install the 'pg' package 
+// 确保安装了 'pg' 包 
 import { drizzle } from 'drizzle-orm/node-postgres';
 
 const db = drizzle(process.env.DATABASE_URL);
@@ -42,10 +42,10 @@ const db = drizzle(process.env.DATABASE_URL);
 const result = await db.execute('select 1');
 ```
 ```typescript copy
-// Make sure to install the 'pg' package 
+// 确保安装了 'pg' 包 
 import { drizzle } from 'drizzle-orm/node-postgres';
 
-// You can specify any property from the node-postgres connection options
+// 你可以指定 node-postgres 连接选项中的任意属性
 const db = drizzle({ 
   connection: { 
     connectionString: process.env.DATABASE_URL,
@@ -57,10 +57,10 @@ const result = await db.execute('select 1');
 ```
 </CodeTabs>
 
-If you need to provide your existing driver:
+如果你需要提供已有的驱动：
 
 ```typescript copy
-// Make sure to install the 'pg' package 
+// 确保安装了 'pg' 包 
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -73,14 +73,14 @@ const result = await db.execute('select 1');
 ```
 
 ## postgres.js
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <Npm>
  drizzle-orm@rc postgres
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
-<CodeTabs items={["postgres.js", "postgres.js with config"]}>
+#### 第 2 步 - 初始化驱动程序并执行查询
+<CodeTabs items={["postgres.js", "带配置的 postgres.js"]}>
 ```typescript copy
 import { drizzle } from 'drizzle-orm/postgres-js';
 
@@ -91,7 +91,7 @@ const result = await db.execute('select 1');
 ```typescript copy
 import { drizzle } from 'drizzle-orm/postgres-js';
 
-// You can specify any property from the postgres-js connection options
+// 你可以指定 postgres-js 连接选项中的任意属性
 const db = drizzle({ 
   connection: { 
     url: process.env.DATABASE_URL, 
@@ -103,10 +103,10 @@ const result = await db.execute('select 1');
 ```
 </CodeTabs>
 
-If you need to provide your existing driver:
+如果你需要提供已有的驱动：
 
 ```typescript copy
-// Make sure to install the 'postgres' package
+// 确保安装了 'postgres' 包
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -116,6 +116,6 @@ const db = drizzle({ client: queryClient });
 const result = await db.execute('select 1');
 ```
 
-#### What's next?
+#### 接下来做什么？
 
 <WhatsNextPostgres/>

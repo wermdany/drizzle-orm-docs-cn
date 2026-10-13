@@ -2,40 +2,40 @@ import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 import Callout from '@mdx/Callout.astro';
 
-# Generated Columns
+# 生成列
 
-1. Virtual (or non-persistent) Generated Columns: These columns are computed dynamically whenever they are queried. They do not occupy storage space in the database.
+1. 虚拟（或非持久化）生成列：这些列在被查询时动态计算。它们不占用数据库的存储空间。
 
-2. Stored (or persistent) Generated Columns: These columns are computed when a row is inserted or updated and their values are stored in the database. This allows them to be indexed and can improve query performance since the values do not need to be recomputed for each query.
+2. 存储（或持久化）生成列：这些列在插入或更新行时计算，其值存储在数据库中。这使它们可以被索引，并能提升查询性能，因为无需为每次查询重新计算这些值。
 
-#### Database side
-    **Types**: `VIRTUAL`, `STORED`
+#### 数据库端
+    **类型**: `VIRTUAL`, `STORED`
 
-	When no type is specified, `VIRTUAL` is used by default
+	未指定类型时，默认使用 `VIRTUAL`
 
-    **How It Works**
-    - Defined with an expression in the table schema.
-    - Virtual columns are computed during read operations.
-    - Stored columns are computed during write operations and stored.
+    **工作原理**
+    - 在表 schema 中通过表达式定义。
+    - 虚拟列在读取操作期间计算。
+    - 存储列在写入操作期间计算并存储。
 
-    **Capabilities**
-    - Used in SELECT, INSERT, UPDATE, and DELETE statements.
-    - Can be indexed, both virtual and stored.
-    - Can specify NOT NULL and other constraints.
+    **能力**
+    - 可用于 SELECT、INSERT、UPDATE 和 DELETE 语句。
+    - 无论是虚拟列还是存储列，都可以被索引。
+    - 可以指定 NOT NULL 及其他约束。
     
-    **Limitations**
-    - Cannot directly insert or update values in a generated column 
+    **限制**
+    - 不能直接向生成列插入或更新值 
 
-    For more info, please check [MySQL Alter Generated](https://dev.mysql.com/doc/refman/8.4/en/alter-table-generated-columns.html) docs and [MySQL create generated](https://dev.mysql.com/doc/refman/8.4/en/create-table-generated-columns.html) docs
+    更多信息，请查看 [MySQL Alter Generated](https://dev.mysql.com/doc/refman/8.4/en/alter-table-generated-columns.html) 文档和 [MySQL create generated](https://dev.mysql.com/doc/refman/8.4/en/create-table-generated-columns.html) 文档
 
-    #### Drizzle side
-    In Drizzle you can specify `.generatedAlwaysAs()` function on any column type and add a supported sql query, 
-    that will generate this column data for you.
+    #### Drizzle 侧
+    在 Drizzle 中，你可以在任何列类型上指定 `.generatedAlwaysAs()` 函数，并添加一条受支持的 SQL 查询，
+    它会为你生成该列的数据。
 
-    #### Features 
-    This function can accept generated expression in 2 ways:
+    #### 功能 
+    该函数可以通过 2 种方式接收生成表达式：
 
-    **`sql`** tag - if you want drizzle to escape some values for you
+    **`sql`** 标签 - 如果你希望 drizzle 为你转义某些值
 
     <CodeTab>
     ```ts {2,6}
@@ -58,7 +58,7 @@ import Callout from '@mdx/Callout.astro';
     ```
     </CodeTab>
 
-    **`callback`** - if you need to reference columns from a table
+    **`callback`** - 如果你需要引用表中的列
 
      <CodeTab>
     ```ts {4,10}
@@ -87,10 +87,10 @@ import Callout from '@mdx/Callout.astro';
     ```
     </CodeTab>
 
-    #### Limitations
-    Drizzle Kit will also have limitations for `push` command:
-    1. You can't change the generated constraint expression and type using `push`. Drizzle-kit will ignore this change. To make it work, you would need to `drop the column`, `push`, and then `add a column with a new expression`. This was done due to the complex mapping from the database side, where the schema expression will be modified on the database side and, on introspection, we will get a different string. We can't be sure if you changed this expression or if it was changed and formatted by the database. As long as these are generated columns and `push` is mostly used for prototyping on a local database, it should be fast to `drop` and `create` generated columns. Since these columns are `generated`, all the data will be restored
-    2. `generate` should have no limitations
+    #### 限制
+    Drizzle Kit 对 `push` 命令也会有限制：
+    1. 你无法通过 `push` 更改生成约束表达式和类型。Drizzle-kit 会忽略这一变更。要使其生效，你需要 `删除该列`、`push`，然后再 `添加一个带新表达式的列`。这样做是因为数据库侧的映射非常复杂：schema 表达式会在数据库侧被修改，而在 introspection 时我们会得到不同的字符串。我们无法确定是你修改了该表达式，还是它被数据库修改并格式化了。只要这些是生成列，并且 `push` 主要用于在本地数据库上进行原型开发，那么 `删除` 并 `创建` 生成列应该会很快。由于这些列是 `generated` 的，所有数据都会被恢复
+    2. `generate` 应该没有限制
 
   <CodeTabs items={["schema.ts"]}>
 	<CodeTab>

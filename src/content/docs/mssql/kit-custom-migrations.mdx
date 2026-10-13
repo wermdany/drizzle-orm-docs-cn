@@ -9,19 +9,19 @@ import Npx from '@mdx/Npx.astro';
 import Steps from '@mdx/Steps.astro';
 import Prerequisites from "@mdx/Prerequisites.astro"
 
-# Migrations with Drizzle Kit
+# 使用 Drizzle Kit 进行迁移
 <Prerequisites>
-- Get started with Drizzle and `drizzle-kit` - [read here](/docs/mssql/get-started)
-- Drizzle schema fundamentals - [read here](/docs/mssql/sql-schema-declaration)
-- Database connection basics - [read here](/docs/mssql/connect-overview)
-- Drizzle migrations fundamentals - [read here](/docs/mssql/migrations)
-- Drizzle Kit [overview](/docs/mssql/kit-overview) and [config file](/docs/mssql/drizzle-config-file)
-- `drizzle-kit generate` command - [read here](/docs/mssql/drizzle-kit-generate)
-- `drizzle-kit migrate` command - [read here](/docs/mssql/drizzle-kit-migrate)
+- 从 Drizzle 和 `drizzle-kit` 开始 - [阅读此处](/docs/mssql/get-started)
+- Drizzle schema 基础 - [阅读此处](/docs/mssql/sql-schema-declaration)
+- 数据库连接基础 - [阅读此处](/docs/mssql/connect-overview)
+- Drizzle 迁移基础 - [阅读此处](/docs/mssql/migrations)
+- Drizzle Kit [概览](/docs/mssql/kit-overview) 和 [配置文件](/docs/mssql/drizzle-config-file)
+- `drizzle-kit generate` 命令 - [阅读此处](/docs/mssql/drizzle-kit-generate)
+- `drizzle-kit migrate` 命令 - [阅读此处](/docs/mssql/drizzle-kit-migrate)
 </Prerequisites>
 
-Drizzle lets you generate empty migration files to write your own custom SQL migrations 
-for DDL alternations currently not supported by Drizzle Kit or data seeding, which you can then run with [`drizzle-kit migrate`](/docs/mssql/drizzle-kit-migrate) command.
+Drizzle 让你可以生成空的迁移文件，以编写自己的自定义 SQL 迁移，
+用于 Drizzle Kit 目前尚不支持的 DDL 变更或数据填充，之后你可以用 [`drizzle-kit migrate`](/docs/mssql/drizzle-kit-migrate) 命令运行它们。
 
 ```shell
 drizzle-kit generate --custom --name=seed-users
@@ -44,5 +44,5 @@ INSERT INTO [users] ([name]) VALUES('Dandrew');
 ```
 </Section>
 
-### Running JavaScript and TypeScript migrations
-We will add ability to run custom JavaScript and TypeScript migration/seeding scripts in the upcoming release, you can follow [github discussion](https://github.com/drizzle-team/drizzle-orm/discussions/2832).
+### 运行 JavaScript 和 TypeScript 迁移
+我们将在即将发布的版本中添加运行自定义 JavaScript 和 TypeScript 迁移/填充脚本的能力，你可以关注 [github 讨论](https://github.com/drizzle-team/drizzle-orm/discussions/2832)。

@@ -8,7 +8,7 @@ import CodeTab from '@mdx/CodeTab.astro';
 import CodeTabs from '@mdx/CodeTabs.astro';
 import Npm from '@mdx/Npm.astro';
 
-# Drizzle relations
+# Drizzle 关系
 
 <Npm>
  drizzle-orm@rc
@@ -18,14 +18,14 @@ import Npm from '@mdx/Npm.astro';
 <br/>
 
 <Prerequisites>  
-  - **Relations Fundamentals** - get familiar with the concepts of foreign key constraints, soft relations, database normalization, etc - [read here](/docs/mysql/relations-schema-declaration)
-  - **Declare schema** - get familiar with how to define drizzle schemas - [read here](/docs/mysql/sql-schema-declaration)
-  - **Database connection** - get familiar with how to connect to database using drizzle - [read here](/docs/mysql/get-started-mysql)
+  - **关系基础** - 熟悉外键约束、软关系、数据库规范化等概念 - [阅读此处](/docs/mysql/relations-schema-declaration)
+  - **声明 schema** - 熟悉如何定义 drizzle schema - [阅读此处](/docs/mysql/sql-schema-declaration)
+  - **数据库连接** - 熟悉如何使用 drizzle 连接到数据库 - [阅读此处](/docs/mysql/get-started-mysql)
 </Prerequisites>
 
-The sole purpose of Drizzle relations is to let you query your relational data in the most simple and concise way:
+Drizzle 关系的唯一目的，就是让你以最简单、最简洁的方式查询你的关系型数据：
 
-<CodeTabs items={["Relational queries", "Select with joins"]}>
+<CodeTabs items={["关系查询", "使用 join 的 select"]}>
 <Section>
 ```ts
 import { drizzle } from 'drizzle-orm/mysql2';
@@ -101,7 +101,7 @@ const mappedResult = ...
 </CodeTabs>
 
 ### `one()`
-Here is a list of all fields available for `.one()` in drizzle relations
+以下是 drizzle 关系中 `.one()` 可用的所有字段列表
 
 ```ts {3-11}
 const relations = defineRelations({ users, posts }, (r) => ({
@@ -119,22 +119,22 @@ const relations = defineRelations({ users, posts }, (r) => ({
 }))
 ```
 
-- `author` key is a custom key that appears in the `posts` object when using Drizzle relational queries.
-- `r.one.users` defines that `author` will be a single object from the `users` table rather than an array of objects.
-- `from: r.posts.ownerId` specifies the table from which we are establishing a soft relation. 
-In this case, the relation starts from the `ownerId` column in the `posts` table.
-- `to: r.users.id` specifies the table to which we are establishing a soft relation. 
-In this case, the relation points to the `id` column in the `users` table.
-- `optional: false` at the type level makes the `author` key in the posts object `required`. 
-This should be used when you are certain that this specific entity will always exist.
-- `alias` is used to add a specific alias to relationships between tables. If you have multiple identical relationships between two tables, you should 
-differentiate them using `alias`
-- `where` condition can be used for polymorphic relations. It fetches relations based on a `where` statement.
-For example, in the case above, only `verified authors` will be retrieved. Learn more about polymorphic relations [here](/docs/mysql/relations-schema-declaration#polymorphic-relations).
+- `author` 键是一个自定义键，在使用 Drizzle 关系查询时会出现在 `posts` 对象中。
+- `r.one.users` 定义 `author` 将是来自 `users` 表的单个对象，而不是对象数组。
+- `from: r.posts.ownerId` 指定我们建立软关系所依据的表。
+在本例中，关系从 `posts` 表的 `ownerId` 列开始。
+- `to: r.users.id` 指定我们将软关系指向的表。
+在本例中，关系指向 `users` 表的 `id` 列。
+- 类型层面的 `optional: false` 会让 posts 对象中的 `author` 键变为 `required`。
+当你确定该特定实体始终存在时，应该使用它。
+- `alias` 用于为表之间的关系添加特定别名。如果两个表之间存在多个完全相同的关系，你应该
+使用 `alias` 来区分它们
+- `where` 条件可用于多态关系。它会基于 `where` 语句获取关系。
+例如，在上面的情况中，只会检索 `已验证的作者`。在[此处](/docs/mysql/relations-schema-declaration#多态关系)了解更多关于多态关系的内容。
 
 ### `many()`
 
-Here is a list of all fields available for `.many()` in drizzle relations
+以下是 drizzle 关系中 `.many()` 可用的所有字段列表
 
 ```ts {3-10}
 const relations = defineRelations({ users, posts }, (r) => ({
@@ -151,23 +151,23 @@ const relations = defineRelations({ users, posts }, (r) => ({
 }))
 ```
 
-- `feed` key is a custom key that appears in the `users` object when using Drizzle relational queries.
-- `r.many.posts` defines that `feed` will be an array of objects from the `posts` table rather than just an object
-- `from: r.users.id` specifies the table from which we are establishing a soft relation. 
-In this case, the relation starts from the `id` column in the `users` table.
-- `to: r.posts.ownerId` specifies the table to which we are establishing a soft relation. 
-In this case, the relation points to the `ownerId` column in the `posts` table.
-- `alias` is used to add a specific alias to relationships between tables. If you have multiple identical relationships between two tables, you should 
-differentiate them using `alias`
-- `where` condition can be used for polymorphic relations. It fetches relations based on a `where` statement.
-For example, in the case above, only `approved posts` will be retrieved. Learn more about polymorphic relations [here](/docs/mysql/relations-schema-declaration#polymorphic-relations).
+- `feed` 键是一个自定义键，在使用 Drizzle 关系查询时会出现在 `users` 对象中。
+- `r.many.posts` 定义 `feed` 将是来自 `posts` 表的对象数组，而不只是一个对象
+- `from: r.users.id` 指定我们建立软关系所依据的表。
+在本例中，关系从 `users` 表的 `id` 列开始。
+- `to: r.posts.ownerId` 指定我们将软关系指向的表。
+在本例中，关系指向 `posts` 表的 `ownerId` 列。
+- `alias` 用于为表之间的关系添加特定别名。如果两个表之间存在多个完全相同的关系，你应该
+使用 `alias` 来区分它们
+- `where` 条件可用于多态关系。它会基于 `where` 语句获取关系。
+例如，在上面的情况中，只会检索 `已批准的帖子`。在[此处](/docs/mysql/relations-schema-declaration#多态关系)了解更多关于多态关系的内容。
 
 ## ---
 
-### One-to-one
-Drizzle ORM provides you an API to define `one-to-one` relations between tables with the `defineRelations` function.
+### 一对一
+Drizzle ORM 提供了一套 API，让你用 `defineRelations` 函数定义表之间的 `一对一` 关系。
 
-An example of a `one-to-one` relation between users and users, where a user can invite another (this example uses a self reference):
+下面是 users 与 users 之间 `一对一` 关系的一个示例，其中一个用户可以邀请另一个用户（本例使用了自引用）：
 
 ```typescript copy {10-17}
 import { mysqlTable, text, int } from 'drizzle-orm/mysql-core';
@@ -189,7 +189,7 @@ export const relations = defineRelations({ users }, (r) => ({
 }));
 ```
 
-Another example would be a user having a profile information stored in separate table. In this case, because the foreign key is stored in the "profile_info" table, the user relation have neither fields or references. This tells Typescript that `user.profileInfo` is nullable:
+另一个示例是一个用户拥有存储在单独表中的资料信息。在这种情况下，因为外键存储在 "profile_info" 表中，user 关系既没有 fields 也没有 references。这会告诉 TypeScript `user.profileInfo` 是可空的：
 
 ```typescript copy {15-22}
 import { mysqlTable, text, int, json } from 'drizzle-orm/mysql-core';
@@ -219,10 +219,10 @@ const user = await db.query.users.findFirst({ with: { profileInfo: true } });
 //____^? type { id: number, name: string | null, profileInfo: { ... } | null  }
 ```
 
-### One-to-many
-Drizzle ORM provides you an API to define `one-to-many` relations between tables with `defineRelations` function. 
+### 一对多
+Drizzle ORM 提供了一套 API，让你用 `defineRelations` 函数定义表之间的 `一对多` 关系。
 
-Example of `one-to-many` relation between users and posts they've written:
+下面是 users 与他们所写 posts 之间 `一对多` 关系的示例：
 
 ```typescript copy {15-25}
 import { mysqlTable, text, int } from 'drizzle-orm/mysql-core';
@@ -252,7 +252,7 @@ export const relations = defineRelations({ users, posts }, (r) => ({
 }));
 ```
 
-Now lets add comments to the posts:
+现在我们给 posts 添加评论：
 ```typescript copy {9-14,22,27-32}
 ...
 
@@ -290,11 +290,11 @@ export const relations = defineRelations({ users, posts, comments }, (r) => ({
 ```
 
 
-### Many-to-many
-Drizzle ORM provides you an API to define `many-to-many` relations between tables through so called `junction` or `join` tables,
-they have to be explicitly defined and store associations between related tables.  
+### 多对多
+Drizzle ORM 提供了一套 API，让你通过所谓的 `junction`（联结）或 `join` 表定义表之间的 `多对多` 关系，
+这些表必须被显式定义，并存储相关表之间的关联。
 
-Example of `many-to-many` relation between users and groups we are using `through` to bypass junction table selection and directly select many `groups` for each `user`.
+下面是 users 与 groups 之间 `多对多` 关系的示例，我们使用 `through` 绕过对联结表的选择，直接为每个 `user` 选择多个 `groups`。
 ```typescript copy {27-39}
 import { defineRelations } from 'drizzle-orm';
 import { int, mysqlTable, primaryKey, text } from 'drizzle-orm/mysql-core';
@@ -337,7 +337,7 @@ export const relations = defineRelations({ users, groups, usersToGroups },
 );
 ```
 
-**Query example:**
+**查询示例：**
 ```ts
 const res = await db.query.users.findMany({
   with: { 
@@ -345,7 +345,7 @@ const res = await db.query.users.findMany({
   },
 });
 
-// response type
+// 响应类型
 type Response = {
   id: number;
   name: string | null;
@@ -356,13 +356,13 @@ type Response = {
 }[];
 ```
 
-### Predefined filters
+### 预定义过滤器
 
-Predefined `where` statements in Drizzle's relation definitions are a type of polymorphic relations implementation, but it's not fully it. Essentially, they allow you to
-connect tables not only by selecting specific columns but also through custom `where` statements. Let's look at some examples:
+Drizzle 关系定义中的预定义 `where` 语句是多态关系实现的一种形式，但并不完全是。本质上，它们让你不仅可以通过选择特定列来
+连接表，还可以通过自定义的 `where` 语句来连接。让我们看一些示例：
 
-We can define a relation between `groups` and `users` so that when querying group's users, we only retrieve those whose `verified` column is set to `true`
-<CodeTabs items={["Relations", "Schema"]}>
+我们可以定义 `groups` 与 `users` 之间的关系，使得在查询组的用户时，只检索 `verified` 列为 `true` 的用户
+<CodeTabs items={["关系", "Schema"]}>
 <Section>
 ```ts
 import { defineRelations } from "drizzle-orm";
@@ -424,7 +424,7 @@ export const usersToGroups = p.mysqlTable(
 </CodeTabs>
 
 <Callout type='warning'>
-You can only specify filters on the target (to) table. So in this example, the where clause will only include columns from the `users` table since we are establishing a relation **TO** users
+你只能在目标（to）表上指定过滤器。所以在这个示例中，由于我们建立的是 **指向** users 的关系，where 子句只会包含来自 `users` 表的列
 
 ```ts {7}
 export const relations = defineRelations(schema,(r) => ({
@@ -444,9 +444,9 @@ export const relations = defineRelations(schema,(r) => ({
 
 ## ---
 
-### Relations Parts
+### 关系组成部分
 
-In a case you need to separate relations config into several parts you can use `defineRelationsPart` helpers
+如果你需要把关系配置拆分成多个部分，可以使用 `defineRelationsPart` 辅助函数
 
 ```ts
 import { defineRelations, defineRelationsPart } from 'drizzle-orm';
@@ -472,16 +472,16 @@ export const part = defineRelationsPart(schema, (r) => ({
 }));
 ```
 
-and then you can provide it to the db instance
+然后你可以将它提供给 db 实例
 
 ```ts
 const db = drizzle(process.env.DB_URL, { relations: { ...relations, ...part } })
 ```
 
 <Callout type='warning'>
-There are a few rules you would need to follow to make sure it `defineRelationsParts` works as expected
+你需要遵循一些规则，以确保 `defineRelationsParts` 按预期工作
 
-**Rule 1**: If you specify reltions with parts, when passing it to drizzle db function you would need to specify it in the right order(main relations goes first)
+**规则 1**：如果你用 parts 来指定关系，在将其传给 drizzle db 函数时，你需要按正确的顺序指定它们（主 relations 在前）
 ```ts
 // ✅
 const db = drizzle(process.env.DB_URL, { relations: { ...relations, ...part } })
@@ -490,9 +490,9 @@ const db = drizzle(process.env.DB_URL, { relations: { ...relations, ...part } })
 const db = drizzle(process.env.DB_URL, { relations: { ...part, ...relations } })
 ```
 
-<Callout collapsed="Why it's important?">
-Even if there will be no type or runtime error, this is how "..." works with objects. As long as main relation 
-recursively infer all tables names, so it can be available in autocomplete. Here is an example:
+<Callout collapsed="为什么这很重要？">
+即使不会有类型或运行时错误，这就是 "..." 在对象上的工作方式。只要主关系
+递归推断出所有表名，它们就能在自动补全中可用。下面是一个示例：
 
 ```ts
 export const relations = defineRelations(schema, (r) => ({
@@ -515,12 +515,12 @@ export const part = defineRelationsPart(schema, (r) => ({
 }));
 ```
 
-Here `relations` and `part` can be represented and this object:
+这里 `relations` 和 `part` 可以表示为这些对象：
 ```json
 // relations
 {
   "users": {"invitee": {...}, "posts": {...}},
-  // added here, so all tables from schema will exist in autocomplete
+  // 在此处添加，这样 schema 中的所有表都会出现在自动补全中
   "posts": {}
 }
 
@@ -530,7 +530,7 @@ Here `relations` and `part` can be represented and this object:
 }
 ```
 
-Having `{ ...relations, ...part }` will result in 
+使用 `{ ...relations, ...part }` 会得到
 ```json
 {
   "users": {"invitee": {...}, "posts": {...}},
@@ -538,55 +538,55 @@ Having `{ ...relations, ...part }` will result in
 }
 ```
 
-and having `{ ...relations, ...part }` will result in
+而使用 `{ ...relations, ...part }` 会得到
 ```json
 {
   "users": {"invitee": {...}, "posts": {...}},
-  // As you can see in the final object, posts relations information will be lost
+  // 如你在最终对象中所见，posts 的关系信息会丢失
   "posts": {}
 }
 ```
 
 </Callout>
 
-**Rule 2**: You should have min relations, so drizzle can infer all of the table for autocomplete. If you want to have only parts, then 
-one of your parts should be empty, like this:
+**规则 2**：你应该有主（main）relations，这样 drizzle 才能为自动补全推断出所有表。如果你只想使用 parts，那么
+你的其中一个 part 应该是空的，就像这样：
 
 ```ts
 export const mainPart = defineRelationsPart(schema);
 ```
 
-In this case, all tables will be inferred correctly, and you'll have complete information about your schema
+在这种情况下，所有表都会被正确推断，你将拥有关于 schema 的完整信息
 </Callout>
 
 ## ---
 
-### Performance
+### 性能
 
-When working with relations in Drizzle ORM, especially in applications with 
-significant data or complex queries, optimizing database performance is crucial.  
-Indexes play a vital role in speeding up data retrieval, particularly when querying 
-related data. This section outlines recommended indexing strategies for each type 
-of relationship defined using Drizzle ORM.
+在 Drizzle ORM 中使用关系时，尤其是在拥有
+大量数据或复杂查询的应用程序中，优化数据库性能至关重要。
+索引在加速数据检索方面起着关键作用，特别是在查询
+关联数据时。本节概述了使用 Drizzle ORM 定义的每种
+关系类型所推荐的索引策略。
 
-##### One-to-one Relationships
+##### 一对一关系
 
-In a one-to-one relationship, like the "user invites user" example or the
-"user has profile info" example, the key performance consideration is efficient joining 
-of the related tables.
+在一对一关系中，比如“用户邀请用户”示例或
+“用户拥有资料信息”示例，关键的性能考量是高效地连接
+相关表。
 
 <Callout>
-For optimal performance in one-to-one relationships, you should create an index 
-on the foreign key column in the table that is being referenced 
-(the "target" table in the relation).
+为在一对一关系中获得最佳性能，你应该在被引用的
+表（关系中的“目标”表）的外键列上
+创建索引。
 </Callout>
 
-<Callout collapsed='Why it is important'>
-When you query data with related one-to-one information, Drizzle performs a JOIN operation. An index on the foreign key column allows the database to quickly 
-locate the related row in the target table, significantly speeding up the join process.
+<Callout collapsed='为什么这很重要'>
+当你查询带有相关一对一信息的数据时，Drizzle 会执行 JOIN 操作。外键列上的索引让数据库能够快速
+定位目标表中的相关行，从而显著加速连接过程。
 </Callout>
 
-**Example:**
+**示例：**
 ```typescript
 import * as p from 'drizzle-orm/mysql-core';
 import { defineRelations } from 'drizzle-orm';
@@ -612,8 +612,8 @@ export const relations = defineRelations({ users, profileInfo }, (r) => ({
 }));
 ```
 
-To optimize queries fetching user data along with their profile information, 
-you should create an index on the `userId` column in the `profile_info` table.
+为了优化获取用户数据及其资料信息的查询，
+你应该在 `profile_info` 表的 `userId` 列上创建索引。
 
 ```typescript {13-15}
 import * as p from 'drizzle-orm/mysql-core';
@@ -645,22 +645,22 @@ export const relations = defineRelations({ users, profileInfo }, (r) => ({
 CREATE INDEX `profile_info_user_id_idx` ON `profile_info` (`user_id`);
 ```
 
-#### One-to-many Relationships
+#### 一对多关系
 
-Similar to one-to-one relationships, one-to-many relations benefit significantly 
-from indexing to optimize join operations. Consider the "users and posts" example where one user can have many posts.
+与一对一关系类似，一对多关系也能通过索引显著受益，
+以优化连接操作。想想“用户与帖子”的示例，其中一个用户可以拥有很多帖子。
 
 <Callout>
-For one-to-many relationships, create an index on the foreign key column in the table that represents the "many" side of the relationship (the table with the foreign key referencing the "one" side).
+对于一对多关系，在表示关系“多”的一侧的表（即带有引用“一”侧的外键的表）的外键列上创建索引。
 </Callout>
 
-<Callout collapsed='Why it is important'>
-When you fetch a user with their posts or posts with their authors, joins are performed.
-Indexing the foreign key (`authorId` in `posts` table) allows the database to efficiently 
-retrieve all posts associated with a given user or quickly find the author of a post.
+<Callout collapsed='为什么这很重要'>
+当你获取一个用户及其帖子，或帖子及其作者时，会执行连接。
+为外键（`posts` 表中的 `authorId`）建立索引，能让数据库高效地
+检索与给定用户关联的所有帖子，或快速找到某篇帖子的作者。
 </Callout>
 
-**Example:**
+**示例：**
 ```typescript
 import * as p from "drizzle-orm/mysql-core";
 import { defineRelations } from 'drizzle-orm';
@@ -689,7 +689,7 @@ export const relations = defineRelations({ users, posts }, (r) => ({
 }));
 ```
 
-To optimize queries involving users and their posts, create an index on the `authorId` column in the `posts` table.
+为了优化涉及用户及其帖子的查询，在 `posts` 表的 `authorId` 列上创建索引。
 
 ```typescript {13-15}
 import * as p from "drizzle-orm/mysql-core";
@@ -724,32 +724,32 @@ export const relations = defineRelations({ users, posts }, (r) => ({
 CREATE INDEX `posts_author_id_idx` ON `posts` (`author_id`);
 ```
 
-#### Many-to-many Relationships
+#### 多对多关系
 
-Many-to-many relationships, implemented using junction tables, require a slightly 
-more nuanced indexing strategy to ensure optimal query performance. 
-Consider the "users and groups" example with the `usersToGroups` junction table.
+使用联结表实现的多对多关系，需要稍微
+更细致的索引策略，以确保最佳的查询性能。
+想想带有 `usersToGroups` 联结表的“用户与组”示例。
 
 <Callout>
-For many-to-many relationships, it is generally recommended to create the following 
-indexes on the junction table:
-1.  **Index on each foreign key column individually:** This optimizes queries that 
-filter or join based on a single side of the relationship 
-(e.g., finding all groups for a user OR all users in a group).
-2.  **Composite index on both foreign key columns together:** This is crucial for 
-efficiently resolving the many-to-many relationship itself. It speeds up queries that need to find the connections between both entities.
+对于多对多关系，通常建议在联结表上创建以下
+索引：
+1.  **分别在每个外键列上建立索引：** 这能优化基于
+关系单侧进行过滤或连接的查询
+（例如，查找某个用户的所有组，或某个组中的所有用户）。
+2.  **在两个外键列上共同建立复合索引：** 这对于
+高效解析多对多关系本身至关重要。它能加速需要查找两个实体之间连接关系的查询。
 </Callout>
 
-<Callout collapsed='Why it is important'>
-When querying many-to-many relations, especially when using `through` in Drizzle ORM, the database needs to efficiently navigate the junction table.
+<Callout collapsed='为什么这很重要'>
+在查询多对多关系时，尤其是在 Drizzle ORM 中使用 `through` 时，数据库需要高效地遍历联结表。
 
-- Indexes on individual foreign key columns (`userId`, `groupId` in `usersToGroups`) help when you are querying from one side to find the other (e.g., "find groups for a user").
-- The composite index on `(userId, groupId)` in `usersToGroups` is particularly important for quickly finding all relationships defined in the junction table. This is used when Drizzle ORM resolves the `many-to-many` relation to fetch related entities.
+- 在单个外键列（`usersToGroups` 中的 `userId`、`groupId`）上的索引，在你从一侧查询以找到另一侧时很有帮助（例如“查找某个用户的组”）。
+- `usersToGroups` 上 `(userId, groupId)` 的复合索引，对于快速找到联结表中定义的所有关系尤为重要。当 Drizzle ORM 解析 `多对多` 关系以获取相关实体时，会用到它。
 </Callout>
 
-**Example:**
+**示例：**
 
-In the "users and groups" example, the `usersToGroups` junction table connects `users` and `groups`.
+在“用户与组”示例中，`usersToGroups` 联结表连接了 `users` 和 `groups`。
 
 ```typescript
 import { defineRelations } from 'drizzle-orm';
@@ -793,7 +793,7 @@ export const relations = defineRelations({ users, groups, usersToGroups },
 );
 ```
 
-To optimize queries for users and groups, create indexes on `usersToGroups` table as follows:
+为了优化用户与组的查询，按如下方式在 `usersToGroups` 表上创建索引：
 
 ```typescript {26-28}
 import { defineRelations } from 'drizzle-orm';
@@ -847,24 +847,24 @@ CREATE INDEX `users_to_groups_group_id_idx` ON `users_to_groups` (`group_id`);
 CREATE INDEX `users_to_groups_composite_idx` ON `users_to_groups` (`user_id`,`group_id`);
 ```
 
-By applying these indexing strategies, you can significantly improve the performance of your Drizzle ORM applications when working with relational data, especially as your data volume grows and your queries become more complex. Remember to choose the indexes that best suit your specific query patterns and application needs.
+通过应用这些索引策略，你在处理关系型数据时可以显著提升 Drizzle ORM 应用程序的性能，尤其是在数据量增长、查询变得更复杂时。请记住选择最适合你特定查询模式和应用需求的索引。
 
 ## ---
 
-### Foreign keys
+### 外键
 
-You might've noticed that `relations` look similar to foreign keys — they even have a `references` property. So what's the difference?
+你可能已经注意到 `relations` 看起来和外键很像——它们甚至都有一个 `references` 属性。那么区别是什么呢？
 
-While foreign keys serve a similar purpose, defining relations between tables, they work on a different level compared to `relations`.
+虽然外键有着类似的目的，即定义表之间的关系，但它们的运作层级与 `relations` 不同。
 
-Foreign keys are a database level constraint, they are checked on every `insert`/`update`/`delete` operation and throw an error if a constraint is violated.
-On the other hand, `relations` are a higher level abstraction, they are used to define relations between tables on the application level only.
-They do not affect the database schema in any way and do not create foreign keys implicitly.
+外键是数据库层面的约束，它们在每次 `insert`/`update`/`delete` 操作时都会被检查，如果违反约束就会抛出错误。
+另一方面，`relations` 是更高层次的抽象，它们仅用于在应用层面定义表之间的关系。
+它们不会以任何方式影响数据库 schema，也不会隐式创建外键。
 
-What this means is `relations` and foreign keys can be used together, but they are not dependent on each other.
-You can define `relations` without using foreign keys (and vice versa), which allows them to be used with databases that do not support foreign keys.
+这意味着 `relations` 和外键可以一起使用，但它们并不相互依赖。
+你可以在不使用外键的情况下定义 `relations`（反之亦然），这使得它们可以用于不支持外键的数据库。
 
-The following two examples will work exactly the same in terms of querying the data using Drizzle relational queries.
+以下两个示例在使用 Drizzle 关系查询数据方面将完全一样地工作。
 
 <CodeTabs items={["schema1.ts", "schema2.ts"]}>
 <CodeTab>
@@ -915,12 +915,12 @@ export const relations = defineRelations({ users, profileInfo }, (r) => ({
 </CodeTab>
 </CodeTabs>
 
-### Disambiguating relations
+### 消除关系歧义
 
-Drizzle also provides the `alias` option as a way to disambiguate
-relations when you define multiple of them between the same two tables. For
-example, if you define a `posts` table that has the `author` and `reviewer`
-relations.
+Drizzle 还提供了 `alias` 选项，用于
+在你于同两个表之间定义多个关系时消除歧义。例如，
+如果你定义了一个 `posts` 表，它带有 `author` 和 `reviewer`
+关系。
 
 ```ts {19,22,29,34}
 import { mysqlTable, int, text } from 'drizzle-orm/mysql-core';

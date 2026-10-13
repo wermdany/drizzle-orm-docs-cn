@@ -5,20 +5,20 @@ import AnchorCards from '@mdx/AnchorCards.astro';
 import Prerequisites from "@mdx/Prerequisites.astro";
 import Section from "@mdx/Section.astro";
 
-# Drizzle HTTP proxy
+# Drizzle HTTP 代理
 
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
+- 使用 Drizzle 的数据库[连接基础](/docs/connect-overview)
 </Prerequisites>
 
-How an HTTP Proxy works and why you might need it
+HTTP 代理如何工作以及你可能为什么需要它
 
-Drizzle Proxy is used when you need to implement your own driver communication with the database. 
-It can be used in several cases, such as adding custom logic at the query stage with existing drivers. 
-The most common use is with an HTTP driver, which sends queries to your server with the database, executes the query 
-on your database, and responds with raw data that Drizzle ORM can then map to results
+当你需要自行实现与数据库的驱动通信时，就会用到 Drizzle Proxy。
+它可用于多种情况，例如在现有驱动的查询阶段添加自定义逻辑。
+最常见的用法是配合 HTTP 驱动，它把查询发送到带有数据库的你的服务器，在你的数据库上执行查询，
+并以原始数据响应，然后 Drizzle ORM 可以将其映射为结果
 
-<Callout collapsed="How it works under the hood?">
+<Callout collapsed="其底层如何工作？">
 ```                                  
 ┌───────────────────────────┐                 ┌─────────────────────────────┐              
 │       Drizzle ORM         │                 │  HTTP Server with Database  │             
@@ -38,22 +38,22 @@ on your database, and responds with raw data that Drizzle ORM can then map to re
 ```
 </Callout>
 
-Drizzle ORM also supports simply using asynchronous callback function for executing SQL.
+Drizzle ORM 也支持简单地使用异步回调函数来执行 SQL。
 
-- `sql` is a query string with placeholders.
-- `params` is an array of parameters.
-- One of the following values will set for `method` depending on the SQL statement - `all`, `execute`.
+- `sql` 是带有占位符的查询字符串。
+- `params` 是参数数组。
+- 根据 SQL 语句，会为 `method` 设置以下值之一 - `all`、`execute`。
 
-Drizzle always waits for `{rows: string[][]}` or `{rows: string[]}` for the return value.
+Drizzle 始终会等待 `{rows: string[][]}` 或 `{rows: string[]}` 作为返回值。
 
-- When the `method` is `execute`, you should return a value as `{rows: string[]}`.
-- Otherwise, you should return `{rows: string[][]}`.
+- 当 `method` 为 `execute` 时，你应返回 `{rows: string[]}` 形式的值。
+- 否则，你应返回 `{rows: string[][]}`。
 
 <br/>
 
 <Section>
 ```typescript copy
-// Example of driver implementation
+// 驱动实现示例
 import { drizzle } from 'drizzle-orm/pg-proxy';
 import axios from "axios";
 
@@ -69,7 +69,7 @@ const db = drizzle(async (sql, params, method) => {
 });
 ```
 ```ts
-// Example of server implementation
+// 服务端实现示例
 import { Client } from 'pg';
 import express from 'express';
 
@@ -83,7 +83,7 @@ const client = new Client('postgres://postgres:postgres@localhost:5432/postgres'
 app.post('/query', async (req, res) => {
   const { sql, params, method } = req.body;
 
-  // prevent multiple queries
+  // 防止多个查询
   const sqlBody = sql.replace(/;/g, '');
 
   try {

@@ -11,26 +11,26 @@ import LibsqlTabs from "@mdx/LibsqlTabs.mdx";
 # Drizzle \<\> Turso Cloud
 
 <Prerequisites>
-- Database [connection basics](/docs/sqlite/connect-overview) with Drizzle
-- Turso Cloud - [website](https://docs.turso.tech/turso-cloud)
-- Turso Cloud driver - [website](https://docs.turso.tech/sdk/ts/reference) & [GitHub](https://github.com/tursodatabase/libsql-client-ts)
+- 使用 Drizzle 的数据库[连接基础](/docs/sqlite/connect-overview)
+- Turso Cloud - [网站](https://docs.turso.tech/turso-cloud)
+- Turso Cloud 驱动 - [网站](https://docs.turso.tech/sdk/ts/reference) & [GitHub](https://github.com/tursodatabase/libsql-client-ts)
 </Prerequisites>
 
-According to the **[official website](https://turso.tech/drizzle)**, 
-Turso is a **[libSQL](https://github.com/libsql/libsql)** powered edge SQLite database as a service.
+根据 **[官方网站](https://turso.tech/drizzle)**，
+Turso 是一个由 **[libSQL](https://github.com/libsql/libsql)** 驱动的边缘 SQLite 数据库即服务。
   
-Drizzle ORM natively supports libSQL driver.
-We embrace SQL dialects and dialect specific drivers and syntax and mirror most popular 
-SQLite-like `all`, `get`, `values` and `run` query methods syntax. 
+Drizzle ORM 原生支持 libSQL 驱动。
+我们拥抱 SQL 方言以及方言特定的驱动和语法，并仿照了最流行的
+类 SQLite 的 `all`、`get`、`values` 和 `run` 查询方法语法。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
  drizzle-orm@rc @libsql/client
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver
-Drizzle has native support for all `@libsql/client` driver variations:
+#### 第 2 步 - 初始化驱动
+Drizzle 原生支持所有 `@libsql/client` 驱动的变体：
 
 <LibsqlTable />
 
@@ -39,7 +39,7 @@ Drizzle has native support for all `@libsql/client` driver variations:
 <LibsqlTabs />
 
 
-If you need to provide your existing driver:
+如果你需要提供已有的驱动：
 
 <CodeTabs items={["default", "web"]}>
 ```typescript copy
@@ -70,7 +70,7 @@ const result = await db.select().from(users).all()
 ```
 </CodeTabs>
 
-#### Step 3 - make a query
+#### 第 3 步 - 执行查询
 
 ```ts
 import { drizzle } from 'drizzle-orm/libsql';
@@ -89,6 +89,6 @@ const users = s.sqliteTable("users", {
 const result = await db.select().from(users);
 ```
 
-#### What's next?
+#### 下一步？
 
 <WhatsNextSQLite/>

@@ -1,21 +1,21 @@
 import Section from '@mdx/Section.astro';
 import Callout from '@mdx/Callout.astro';
 
-# Codecs
+# 编解码器
 
-## What are codecs?
+## 什么是编解码器？
 
-Codecs are a driver-aware transform layer that sits between your JavaScript values and the database. They solve the problem of **different drivers returning and accepting data in different formats** for the same column types.
+codecs 是一层感知驱动的转换层，位于你的 JavaScript 值与数据库之间。它们解决了**不同驱动对相同列类型返回和接受的数据格式不同**的问题。
 
-## Why are they needed?
+## 为什么需要它们？
 
-1. **Driver differences** — each PG driver (`node-postgres`, `postgres-js`, `pglite`, etc.) parses and serializes types differently. Codecs normalize these differences so your app code doesn't have to care which driver you're using.
+1. **驱动差异** — 每个 PG 驱动（`node-postgres`、`postgres-js`、`pglite` 等）解析和序列化类型的方式都不同。codecs 会规范化这些差异，这样你的应用代码不必关心自己使用的是哪个驱动。
 
-2. **JSON context** — when a column is selected inside a JSON function (like `jsonAgg`, `jsonBuildObject`, or relational queries), the database returns values in JSON format which may differ from the regular format. For example, `bigint` in JSON becomes a number (losing precision). Codecs handle this by casting to text before JSON-ification (`castInJson`) and then parsing it back (`normalizeInJson`).
+2. **JSON 上下文** — 当在 JSON 函数（如 `jsonAgg`、`jsonBuildObject` 或关系查询）内部选择某一列时，数据库会以 JSON 格式返回值，这可能与常规格式不同。例如，JSON 中的 `bigint` 会变成数字（丢失精度）。codecs 通过在 JSON 化之前先转换为 text（`castInJson`），然后再解析回来（`normalizeInJson`）来处理这一情况。
 
-## How codecs work
+## 编解码器如何工作
 
-Codecs have two layers: **cast** and **normalize**.
+codecs 有两层：**cast** 和 **normalize**。
 
 ```
 
@@ -32,15 +32,15 @@ Codecs have two layers: **cast** and **normalize**.
 
 <br/>
 
-**Cast** operates at the database level — it wraps a column in a SQL `::type`
+**Cast** 在数据库层面运作——它把列包装成 SQL `::type`
 
-**Normalize** operates at the code level — it transforms the raw value into the  type you/driver expect
+**Normalize** 在代码层面运作——它把原始值转换为你的代码/驱动所期望的类型
 
 <br/>
 
-Both layers can have separate variants for different query contexts:
+两层都可以针对不同的查询上下文有各自的变体：
 
-For reads (SELECT):
+对于读取（SELECT）：
 
 ```
 SQL generation:      SELECT "col"::text FROM ...     ← cast layer modifies SQL
@@ -52,7 +52,7 @@ JS result mapping:   parseLineABC(rawValue)          ← normalize layer transfo
 Your code gets:      { a: 1, b: 2, c: 3 }
 ```
 
-For writes (INSERT/UPDATE):
+对于写入（INSERT/UPDATE）：
 
 ```
 Your JS value:       { key: "val" }
@@ -66,7 +66,7 @@ Database receives:   '{"key":"val"}' with type hint
 
 <br/>
 
-Each layer operates across 3 contexts, each with scalar and array variants:
+每一层都跨越 3 种上下文运作，每种上下文又都有标量和数组两种变体：
 
 ```
                         Cast (SQL)              Normalize (JS)
@@ -82,40 +82,40 @@ Each layer operates across 3 contexts, each with scalar and array variants:
                    └──────────────────┘    └──────────────────────┘
 ```
 
-JSON context exists because databases serialize values differently inside JSON — a `bigint` that normally comes back as a string from the driver will come back as a lossy number inside a JSON object. So codecs need separate handling: cast to `::text` in SQL before JSON wrapping, then parse the text back in JS after.
+存在 JSON 上下文是因为数据库在 JSON 内部对值的序列化方式不同——通常从驱动返回为字符串的 `bigint`，在 JSON 对象内部会变成有损的数字。因此 codecs 需要单独处理：在 JSON 包装前先在 SQL 中转换为 `::text`，之后在 JS 中再把文本解析回来。
 
 <br/>
 
-| Method | When | Example SQL |
+| 方法 | 何时 | 示例 SQL |
 |---|---|:---:|
-| `cast` | Column in SELECT | `"col"::text` |
-| `castArray` | Array column in SELECT | `"col"::text[]` |
-| `castInJson` | Column inside JSON functions | `"col"::text` (inside `json_agg`) |
-| `castArrayInJson` | Array column inside JSON | |
-| `castParam` | Param placeholder in INSERT/UPDATE/WHERE | `$1::date` |
-| `castArrayParam` | Array param placeholder | `$1::date[]` |
+| `cast` | SELECT 中的列 | `"col"::text` |
+| `castArray` | SELECT 中的数组列 | `"col"::text[]` |
+| `castInJson` | JSON 函数内的列 | `"col"::text`（在 `json_agg` 内） |
+| `castArrayInJson` | JSON 内的数组列 | |
+| `castParam` | INSERT/UPDATE/WHERE 中的参数占位符 | `$1::date` |
+| `castArrayParam` | 数组参数占位符 | `$1::date[]` |
 
 <br/>
 
-| Method | When | Example |
+| 方法 | 何时 | 示例 |
 |---|---|:---:|
-| `normalize` | SELECT result → JS value | `"123"` → `123n` |
-| `normalizeArray` | SELECT array result → JS array | `["123", "456"]` → `[123n, 456n]` |
-| `normalizeInJson` | SELECT result inside JSON → JS | JSON `bigint` → `BigInt` |
-| `normalizeArrayInJson` | SELECT array inside JSON → JS | |
-| `normalizeParam` | JS value → driver param (INSERT/UPDATE/WHERE) | `{ key: "val" }` → `'{"key":"val"}'` |
-| `normalizeParamArray` | JS array → driver array param | `[1, 2]` → `{1,2}` (PG array literal) |
+| `normalize` | SELECT 结果 → JS 值 | `"123"` → `123n` |
+| `normalizeArray` | SELECT 数组结果 → JS 数组 | `["123", "456"]` → `[123n, 456n]` |
+| `normalizeInJson` | JSON 内的 SELECT 结果 → JS | JSON `bigint` → `BigInt` |
+| `normalizeArrayInJson` | JSON 内的 SELECT 数组 → JS | |
+| `normalizeParam` | JS 值 → 驱动参数（INSERT/UPDATE/WHERE） | `{ key: "val" }` → `'{"key":"val"}'` |
+| `normalizeParamArray` | JS 数组 → 驱动数组参数 | `[1, 2]` → `{1,2}`（PG 数组字面量） |
 
 <br/>
 
-## Are they enabled by default?
+## 它们默认启用吗？
 
-Yes. Every driver ships default codecs. When you call `drizzle(client)`, the driver's codecs are automatically used.  
-You don't need to do anything to enable them.
+是的。每个驱动都自带默认 codecs。当你调用 `drizzle(client)` 时，驱动的 codecs 会自动被使用。  
+你无需做任何操作来启用它们。
 
-## How codecs work in built-in column types
+## 编解码器在内置列类型中如何工作
 
-Every built-in PG column class declares a `codec` string identifier:
+每个内置的 PG 列类都会声明一个 `codec` 字符串标识符：
 
 ```ts {3,8,11,14,19,22,27}
 // pg-core/columns/integer.ts
@@ -145,23 +145,23 @@ class PgLineTuple extends PgColumn {
 ...
 ```
 
-This identifier is a lookup key into the driver's codec map. If the driver defines transforms for that key, they're applied. If not, the value passes through untouched.
+该标识符是驱动 codec map 的一个查找键。如果驱动为该键定义了转换，它们就会被应用。如果没有，值会原样透传。
 
-For example, `integer` has codec `'int'`. The `node-postgres` codec map has **no entry** for `'int'` — integers don't need any transformation. But `bigint` has codec `'bigint'`, and node-postgres defines:
+例如，`integer` 的 codec 是 `'int'`。`node-postgres` 的 codec map 中**没有** `'int'` 的条目——整数不需要任何转换。但 `bigint` 的 codec 是 `'bigint'`，而 node-postgres 定义了：
 
 ```ts
 // node-postgres/codecs.ts
 bigint: {
-  normalize: BigInt,                           // SELECT: "123" → 123n
-  normalizeArray: arrayCompatNormalize(BigInt), // SELECT array: ["123"] → [123n]
+  normalize: BigInt,                           // SELECT："123" → 123n
+  normalizeArray: arrayCompatNormalize(BigInt), // SELECT 数组：["123"] → [123n]
 }
 ```
 
-## Overriding codecs for built-in types
+## 为内置类型覆盖编解码器
 
-Built-in columns (like `integer()`, `bigint()`, `date()`, `text()`, etc.) have a hardcoded `codec` string — you can't change which codec identifier a column uses. But you **can** change what that codec identifier does by overriding the driver's codec map.
+内置列（如 `integer()`、`bigint()`、`date()`、`text()` 等）有一个硬编码的 `codec` 字符串——你无法改变某个列使用哪个 codec 标识符。但你**可以**通过覆盖驱动的 codec map 来改变该 codec 标识符的行为。
 
-Every PG driver accepts a `codecs` option in `drizzle()`:
+每个 PG 驱动都在 `drizzle()` 中接受一个 `codecs` 选项：
 
 ```ts {3-6}
 const db = drizzle(client, {
@@ -174,34 +174,34 @@ const db = drizzle(client, {
 });
 ```
 
-## How codecs work in `customType()`
+## 编解码器在 `customType()` 中如何工作
 
-<Callout type='info' title='Note'>
-`toDriver`/`fromDriver` on `customType` and codecs are **separate layers**. 
-`toDriver`/`fromDriver` are per-column instance transforms. Codecs are driver-level transforms and both are applied  
-On reads - `codec normalize` first → then `fromDriver`
-On writes - `toDriver` first → then `codec normalizeParam`
+<Callout type='info' title='注意'>
+`customType` 上的 `toDriver`/`fromDriver` 与 codecs 是**相互独立的层**。
+`toDriver`/`fromDriver` 是逐列实例的转换。Codecs 是驱动级的转换，两者都会被应用  
+读取时 - 先执行 `codec normalize` → 再执行 `fromDriver`
+写入时 - 先执行 `toDriver` → 再执行 `codec normalizeParam`
 </Callout>
 
-Read more about custom types [here](/docs/custom-types)
+在[这里](/docs/custom-types)阅读更多关于自定义类型的内容
 
-When defining a custom column type, you can specify which codec to use via the `codec` property:
+在定义自定义列类型时，你可以通过 `codec` 属性指定要使用哪个 codec：
 
 ```ts
 import { customType } from 'drizzle-orm/pg-core';
 
-// Use an existing codec by name
+// 按名称使用已有的 codec
 const customBigint = customType<{ data: bigint; driverData: string }>({
   dataType() {
     return "bigint";
   },
   fromDriver(value: string) {
-    return BigInt(Number(value) * 1000); // ← extra column mapping logic
+    return BigInt(Number(value) * 1000); // ← 额外的列映射逻辑
   },
-  codec: "bigint", // ← uses the driver's bigint codec
+  codec: "bigint", // ← 使用驱动的 bigint codec
 });
 
-// Codec as a function (useful when codec depends on config)
+// codec 作为函数（当 codec 依赖配置时很有用）
 const customDataType = customType<{
   data: number;
   driverData: bigint | number;
@@ -212,10 +212,10 @@ const customDataType = customType<{
     return `custom_type`;
   },
   fromDriver(value: bigint | number) {
-    return Number(value) / 1000; // ← extra column mapping logic
+    return Number(value) / 1000; // ← 额外的列映射逻辑
   },
   codec: (config) => {
-    // ← can be dynamic based on config
+    // ← 可以基于 config 动态决定
     if (!config || config.mode === "bigint") {
       return "bigint";
     }
@@ -224,16 +224,16 @@ const customDataType = customType<{
   },
 });
 
-// No codec — skip codec transforms entirely
+// 无 codec — 完全跳过 codec 转换
 const rawCustom = customType<{ data: string; driverData: string }>({
   dataType() {
     return 'my_type';
   },
-  // codec is undefined by default — no codec transforms applied
+  // codec 默认为 undefined — 不应用任何 codec 转换
 });
 ```
 
-The `codec` field accepts:
-- A `string` — one of the PostgreSQL type identifiers (e.g. `'bigint'`, `'date'`, `'json'`, `'text'`, etc.)
-- A `function` `(config) => string | undefined` — dynamically resolve the codec based on the column's config
-- `undefined` (default) — no codec, values pass through as-is
+`codec` 字段接受：
+- 一个 `string` — PostgreSQL 类型标识符之一（例如 `'bigint'`、`'date'`、`'json'`、`'text'` 等）
+- 一个 `function` `(config) => string | undefined` — 根据列的 config 动态解析 codec
+- `undefined`（默认）— 无 codec，值原样透传

@@ -6,7 +6,7 @@ import Npm from "@mdx/Npm.astro";
 import CodeTabs from '@mdx/CodeTabs.astro';
 import CodeTab from '@mdx/CodeTab.astro';
 
-# Migrating to Relational Queries version 2
+# 迁移到关系查询版本 2
 
 <Npm>
  drizzle-orm@rc
@@ -16,34 +16,34 @@ import CodeTab from '@mdx/CodeTab.astro';
 <br/>
 
 <Prerequisites>
-- **Relations Fundamentals** - [read here](/docs/relations-schema-declaration)
-- **drizzle-kit pull** - [read here](/docs/drizzle-kit-pull)
+- **Relations Fundamentals** - [点击阅读](/docs/relations-schema-declaration)
+- **drizzle-kit pull** - [点击阅读](/docs/drizzle-kit-pull)
 </Prerequisites>
 
 <Callout>
-Below is the table of contents. Click an item to jump to that section:
+以下是目录。点击某项可跳转到对应章节：
 
-- [What is working differently from v1](#what-is-working-differently-from-v1)  
-- [New features in v2](#what-is-new)  
-- [How to migrate relations definition from v1 to v2](#how-to-migrate-relations-schema-definition-from-v1-to-v2)  
-- [How to migrate queries from v1 to v2](#how-to-migrate-queries-from-v1-to-v2)  
-- [Internal changes(imports, internal types, etc.)](#internal-changes)
+- [What is working differently from v1](#与-v1-相比有哪些不同)  
+- [New features in v2](#新增了什么)  
+- [How to migrate relations definition from v1 to v2](#如何将关系-schema-定义从-v1-迁移到-v2)  
+- [How to migrate queries from v1 to v2](#如何将查询从-v1-迁移到-v2)  
+- [Internal changes(imports, internal types, etc.)](#内部变更)
 </Callout>
 
-### API changes
-#### What is working differently from v1
+### API 变更
+#### 与 v1 相比有哪些不同
 
 {/* ##### Drizzle Relations schema definition */}
 
-One of the biggest updates were in **Relations Schema definition**
+最大的更新之一在 **Relations Schema 定义** 部分
 
-The first difference is that you no longer need to specify `relations` for each table separately in different objects and
-then pass them all to `drizzle()` along with your schema. In Relational Queries v2, you now have one dedicated place to
-specify all the relations for all the tables you need.
+第一个区别是，你不再需要为每个表在不同对象中分别指定 `relations`，
+然后再将它们与 schema 一起传递给 `drizzle()`。在 Relational Queries v2 中，你现在有一个专门的地方来
+为你需要的所有表指定所有关系。
 
-The `r` parameter in the callback provides comprehensive autocomplete
-functionality - including all tables from your schema and functions such as `one`, `many`, and `through` - essentially
-offering everything you need to specify your relations.
+回调中的 `r` 参数提供了全面的自动补全
+功能——包括 schema 中的所有表以及诸如 `one`、`many` 和 `through` 等函数——基本上
+提供了你指定关系所需的一切。
 
 ```ts
 // relations.ts
@@ -62,9 +62,9 @@ import { drizzle } from "drizzle-orm/..."
 const db = drizzle(process.env.DATABASE_URL, { relations })
 ```
 
-##### What is different?
+##### 有什么不同？
 
-<Callout collapsed="Schema Definition">
+<Callout collapsed="Schema 定义">
 ```ts copy
 import * as p from 'drizzle-orm/pg-core';
 
@@ -82,7 +82,7 @@ export const posts = p.pgTable('posts', {
 ```
 </Callout>
 
-**One place for all your relations**
+**在一个地方定义你所有的关系**
 
 <Callout title="❌ v1">
 ```ts
@@ -129,7 +129,7 @@ export const relations = defineRelations(schema, (r) => ({
 ```
 </Callout>
 
-You can still separate it into different `parts`, and you can make the parts any size you want
+你仍然可以将其拆分到不同的 `parts` 中，并且可以让各部分大小任意
 
 ```ts
 import { defineRelations, defineRelationsPart } from 'drizzle-orm';
@@ -155,18 +155,18 @@ export const part = defineRelationsPart(schema, (r) => ({
 }));
 ```
 
-and then you can provide it to the db instance
+然后你可以将其提供给 db 实例
 
 ```ts
 const db = drizzle(process.env.DB_URL, { relations: { ...relations, ...part } })
 ```
 
-**Define `many` without `one`**
+**在不使用 `one` 的情况下定义 `many`**
 
-In v1, if you wanted only the `many` side of a relationship, you had to specify the `one` side on the other end, 
-which made for a poor developer experience.
+在 v1 中，如果你只想要关系的 `many` 一侧，你必须在另一端指定 `one` 一侧，
+这使得开发者体验很差。
 
-In v2, you can simply use the `many` side without any additional steps
+在 v2 中，你可以直接使用 `many` 一侧，无需任何额外步骤
 
 <Callout title="❌ v1">
 ```ts
@@ -202,13 +202,13 @@ export const relations = defineRelations(schema, (r) => ({
 ```
 </Callout>
 
-**New `optional` option**
+**新增 `optional` 选项**
 
-`optional: false` at the type level makes the `author` key in the `posts` object required. 
-This should be used when you are certain that this specific entity will always exist.
+`optional: false` 在类型层面会使 `posts` 对象中的 `author` 键变为必需。
+当你确定这个特定实体始终存在时，应使用它。
 
 <Callout title="❌ v1">
-Was not supported in v1
+在 v1 中不支持
 </Callout>
 
 <Callout title='✅ v2'>
@@ -228,16 +228,16 @@ export const relations = defineRelations(schema, (r) => ({
 ```
 </Callout>
 
-**No modes in `drizzle()`**
+**`drizzle()` 中不再有 modes**
 
-We found a way to use the same strategy for all MySQL dialects, so there's no need to specify them
+我们找到了一种对所有 MySQL 方言使用相同策略的方法，因此无需再指定它们
 
 <Callout title="❌ v1">
 ```ts
 import * as schema from './schema'
 
 const db = drizzle(process.env.DATABASE_URL, { mode: "planetscale", schema });
-// or
+// 或
 const db = drizzle(process.env.DATABASE_URL, { mode: "default", schema });
 ```
 </Callout>
@@ -250,9 +250,9 @@ const db = drizzle(process.env.DATABASE_URL, { relations });
 ```
 </Callout>
 
-**`from` and `to` upgrades**
+**`from` 和 `to` 升级**
 
-We've renamed `fields` to `from` and `references` to `to`, and we made both accept either a single value or an array
+我们将 `fields` 重命名为 `from`，将 `references` 重命名为 `to`，并且让两者都接受单个值或数组
 
 <Callout title="❌ v1">
 ```ts
@@ -318,11 +318,11 @@ export const relations = defineRelations(schema, (r) => ({
 ```
 </Callout>
 
-**`custom types` new function**
+**`custom types` 新函数**
 
-There is a new [codec](/docs/codecs) function was added to custom types, so you can control how data is mapped
+custom types 中新增了一个 [codec](/docs/codecs) 函数，因此你可以控制数据如何映射
 
-You can find out more [here](/docs/custom-types#ts-doc-for-type-definitions)
+你可以在[这里](/docs/custom-types#类型定义的-ts-文档)了解更多信息
 
 <Callout title='✅ v2'>
 ```ts
@@ -338,13 +338,13 @@ const customBytes = customType<{
 
 </Callout>
 
-##### What is new?
+##### 新增了什么？
 
-**`through` for many-to-many relations**
+**用于多对多关系的 `through`**
 
-Previously, you would need to query through a junction table and then map it out for every response
+以前，你需要通过中间表进行查询，然后为每个响应手动映射
 
-You don't need to do it now!
+现在你不需要这样做了！
 
 <Callout collapsed='Schema'>
 ```ts
@@ -400,7 +400,7 @@ export const usersToGroupsRelations = relations(usersToGroups, ({ one }) => ({
 }));
 ```
 ```ts
-// Query example
+// 查询示例
 const response = await db.query.users.findMany({
   with: {
     usersToGroups: {
@@ -432,7 +432,7 @@ export const relations = defineRelations(schema, (r) => ({
 }));
 ```
 ```ts
-// Query example
+// 查询示例
 const response = await db.query.users.findMany({
   with: {
     groups: true,
@@ -441,10 +441,10 @@ const response = await db.query.users.findMany({
 ```
 </Callout>
 
-**Predefined filters**
+**预定义过滤器**
 
 <Callout title="❌ v1">
-Was not supported in v1
+在 v1 中不支持
 </Callout>
 
 <Callout title='✅ v2'>
@@ -467,7 +467,7 @@ export const relations = defineRelations(schema,
 );
 ```
 ```ts {4}
-// Query example: get groups with all verified users
+// 查询示例：获取包含所有已验证用户的 groups
 const response = await db.query.groups.findMany({
   with: {
     verifiedUsers: true,
@@ -476,7 +476,7 @@ const response = await db.query.groups.findMany({
 ```
 </Callout>
 
-##### `where` is now object
+##### `where` 现在是对象
 
 <Callout title="❌ v1">
 ```ts
@@ -495,10 +495,10 @@ const response = db.query.users.findMany({
 });
 ```
 
-For a complete API Reference please check our [Select Filters docs](/docs/rqb#select-filters)
+如需完整的 API 参考，请查看我们的 [Select Filters 文档](/docs/rqb#select-过滤器)
 </Callout>
 
-<Callout collapsed='Complex filter example using RAW'>
+<Callout collapsed='使用 RAW 的复杂过滤器示例'>
 ```ts
 // schema.ts
 import { integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
@@ -512,8 +512,8 @@ export const users = pgTable("users", {
   lastLogin: timestamp("last_login"),
   subscriptionEnd: timestamp("subscription_end"),
   lastActivity: timestamp("last_activity"),
-  preferences: jsonb(),      // JSON column for user settings/preferences
-  interests: text().array(),     // Array column for user interests
+  preferences: jsonb(),      // 用于用户设置/偏好的 JSON 列
+  interests: text().array(),     // 用户兴趣的数组列
 });
 ```
 ```ts
@@ -539,7 +539,7 @@ const response = await db.query.users.findMany({
 ```
 </Callout>
 
-##### `orderBy` is now object
+##### `orderBy` 现在是对象
 
 <Callout title="❌ v1">
 ```ts
@@ -557,14 +557,14 @@ const response = db.query.users.findMany({
 ```
 </Callout>
 
-##### Filtering by relations
+##### 按关系过滤
 
 <Callout title="❌ v1">
-Was not supported in v1
+在 v1 中不支持
 </Callout>
 
 <Callout title='✅ v2'>
-Example: Get all users whose ID>10 and who have at least one post with content starting with “M”
+示例：获取所有 ID>10 且至少有一条内容以 “M” 开头的帖子的用户
 
 ```ts
 const usersWithPosts = await db.query.usersTable.findMany({
@@ -582,20 +582,20 @@ const usersWithPosts = await db.query.usersTable.findMany({
 ```
 </Callout>
 
-##### Using offset on related objects
+##### 在关联对象上使用 offset
 
 <Callout title="❌ v1">
-Was not supported in v1
+在 v1 中不支持
 </Callout>
 
 <Callout title='✅ v2'>
 ```ts
 await db.query.posts.findMany({
 	limit: 5,
-	offset: 2, // correct ✅
+	offset: 2, // 正确 ✅
 	with: {
 		comments: {
-			offset: 3, // correct ✅
+			offset: 3, // 正确 ✅
 			limit: 3,
 		},
 	},
@@ -603,21 +603,21 @@ await db.query.posts.findMany({
 ```
 </Callout>
 
-#### How to migrate relations schema definition from v1 to v2
+#### 如何将关系 schema 定义从 v1 迁移到 v2
 
-##### **Option 1**: Using `drizzle-kit pull`
+##### **选项 1**：使用 `drizzle-kit pull`
 
-In new version `drizzle-kit pull` supports pulling `relations.ts` file in a new syntax:
+在新版本中，`drizzle-kit pull` 支持以新语法拉取 `relations.ts` 文件：
 
-##### Step 1
+##### 步骤 1
 
 <Npx>
 drizzle-kit pull
 </Npx>
 
-#### Step 2 
+#### 步骤 2 
 
-Transfer generated relations code from `drizzle/relations.ts` to the file you are using to specify your relations 
+将生成的 relations 代码从 `drizzle/relations.ts` 转移到你用于指定关系的文件中
 ```plaintext {4-5}
  ├ 📂 drizzle
  │ ├ 📂 meta
@@ -633,14 +633,14 @@ Transfer generated relations code from `drizzle/relations.ts` to the file you ar
 ```
 
 <Callout>
-`drizzle/relations.ts` includes an import of all tables from `drizzle/schema.ts`, which looks like this:
+`drizzle/relations.ts` 包含了对 `drizzle/schema.ts` 中所有表的导入，如下所示：
 ```ts
 import * as schema from './schema'
 ```
 
-You may need to change this import to a file where ALL your schema tables are located. 
+你可能需要将此导入改为包含你所有 schema 表的文件。
 
-If there are multiple schema files, you can do the following:
+如果有多个 schema 文件，你可以这样做：
 ```ts
 import * as schema1 from './schema1'
 import * as schema2 from './schema2'
@@ -648,11 +648,11 @@ import * as schema2 from './schema2'
 ```
 </Callout>
 
-#### Step 3
+#### 步骤 3
 
-Change drizzle database instance creation and provide `relations` object instead of `schema`
+更改 drizzle 数据库实例的创建方式，提供 `relations` 对象而不是 `schema`
 
-<Callout title='Before'>
+<Callout title='之前'>
 ```ts
 import * as schema from './schema'
 import { drizzle } from 'drizzle-orm/...'
@@ -661,9 +661,9 @@ const db = drizzle('<url>', { schema })
 ```
 </Callout>
 
-<Callout title='After'>
+<Callout title='之后'>
 ```ts
-// should be imported from a file in Step 2
+// 应从 Step 2 中的文件导入
 import { relations } from './relations'
 import { drizzle } from 'drizzle-orm/...'
 
@@ -672,24 +672,23 @@ const db = drizzle('<url>', { relations })
 </Callout>
 
 <Callout>
-If you had MySQL dialect, you can remove `mode` from `drizzle()` as long as it's not needed in version 2
+如果你使用的是 MySQL 方言，只要在版本 2 中不需要，就可以从 `drizzle()` 中移除 `mode`
 </Callout>
 
-##### **Option 2**: Manual migration
+##### **选项 2**：手动迁移
 
-If you want to migrate manually, you can check our [Drizzle Relations section](/docs/relations) for the complete API reference and examples of one-to-one, one-to-many, and many-to-many relations.
+如果你想手动迁移，可以查看我们的 [Drizzle Relations 章节](/docs/relations)，了解完整 API 参考以及一对一、一对多和多对多关系的示例。
 
-#### How to migrate queries from v1 to v2
+#### 如何将查询从 v1 迁移到 v2
 
-##### Migrate `where` statements
+##### 迁移 `where` 语句
 
-You can check our [Select Filters docs](/docs/rqb#select-filters) to see examples and a complete API reference.
+你可以查看我们的 [Select Filters 文档](/docs/rqb#select-过滤器) 以了解示例和完整的 API 参考。
 
-With the new syntax, you can use `AND`, `OR`, `NOT`, and `RAW`, plus all the filtering operators that 
-were previously available in Relations v1.
+使用新语法，你可以使用 `AND`、`OR`、`NOT` 和 `RAW`，以及之前在 Relations v1 中提供的所有过滤运算符。
 
-**Examples**
-<CodeTabs items={["simple eq", "using AND", "using OR", "using NOT", "complex example using RAW"]}>
+**示例**
+<CodeTabs items={["简单 eq", "使用 AND", "使用 OR", "使用 NOT", "使用 RAW 的复杂示例"]}>
 <CodeTab>
 ```ts
 const response = await db.query.users.findMany({
@@ -808,8 +807,8 @@ export const users = pgTable("users", {
   lastLogin: timestamp("last_login"),
   subscriptionEnd: timestamp("subscription_end"),
   lastActivity: timestamp("last_activity"),
-  preferences: jsonb(),      // JSON column for user settings/preferences
-  interests: text().array(),     // Array column for user interests
+  preferences: jsonb(),      // 用于用户设置/偏好的 JSON 列
+  interests: text().array(),     // 用户兴趣的数组列
 });
 ```
 ```ts
@@ -867,9 +866,9 @@ WHERE
 </CodeTab>
 </CodeTabs>
 
-##### Migrate `orderBy` statements
+##### 迁移 `orderBy` 语句
 
-Order by was simplified to a single object, where you specify the column and the sort direction (`asc` or `desc`)
+Order by 被简化为单个对象，你在其中指定列和排序方向（`asc` 或 `desc`）
 
 <Callout title="❌ v1">
 ```ts
@@ -887,10 +886,10 @@ const response = db.query.users.findMany({
 ```
 </Callout>
 
-##### Migrate `many-to-many` queries
+##### 迁移 `many-to-many` 查询
 
-Relational Queries v1 had a very complex way of managing many-to-many queries.
-You had to use junction tables to query through them explicitly, and then map those tables out, like this:
+Relational Queries v1 管理多对多查询的方式非常复杂。
+你必须使用中间表来显式地通过它们进行查询，然后手动映射这些表，像这样：
 
 ```ts
 const response = await db.query.users.findMany({
@@ -905,7 +904,7 @@ const response = await db.query.users.findMany({
 });
 ```
 
-After upgrading to Relational Queries v2, your many-to-many relation will look like this:
+升级到 Relational Queries v2 后，你的多对多关系将如下所示：
 
 ```ts
 import * as schema from './schema';
@@ -924,10 +923,10 @@ export const relations = defineRelations(schema, (r) => ({
 }));
 ```
 
-And when you migrate your query, it will become this:
+当你迁移查询时，它将变成这样：
 
 ```ts
-// Query example
+// 查询示例
 const response = await db.query.users.findMany({
   with: {
     groups: true,
@@ -935,13 +934,13 @@ const response = await db.query.users.findMany({
 });
 ```
 
-### Internal changes
+### 内部变更
 
-1. Every `drizzle` database, `session`, `migrator` and `transaction` instance updated with new generic arguments for RQB v2 queries
+1. 每个 `drizzle` 数据库、`session`、`migrator` 和 `transaction` 实例都更新为带有用于 RQB v2 查询的新泛型参数
 
-<Callout collapsed='Examples'>
+<Callout collapsed='示例'>
 **migrator**
-<Callout type='error' title='before'>
+<Callout type='error' title='之前'>
 ```ts
 export async function migrate<
   TSchema extends Record<string, unknown>
@@ -953,7 +952,7 @@ export async function migrate<
 }
 ```
 </Callout>
-<Callout title='now'>
+<Callout title='现在'>
 ```ts {1,2}
 export async function migrate<TRelations extends AnyRelations>(
 	db: NodePgDatabase<TRelations>,
@@ -964,7 +963,7 @@ export async function migrate<TRelations extends AnyRelations>(
 ```
 </Callout>
 **session**
-<Callout type='error' title='before'>
+<Callout type='error' title='之前'>
 ```ts
 export class NodePgSession<
 	TFullSchema extends Record<string, unknown>,
@@ -972,7 +971,7 @@ export class NodePgSession<
 > extends PgSession<NodePgQueryResultHKT, TFullSchema, TSchema>
 ```
 </Callout>
-<Callout title='now'>
+<Callout title='现在'>
 ```ts {2,3}
 export class NodePgSession<
 	TRelations extends AnyRelations,
@@ -980,7 +979,7 @@ export class NodePgSession<
 ```
 </Callout>
 **transaction**
-<Callout type='error' title='before'>
+<Callout type='error' title='之前'>
 ```ts
 export class NodePgTransaction<
 	TFullSchema extends Record<string, unknown>,
@@ -988,7 +987,7 @@ export class NodePgTransaction<
 > extends PgTransaction<NodePgQueryResultHKT, TFullSchema, TSchema>
 ```
 </Callout>
-<Callout title='now'>
+<Callout title='现在'>
 ```ts {2,3}
 export class NodePgTransaction<
 	TRelations extends AnyRelations,
@@ -996,14 +995,14 @@ export class NodePgTransaction<
 ```
 </Callout>
 **driver**
-<Callout type='error' title='before'>
+<Callout type='error' title='之前'>
 ```ts
 export class NodePgDatabase<
 	TSchema extends Record<string, unknown> = Record<string, never>,
 > extends PgDatabase<NodePgQueryResultHKT, TSchema>
 ```
 </Callout>
-<Callout title='now'>
+<Callout title='现在'>
 ```ts {2,3}
 export class NodePgDatabase<
 	TRelations extends AnyRelations = EmptyRelations,
@@ -1012,10 +1011,10 @@ export class NodePgDatabase<
 </Callout>
 </Callout>
 
-2. Updated `DrizzleConfig` generic with `TRelations` argument and `relations: TRelations` field
+2. 更新了 `DrizzleConfig` 泛型，加入了 `TRelations` 参数和 `relations: TRelations` 字段
 
-<Callout collapsed='Examples'>
-<Callout type='error' title='before'>
+<Callout collapsed='示例'>
+<Callout type='error' title='之前'>
 ```ts
 export interface DrizzleConfig<
   TSchema extends Record<string, unknown> = Record<string, never>
@@ -1027,7 +1026,7 @@ export interface DrizzleConfig<
 ```
 </Callout>
 
-<Callout title='now'>
+<Callout title='现在'>
 ```ts {2,5}
 export interface DrizzleConfig<
 	TRelationConfigs extends AnyRelations = EmptyRelations,
@@ -1041,10 +1040,10 @@ export interface DrizzleConfig<
 </Callout>
 </Callout>
 
-3. The following entities have been removed from `drizzle-orm` and `drizzle-orm/relations`. The original imports now 
-include new types used by Relational Queries v2, so make sure to update your imports if you intend to use the older types:
+3. 以下实体已从 `drizzle-orm` 和 `drizzle-orm/relations` 中移除。原来的导入现在
+包含 Relational Queries v2 使用的新类型，因此如果你打算使用较旧的类型，请务必更新你的导入：
 
-<Callout collapsed='A list of all removed entities'>
+<Callout collapsed='所有已移除实体的列表'>
 - `Relations`
 - `TableRelationsKeysOnly`
 - `ExtractTableRelationsFromSchema`
@@ -1063,9 +1062,9 @@ include new types used by Relational Queries v2, so make sure to update your imp
 - `TableRelationsHelpers`
 </Callout>
 
-4. In the same manner, `${dialect}-core/query-builders/query` files were updated with RQB v2's alternatives
+4. 同样地，`${dialect}-core/query-builders/query` 文件也更新为 RQB v2 的替代方案
 
-<Callout collapsed='Examples'>
+<Callout collapsed='示例'>
 ```ts
 import { RelationalQueryBuilder, PgRelationalQuery } from 'drizzle-orm/pg-core/query-builders/query';
 ```

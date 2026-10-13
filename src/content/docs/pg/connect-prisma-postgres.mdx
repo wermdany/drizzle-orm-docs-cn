@@ -11,21 +11,21 @@ import WhatsNextPostgres from "@mdx/WhatsNextPostgres.astro";
 
 # Drizzle \<\> Prisma Postgres
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- Prisma Postgres serverless database - [website](https://prisma.io/postgres)
-- Prisma Postgres direct connections - [docs](https://www.prisma.io/docs/postgres/database/direct-connections) 
-- Drizzle PostgreSQL drivers - [docs](/docs/get-started-postgresql)
+- 使用 Drizzle 进行[数据库连接基础](/docs/connect-overview)
+- Prisma Postgres 无服务器数据库 - [网站](https://prisma.io/postgres)
+- Prisma Postgres 直连 - [文档](https://www.prisma.io/docs/postgres/database/direct-connections) 
+- Drizzle PostgreSQL 驱动 - [文档](/docs/get-started-postgresql)
 </Prerequisites>
 
-Prisma Postgres is a serverless database built on [unikernels](https://www.prisma.io/blog/announcing-prisma-postgres-early-access). It has a large free tier, [operation-based pricing](https://www.prisma.io/blog/operations-based-billing) and no cold starts.
-  
-You can connect to it using either the [`node-postgres`](https://node-postgres.com/) or [`postgres.js`](https://github.com/porsager/postgres) drivers for PostgreSQL.
+Prisma Postgres 是一个基于 [unikernels](https://www.prisma.io/blog/announcing-prisma-postgres-early-access) 构建的无服务器数据库。它提供慷慨的免费额度、[基于操作的计费方式](https://www.prisma.io/blog/operations-based-billing)，并且没有冷启动。
+
+你可以使用 PostgreSQL 的 [`node-postgres`](https://node-postgres.com/) 或 [`postgres.js`](https://github.com/porsager/postgres) 驱动连接到它。
 
 <Callout type="info">
-Prisma Postgres also has a [serverless driver](https://www.prisma.io/docs/postgres/database/serverless-driver) that will be supported with Drizzle ORM in the future.
+Prisma Postgres 还有一个[无服务器驱动](https://www.prisma.io/docs/postgres/database/serverless-driver)，未来 Drizzle ORM 将会支持它。
 </Callout>
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <CodeTabs items={["node-postgres (pg)", "postgres.js"]}>
 <Npm>
  drizzle-orm@rc pg
@@ -40,10 +40,10 @@ Prisma Postgres also has a [serverless driver](https://www.prisma.io/docs/postgr
 </CodeTabs>
 
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 <CodeTabs items={["node-postgres (pg)", "postgres.js"]}>
 ```typescript 
-// Make sure to install the 'pg' package 
+// 确保安装 'pg' 包 
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -55,7 +55,7 @@ const db = drizzle({ client: pool });
 const result = await db.execute('select 1');
 ```
 ```typescript
-// Make sure to install the 'postgres' package
+// 确保安装 'postgres' 包
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -66,6 +66,6 @@ const result = await db.execute('select 1');
 ```
 </CodeTabs>
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres/>

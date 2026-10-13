@@ -3,14 +3,14 @@ import Callout from '@mdx/Callout.astro';
 
 # typebox-legacy
 
-### Install the dependencies
+### 安装依赖
 <Npm>
 drizzle-orm@rc @sinclair/typebox
 </Npm>
 
 ### Select schema
 
-Defines the shape of data queried from the database - can be used to validate API responses.
+定义从数据库查询的数据的结构——可用于校验 API 响应。
 
 ```ts copy
 import { pgTable, text, integer } from 'drizzle-orm/pg-core';
@@ -26,13 +26,13 @@ const users = pgTable('users', {
 const userSelectSchema = createSelectSchema(users);
 
 const rows = await db.select({ id: users.id, name: users.name }).from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // Error: `age` is not returned in the above query
+const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // 错误：上述查询中没有返回 `age`
 
 const rows = await db.select().from(users).limit(1);
-const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // Will parse successfully
+const parsed: { id: number; name: string; age: number } = Value.Parse(userSelectSchema, rows[0]); // 将成功解析
 ```
 
-Views and enums are also supported.
+也支持视图和枚举。
 
 ```ts copy
 import { pgEnum, pgView } from 'drizzle-orm/pg-core';
@@ -51,7 +51,7 @@ const parsed: { id: number; name: string; age: number } = Value.Parse(usersViewS
 
 ### Insert schema
 
-Defines the shape of data to be inserted into the database - can be used to validate API requests.
+定义要插入数据库的数据的结构——可用于校验 API 请求。
 
 ```ts copy
 import { pgTable, text, integer } from 'drizzle-orm/pg-core';
@@ -67,16 +67,16 @@ const users = pgTable('users', {
 const userInsertSchema = createInsertSchema(users);
 
 const user = { name: 'John' };
-const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // Error: `age` is not defined
+const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // 错误：未定义 `age`
 
 const user = { name: 'Jane', age: 30 };
-const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // Will parse successfully
+const parsed: { name: string, age: number } = Value.Parse(userInsertSchema, user); // 将成功解析
 await db.insert(users).values(parsed);
 ```
 
 ### Update schema
 
-Defines the shape of data to be updated in the database - can be used to validate API requests.
+定义要在数据库中更新的数据的结构——可用于校验 API 请求。
 
 ```ts copy
 import { pgTable, text, integer } from 'drizzle-orm/pg-core';
@@ -93,13 +93,13 @@ const users = pgTable('users', {
 const userUpdateSchema = createUpdateSchema(users);
 
 const user = { age: 35 };
-const parsed: { name?: string | undefined, age?: number | undefined } = Value.Parse(userUpdateSchema, user); // Will parse successfully
+const parsed: { name?: string | undefined, age?: number | undefined } = Value.Parse(userUpdateSchema, user); // 将成功解析
 await db.update(users).set(parsed).where(eq(users.name, 'Jane'));
 ```
 
-### Refinements
+### 细化
 
-Each create schema function accepts an additional optional parameter that you can used to extend, modify or completely overwite a field's schema. Defining a callback function will extend or modify while providing a Typebox schema will overwrite it.
+每个 create schema 函数都接受一个额外的可选参数，你可以用它来扩展、修改或完全覆盖某个字段的 schema。定义回调函数会扩展或修改，而提供 Typebox schema 则会覆盖它。
 
 ```ts copy
 import { pgTable, text, integer, json } from 'drizzle-orm/pg-core';
@@ -115,9 +115,9 @@ const users = pgTable('users', {
 });
 
 const userSelectSchema = createSelectSchema(users, {
-  name: (schema) => Type.String({ ...schema, maxLength: 20 }), // Extends schema
-  bio: (schema) => Type.String({ ...schema, maxLength: 1000 }), // Extends schema before becoming nullable/optional
-  preferences: Type.Object({ theme: Type.String() }) // Overwrites the field, including its nullability
+  name: (schema) => Type.String({ ...schema, maxLength: 20 }), // 扩展 schema
+  bio: (schema) => Type.String({ ...schema, maxLength: 1000 }), // 在变为可空/可选之前扩展 schema
+  preferences: Type.Object({ theme: Type.String() }) // 覆盖该字段，包括其可空性
 });
 
 const parsed: {
@@ -130,16 +130,16 @@ const parsed: {
 } = Value.Parse(userSelectSchema, ...);
 ```
 
-### Factory functions
+### 工厂函数
 
-For more advanced use cases, you can use the `createSchemaFactory` function.
+对于更高级的用例，你可以使用 `createSchemaFactory` 函数。
 
-**Use case: Using an extended Typebox instance**
+**用例：使用扩展的 Typebox 实例**
 
 ```ts copy
 import { pgTable, text, integer } from 'drizzle-orm/pg-core';
 import { createSchemaFactory } from 'drizzle-orm/typebox';
-import { t } from 'elysia'; // Extended Typebox instance
+import { t } from 'elysia'; // 扩展的 Typebox 实例
 
 const users = pgTable('users', {
   id: integer().generatedAlwaysAsIdentity().primaryKey(),
@@ -150,12 +150,12 @@ const users = pgTable('users', {
 const { createInsertSchema } = createSchemaFactory({ typeboxInstance: t });
 
 const userInsertSchema = createInsertSchema(users, {
-  // We can now use the extended instance
+  // 现在可以使用扩展后的实例
   name: (schema) => t.Number({ ...schema, error: "`name` must be a string" }),
 });
 ```
 
-### Data type reference
+### 数据类型参考
 
 ```ts
 pg.boolean();
@@ -238,14 +238,14 @@ pg.smallint();
 pg.smallserial();
 
 // Schema
-Type.Integer({ minimum: -32_768, maximum: 32_767 }); // 16-bit integer lower and upper limit
+Type.Integer({ minimum: -32_768, maximum: 32_767 }); // 16 位整数的下限和上限
 ```
 
 ```ts
 pg.real();
 
 // Schema
-Type.Number().min(-8_388_608).max(8_388_607); // 24-bit integer lower and upper limit
+Type.Number().min(-8_388_608).max(8_388_607); // 24 位整数的下限和上限
 ```
 
 ```ts
@@ -253,14 +253,14 @@ pg.integer();
 pg.serial();
 
 // Schema
-Type.Integer({ minimum: -2_147_483_648, maximum: 2_147_483_647 }); // 32-bit integer lower and upper limit
+Type.Integer({ minimum: -2_147_483_648, maximum: 2_147_483_647 }); // 32 位整数的下限和上限
 ```
 
 ```ts
 pg.doublePrecision();
 
 // Schema
-Type.Number({ minimum: -140_737_488_355_328, maximum: 140_737_488_355_327 }); // 48-bit integer lower and upper limit
+Type.Number({ minimum: -140_737_488_355_328, maximum: 140_737_488_355_327 }); // 48 位整数的下限和上限
 ```
 
 ```ts
@@ -268,7 +268,7 @@ pg.bigint({ mode: 'number' });
 pg.bigserial({ mode: 'number' });
 
 // Schema
-Type.Integer({ minimum: -9_007_199_254_740_991, maximum: 9_007_199_254_740_991 }); // Javascript min. and max. safe integers
+Type.Integer({ minimum: -9_007_199_254_740_991, maximum: 9_007_199_254_740_991 }); // JavaScript 的最小和最大安全整数
 ```
 
 ```ts
@@ -276,7 +276,7 @@ pg.bigint({ mode: 'bigint' });
 pg.bigserial({ mode: 'bigint' });
 
 // Schema
-Type.BigInt({ minimum: -9_223_372_036_854_775_808n, maximum: 9_223_372_036_854_775_807n }); // 64-bit integer lower and upper limit
+Type.BigInt({ minimum: -9_223_372_036_854_775_808n, maximum: 9_223_372_036_854_775_807n }); // 64 位整数的下限和上限
 ```
 
 ```ts

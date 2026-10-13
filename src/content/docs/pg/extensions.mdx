@@ -1,5 +1,5 @@
 ---
-title: PostgreSQL extensions
+title: PostgreSQL 扩展
 ---
 
 import Callout from '@mdx/Callout.astro';
@@ -8,25 +8,25 @@ import Section from '@mdx/Section.astro';
 ### `pg_vector`
 
 <Callout>
-There is no specific code to create an extension inside the Drizzle schema. We assume that if you are using vector types, 
-indexes, and queries, you have a PostgreSQL database with the pg_vector extension installed.
+在 Drizzle schema 中创建扩展没有特定的代码。我们假设如果你使用向量类型、
+索引和查询，那么你的 PostgreSQL 数据库已经安装了 pg_vector 扩展。
 </Callout>
 
-[`pg_vector`](https://github.com/pgvector/pgvector) is open-source vector similarity search for Postgres
+[`pg_vector`](https://github.com/pgvector/pgvector) 是用于 Postgres 的开源向量相似度搜索
 
-Store your vectors with the rest of your data. Supports:
+将你的向量和其余数据一起存储。支持：
 
-- exact and approximate nearest neighbor search
-- single-precision, half-precision, binary, and sparse vectors
-- L2 distance, inner product, cosine distance, L1 distance, Hamming distance, and Jaccard distance
+- 精确和近似最近邻搜索
+- 单精度、半精度、二进制和稀疏向量
+- L2 距离、内积、余弦距离、L1 距离、汉明距离和杰卡德距离
 
-#### Column Types
+#### 列类型
 
 **`vector`**
 
-Store your vectors with the rest of your data
+将你的向量和其余数据一起存储
 
-For more info please refer to the official pg_vector docs **[docs.](https://github.com/pgvector/pgvector)**
+更多信息请参考 pg_vector 官方文档 **[文档。](https://github.com/pgvector/pgvector)**
 
 <Section>
 ```ts
@@ -46,9 +46,9 @@ CREATE TABLE "table" (
 
 **`halfvec`**
 
-Half-precision vector type, stores dense vectors of half-precision float values
+半精度向量类型，存储由半精度浮点值组成的稠密向量
 
-For more info please refer to the official pg_vector docs **[docs.](https://github.com/pgvector/pgvector)**
+更多信息请参考 pg_vector 官方文档 **[文档。](https://github.com/pgvector/pgvector)**
 
 <Section>
 ```ts
@@ -68,9 +68,9 @@ CREATE TABLE "table" (
 
 **`sparsevec`**
 
-Sparse vector type, stores vectors with mostly zero values efficiently
+稀疏向量类型，高效地存储大部分值为零的向量
 
-For more info please refer to the official pg_vector docs **[docs.](https://github.com/pgvector/pgvector)**
+更多信息请参考 pg_vector 官方文档 **[文档。](https://github.com/pgvector/pgvector)**
 
 <Section>
 ```ts
@@ -90,9 +90,9 @@ CREATE TABLE "table" (
 
 **`bit`**
 
-Bit string type, used for binary vectors in pgvector
+位字符串类型，用于 pgvector 中的二进制向量
 
-For more info please refer to the official pg_vector **[docs.](https://github.com/pgvector/pgvector)**
+更多信息请参考 pg_vector 官方 **[文档。](https://github.com/pgvector/pgvector)**
 
 <Section>
 ```ts
@@ -110,13 +110,13 @@ CREATE TABLE "table" (
 ```
 </Section>
 
-#### Indexes
+#### 索引
 
-You can now specify indexes for `pg_vector` and utilize `pg_vector` functions for querying, ordering, etc.
+你现在可以为 `pg_vector` 指定索引，并利用 `pg_vector` 函数进行查询、排序等操作。
 
-Let's take a few examples of `pg_vector` indexes from the `pg_vector` docs and translate them to Drizzle
+让我们从 `pg_vector` 文档中取一些 `pg_vector` 索引示例，并将它们转换为 Drizzle 写法
 
-#### L2 distance, Inner product and Cosine distance for `vector`
+#### `vector` 的 L2 距离、内积和余弦距离
 
 ```ts
 // CREATE INDEX ON items USING hnsw (embedding vector_l2_ops);
@@ -132,7 +132,7 @@ export const table = pgTable('items', {
 ])
 ```
 
-#### L2 distance, Inner product and Cosine distance for `halfvec`
+#### `halfvec` 的 L2 距离、内积和余弦距离
 
 ```ts
 // CREATE INDEX ON items USING hnsw (embedding halfvec_l2_ops);
@@ -148,7 +148,7 @@ export const table = pgTable('items', {
 ])
 ```
 
-#### L2 distance, Inner product and Cosine distance for `sparsevec`
+#### `sparsevec` 的 L2 距离、内积和余弦距离
 
 ```ts
 // CREATE INDEX ON items USING hnsw (embedding sparsevec_l2_ops);
@@ -164,7 +164,7 @@ export const table = pgTable('items', {
 ])
 ```
 
-#### Hamming distance and Jaccard distance for `bit`
+#### `bit` 的汉明距离和 Jaccard 距离
 
 ```ts
 // CREATE INDEX "hamming_index" ON "items" USING hnsw ("embedding" bit_hamming_ops);
@@ -178,11 +178,11 @@ export const table = pgTable("items", {
 ]);
 ```
 
-#### Helper Functions
+#### 辅助函数
 
-For queries, you can use predefined functions for vectors or create custom ones using the SQL template operator.
+对于查询，你可以使用为向量预定义好的函数，也可以使用 SQL 模板操作符创建自定义函数。
 
-You can also use the following helpers:
+你还可以使用以下辅助函数：
 
 ```ts
 import { l2Distance, l1Distance, innerProduct, 
@@ -198,7 +198,7 @@ hammingDistance(table.column, '101') // table.column <~> '101'
 jaccardDistance(table.column, '101') // table.column <%> '101'
 ```
 
-If `pg_vector` has some other functions to use, you can replicate implementation from existing one we have. Here is how it can be done
+如果 `pg_vector` 还有其它函数要使用，你可以复刻我们现有函数的实现。以下是具体做法
 
 ```ts
 export function l2Distance(
@@ -212,11 +212,11 @@ export function l2Distance(
 }
 ```
 
-Name it as you wish and change the operator. This example allows for a numbers array, strings array, string, or even a select query. Feel free to create any other type you want or even contribute and submit a PR
+你可以随意命名并更改操作符。这个示例支持数字数组、字符串数组、字符串，甚至 select 查询。你可以随意创建任何其它类型，甚至贡献代码并提交 PR
 
-#### Examples
+#### 示例
 
-Let's take a few examples of `pg_vector` queries from the `pg_vector` docs and translate them to Drizzle
+让我们从 `pg_vector` 文档中取一些 `pg_vector` 查询示例，并将它们转换为 Drizzle 写法
 
 ```ts
 import { l2Distance } from 'drizzle-orm';
@@ -234,30 +234,30 @@ db.select().from(items).orderBy(l2Distance(items.embedding, subquery)).limit(5)
 // SELECT (embedding <#> '[3,1,2]') * -1 AS inner_product FROM items;
 db.select({ innerProduct: sql`(${innerProduct(items.embedding, [3,1,2])}) * -1` }).from(items)
 
-// and more!
+// 还有更多！
 ```
 
 ### `postgis`
 
 <Callout>
-There is no specific code to create an extension inside the Drizzle schema. We assume that if you are using postgis types, indexes, and queries, you have a PostgreSQL database with the `postgis` extension installed.
+在 Drizzle schema 中创建扩展没有特定的代码。我们假设如果你使用 postgis 类型、索引和查询，那么你的 PostgreSQL 数据库已经安装了 `postgis` 扩展。
 </Callout>
 
-As [PostGIS](https://postgis.net/) website mentions:
+正如 [PostGIS](https://postgis.net/) 网站所述：
 
-> PostGIS extends the capabilities of the PostgreSQL relational database by adding support for storing, indexing, and querying geospatial data.
+> PostGIS 通过增加对地理空间数据的存储、索引和查询支持，扩展了 PostgreSQL 关系型数据库的能力。
 
 <Callout type="info">
-If you are using the `introspect` or `push` commands with the PostGIS extension and don't want PostGIS tables to be included, you can use [extensionsFilters](/docs/drizzle-config-file#extensionsfilters) to ignore all the PostGIS tables
+如果你在使用 PostGIS 扩展的同时使用 `introspect` 或 `push` 命令，并且不希望包含 PostGIS 的表，可以使用 [extensionsFilters](/docs/drizzle-config-file#extensionsfilters) 忽略所有 PostGIS 表
 </Callout>
 
-#### Column Types
+#### 列类型
 
 **`geometry`**
 
-Store your geometry data with the rest of your data
+将你的几何数据和其余数据一起存储
 
-For more info please refer to the official PostGIS docs **[docs.](https://postgis.net/workshops/postgis-intro/geometries.html)**
+更多信息请参考 PostGIS 官方文档 **[文档。](https://postgis.net/workshops/postgis-intro/geometries.html)**
 
 ```ts
 const items = pgTable('items', {
@@ -269,20 +269,20 @@ const items = pgTable('items', {
 
 **mode**
 
-Type `geometry` has 2 modes for mappings from the database: `tuple` and `xy`.
+`geometry` 类型有 2 种从数据库映射的模式：`tuple` 和 `xy`。
 
-- `tuple` will be accepted for insert and mapped on select to a tuple. So, the database geometry will be typed as [1,2] with drizzle.
-- `xy` will be accepted for insert and mapped on select to an object with x, y coordinates. So, the database geometry will be typed as `{ x: 1, y: 2 }` with drizzle
+- `tuple` 在插入时会被接受，并在 select 时映射为一个元组。因此，使用 drizzle 时数据库几何数据会被类型化为 [1,2]。
+- `xy` 在插入时会被接受，并在 select 时映射为一个带有 x、y 坐标的对象。因此，使用 drizzle 时数据库几何数据会被类型化为 `{ x: 1, y: 2 }`
 
 **type**
 
-The current release has a predefined type: `point`, which is the `geometry(Point)` type in the PostgreSQL PostGIS extension. You can specify any string there if you want to use some other type
+当前版本有一个预定义类型：`point`，即 PostgreSQL PostGIS 扩展中的 `geometry(Point)` 类型。如果你想使用其它类型，可以在那里指定任意字符串
 
-#### Indexes
+#### 索引
 
-With the available Drizzle indexes API, you should be able to write any indexes for PostGIS
+借助可用的 Drizzle 索引 API，你应该能够为 PostGIS 编写任何索引
 
-**Examples**
+**示例**
 
 ```ts
 // CREATE INDEX custom_idx ON table USING GIST (geom);

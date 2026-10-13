@@ -6,21 +6,21 @@ import WhatsNextMySQL from "@mdx/WhatsNextMySQL.astro";
 
 # Drizzle \<\> MySQL
 
-To use Drizzle with a MySQL database, you should use the `mysql2` driver
+要将 Drizzle 与 MySQL 数据库一起使用，你应该使用 `mysql2` 驱动
 
-According to the **[official website](https://github.com/sidorares/node-mysql2)**, 
-`mysql2` is a MySQL client for Node.js with focus on performance.  
+根据**[官方网站](https://github.com/sidorares/node-mysql2)**，
+`mysql2` 是一个为 Node.js 打造的 MySQL 客户端，专注于性能。  
 
-Drizzle ORM natively supports `mysql2` with `drizzle-orm/mysql2` package.
+Drizzle ORM 通过 `drizzle-orm/mysql2` 包原生支持 `mysql2`。
 
-#### Step 1 - Install packages
+#### 步骤 1 - 安装软件包
 <Npm>
  drizzle-orm@rc mysql2
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
-<CodeTabs items={['mysql2', 'mysql with config']}>
+#### 步骤 2 - 初始化驱动并执行查询
+<CodeTabs items={['mysql2', 'mysql 及配置']}>
 ```typescript copy
 import { drizzle } from "drizzle-orm/mysql2";
 
@@ -31,16 +31,16 @@ const response = await db.select().from(...)
 ```typescript copy
 import { drizzle } from "drizzle-orm/mysql2";
 
-// You can specify any property from the mysql2 connection options
+// 你可以指定 mysql2 连接选项中的任意属性
 const db = drizzle({ connection:{ uri: process.env.DATABASE_URL }});
 
 const response = await db.select().from(...)
 ```
 </CodeTabs>
 
-If you need to provide your existing driver:
+如果你需要提供现有的驱动：
 
-<CodeTabs items={['Client connection', 'Pool connection']}>
+<CodeTabs items={['Client 连接', 'Pool 连接']}>
   ```typescript copy
   import { drizzle } from "drizzle-orm/mysql2";
   import mysql from "mysql2/promise";
@@ -70,11 +70,11 @@ If you need to provide your existing driver:
 </CodeTabs>
 
 <Callout type="warning" emoji="⚙️">
-  For the built in `migrate` function with DDL migrations we and drivers strongly encourage you to use single `client` connection.  
+  对于用于 DDL 迁移的内置 `migrate` 函数，我们和驱动都强烈建议你使用单个 `client` 连接。  
 
-  For querying purposes feel free to use either `client` or `pool` based on your business demands.
+  对于查询用途，你可以根据自己的业务需求随意使用 `client` 或 `pool`。
 </Callout>
 
-#### What's next?
+#### 接下来做什么？
 
 <WhatsNextMySQL/>

@@ -13,22 +13,22 @@ import WhatsNextCockroach from "@mdx/WhatsNextCockroach.astro";
 <br/>
 
 <Prerequisites>
-- Database [connection basics](/docs/cockroach/connect-overview) with Drizzle
-- node-postgres [basics](https://node-postgres.com/)
+- 使用 Drizzle 的数据库[连接基础](/docs/cockroach/connect-overview)
+- node-postgres [基础](https://node-postgres.com/)
 </Prerequisites>
 
-Drizzle has native support for CockroachDB connections with the `node-postgres` driver.
+Drizzle 通过 `node-postgres` 驱动原生支持 CockroachDB 连接。
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装包
 <Npm>
 drizzle-orm@rc pg
 -D drizzle-kit@rc @types/pg
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
-<CodeTabs items={["node-postgres", "node-postgres with config"]}>
+#### 第 2 步 - 初始化驱动并执行查询
+<CodeTabs items={["node-postgres", "带配置的 node-postgres"]}>
 ```typescript copy
-// Make sure to install the 'pg' package 
+// 请确保安装 'pg' 包 
 import { drizzle } from 'drizzle-orm/cockroach';
 
 const db = drizzle(process.env.DATABASE_URL);
@@ -36,10 +36,10 @@ const db = drizzle(process.env.DATABASE_URL);
 const result = await db.execute('select 1');
 ```
 ```typescript copy
-// Make sure to install the 'pg' package 
+// 请确保安装 'pg' 包 
 import { drizzle } from 'drizzle-orm/cockroach';
 
-// You can specify any property from the node-postgres connection options
+// 你可以指定 node-postgres 连接选项中的任意属性
 const db = drizzle({ 
   connection: { 
     connectionString: process.env.DATABASE_URL,
@@ -51,10 +51,10 @@ const result = await db.execute('select 1');
 ```
 </CodeTabs>
 
-If you need to provide your existing driver:
+如果你需要提供你现有的驱动：
 
 ```typescript copy
-// Make sure to install the 'pg' package 
+// 请确保安装 'pg' 包 
 import { drizzle } from "drizzle-orm/cockroach";
 import { Pool } from "pg";
 
@@ -66,6 +66,6 @@ const db = drizzle({ client: pool });
 const result = await db.execute('select 1');
 ```
 
-#### What's next?
+#### 接下来做什么？
 
 <WhatsNextCockroach/>

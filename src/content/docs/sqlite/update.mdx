@@ -4,21 +4,21 @@ import Section from '@mdx/Section.astro';
 # SQL Update
 
 <Callout type='info'>
-All the values provided to `.set()`are parameterized automatically.
-For example, this query:
+传递给 `.set()` 的所有值都会自动参数化。
+例如，这个查询：
 ```ts
 await db.update(users).set({ name: "Mr. Dan" }).where(eq(users.name, "Dan"));
 ```
-will be translated to:
+会被转换为：
 ```sql
-update "users" set "name" = ? where "users"."name" = ?; -- params: ['Mr. Dan', 'Dan']
+update "users" set "name" = ? where "users"."name" = ?; -- 参数: ['Mr. Dan', 'Dan']
 ```
 </Callout>
 
 <br/>
 
-The object that you pass to `update` should have keys that match column names in your database schema.
-Values of `undefined` are ignored in the object: to set a column to `null`, pass `null`.
+传递给 `update` 的对象，其键应与你数据库 schema 中的列名匹配。
+对象中值为 `undefined` 的项会被忽略：要将某列设为 `null`，请传入 `null`。
 
 ```typescript copy
 await db.update(users)
@@ -31,7 +31,7 @@ await db.update(users)
   .where(eq(users.name, 'Dan'));
 ```
 
-You can pass SQL as a value to be used in the update object, like this:
+你可以在 update 对象中传入 SQL 作为值，如下所示：
 
 ```typescript copy
 await db.update(users)
@@ -40,7 +40,7 @@ await db.update(users)
 ```
 
 ### Limit
-Use `.limit()` to add `limit` clause to the query - for example:
+使用 `.limit()` 为查询添加 `limit` 子句 - 例如：
 <Section>
 ```typescript
 await db.update(usersTable).set({ verified: true }).limit(2);
@@ -51,7 +51,7 @@ update "users" set "verified" = ? limit ?;
 </Section>
 
 ### Order By
-Use `.orderBy()` to add `order by` clause to the query, sorting the results by the specified fields:
+使用 `.orderBy()` 为查询添加 `order by` 子句，按指定字段对结果进行排序：
 <Section>
 ```typescript
 import { asc, desc } from 'drizzle-orm';
@@ -73,7 +73,7 @@ update "users" set "verified" = ? order by "name" asc, "name2" desc;
 </Section>
 
 ### Returning
-You can update a row and get it back in SQLite:
+在 SQLite 中，你可以更新一行并把它取回来：
 ```typescript copy
 const updatedUserId = await db.update(users).set({ name: "Mr. Dan" }).where(eq(users.name, "Dan")).returning({ updatedId: users.id });
 //      ^ { updatedId: number | null }[]
@@ -82,13 +82,13 @@ const updatedUserId = await db.update(users).set({ name: "Mr. Dan" }).where(eq(u
 update "users" set "name" = 'Mr. Dan' where "users"."name" = 'Dan' returning "id";
 ```
 
-## `with update` clause
+## `with update` 子句
 
 <Callout>
-  Check how to use WITH statement with [select](/docs/sqlite/select#with-clause), [insert](/docs/sqlite/insert#with-insert-clause), [delete](/docs/sqlite/delete#with-delete-clause)
+  查看如何配合 [select](/docs/sqlite/select#with-子句)、[insert](/docs/sqlite/insert#with-insert-子句)、[delete](/docs/sqlite/delete#with-delete-子句) 使用 WITH 语句
 </Callout>
 
-Using the `with` clause can help you simplify complex queries by splitting them into smaller subqueries called common table expressions (CTEs):
+使用 `with` 子句可以将复杂查询拆分为更小的子查询（称为公共表表达式，CTE），从而简化查询：
 <Section>
 ```typescript copy
 const averagePrice = db.$with('average_price').as(
@@ -114,12 +114,12 @@ returning "id"
 </Section>
 
 ## Update ... from
-As the SQLite documentation mentions:
+正如 SQLite 文档所提到的：
 
-> The UPDATE-FROM idea is an extension to SQL that allows an UPDATE statement to be driven by other tables in the database. 
-The "target" table is the specific table that is being updated. With UPDATE-FROM you can join the target table 
-against other tables in the database in order to help compute which rows need updating and what 
-the new values should be on those rows
+> UPDATE-FROM 这一思路是对 SQL 的扩展，它允许 UPDATE 语句由数据库中的其它表来驱动。
+"目标"表就是正在被更新的那张特定表。借助 UPDATE-FROM，你可以让目标表
+与数据库中的其它表进行连接，从而帮助计算哪些行需要更新，以及
+这些行的新值应该是什么
 
 <Section>
 ```ts
@@ -136,7 +136,7 @@ where (("cities"."name" = 'Seattle') and ("users"."name" = 'John'))
 ```
 </Section>
 
-You can also alias tables that are joined (you can also alias the updating table too).
+你还可以为参与连接的表设置别名（也可以为被更新的表设置别名）。
 <Section>
 ```ts
 const c = alias(cities, 'c');
@@ -151,7 +151,7 @@ from "cities" "c"
 ```
 </Section>
 
-In SQLite, you can also return columns from the joined tables.
+在 SQLite 中，你还可以从参与连接的表返回列。
 <Section>
 ```ts
 const updatedUsers = await db

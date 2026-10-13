@@ -7,11 +7,11 @@ import Npm from '@mdx/Npm.astro';
 
 # drizzle-graphql
 
-Create a GraphQL server from a Drizzle schema in one line, and easily enhance it with custom queries and mutations.
+用一行代码即可从 Drizzle schema 创建 GraphQL 服务器，并可通过自定义查询和变更轻松增强它。
 
-## Quick start
+## 快速开始
 
-Make sure your `drizzle-orm` version is at least `0.30.9`, and update if needed:
+确保你的 `drizzle-orm` 版本至少为 `0.30.9`，如有需要请更新：
 <Npm>drizzle-orm@latest</Npm>
 
 ### Apollo Server
@@ -119,13 +119,13 @@ export const postsRelations = relations(posts, ({ one }) => ({
 </CodeTab>
 </CodeTabs>
 
-## Customizing schema
+## 自定义 schema
 
 <Callout type='info' emoji='ℹ️'>
-`buildSchema()` produces schema and types using standard `graphql` SDK, so its output is compatible with any library that supports it.
+`buildSchema()` 使用标准的 `graphql` SDK 生成 schema 和类型，因此其输出与任何支持它的库兼容。
 </Callout>
 
-If you want to customize your schema, you can use `entities` object to build your own new schema:
+如果你想自定义 schema，可以使用 `entities` 对象来构建你自己的新 schema：
 
 <CodeTabs items={['server.ts', 'schema.ts']}>
 <CodeTab>
@@ -142,27 +142,27 @@ const db = drizzle({ schema: dbSchema });
 
 const { entities } = buildSchema(db);
 
-// You can customize which parts of queries or mutations you want
+// 你可以自定义想要查询或变更的哪些部分
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: {
-      // Select only wanted queries out of all generated
+      // 从所有生成的查询中只选择需要的
       users: entities.queries.users,
       customer: entities.queries.customersSingle,
 
-      // Create a custom one
+      // 创建一个自定义的
       customUsers: {
-        // You can reuse and customize types from original schema
+        // 你可以复用并自定义原始 schema 中的类型
         type: new GraphQLList(new GraphQLNonNull(entities.types.UsersItem)),
         args: {
-          // You can reuse inputs as well
+          // 你也可以复用输入
           where: {
             type: entities.inputs.UsersFilters
           },
         },
         resolve: async (source, args, context, info) => {
-          // Your custom logic goes here...
+          // 你的自定义逻辑写在这里...
           const result = await db.select(schema.users).where()...
 
           return result;
@@ -170,12 +170,12 @@ const schema = new GraphQLSchema({
       },
     },
   }),
-  // Same rules apply to mutations
+  // 相同的规则适用于 mutation
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: entities.mutations,
   }),
-  // In case you need types inside your schema
+  // 以防你需要在 schema 中使用类型
   types: [...Object.values(entities.types), ...Object.values(entities.inputs)],
 });
 

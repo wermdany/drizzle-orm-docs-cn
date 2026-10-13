@@ -19,23 +19,23 @@ import ConnectLibsql from '@mdx/get-started/sqlite/ConnectLibsql.mdx';
 
 <Breadcrumbs/>
 
-# Get Started with Drizzle and D1
+# Drizzle 和 D1 入门
 
 <Prerequisites>  
-  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
-  - **tsx** - package for running TypeScript files - [read here](https://tsx.hirok.io/)
-  - **Cloudflare D1** - Serverless SQL database to query from your Workers and Pages projects - [read here](https://developers.cloudflare.com/d1/)
-  - **wrangler** - Cloudflare Developer Platform command-line interface - [read here](https://developers.cloudflare.com/workers/wrangler)
+  - **dotenv** - 用于管理环境变量的包 - [阅读文档](https://www.npmjs.com/package/dotenv)
+  - **tsx** - 用于运行 TypeScript 文件的包 - [阅读文档](https://tsx.hirok.io/)
+  - **Cloudflare D1** - 可从你的 Workers 和 Pages 项目中查询的无服务器 SQL 数据库 - [阅读文档](https://developers.cloudflare.com/d1/)
+  - **wrangler** - Cloudflare 开发者平台命令行界面 - [阅读文档](https://developers.cloudflare.com/workers/wrangler)
 </Prerequisites>
 
 <FileStructure />
 
-#### Step 1 - Install required packages
+#### 第 1 步 - 安装所需的软件包
 <InstallPackages lib='wrangler'/>
 
-#### Step 2 - Setup wrangler.toml
+#### 第 2 步 - 设置 wrangler.toml
 
-You would need to have a `wrangler.toml` file for D1 database and will look something like this:
+你需要为 D1 数据库准备一个 `wrangler.toml` 文件，内容大致如下：
 ```toml
 name = "YOUR PROJECT NAME"
 main = "src/index.ts"
@@ -49,7 +49,7 @@ database_id = "YOUR DB ID"
 migrations_dir = "drizzle"
 ```
 
-#### Step 3 - Connect Drizzle ORM to the database
+#### 第 3 步 - 将 Drizzle ORM 连接到数据库
 
 ```typescript copy
 import { drizzle } from 'drizzle-orm/d1';
@@ -64,25 +64,25 @@ export default {
 };
 ```
 
-#### Step 4 - Generate wrangler types 
+#### 第 4 步 - 生成 wrangler 类型 
 
 <Npx>
 wrangler types
 </Npx>
 
 <Callout>
-The output of this command will be a `worker-configuration.d.ts` file.
+该命令的输出将是一个 `worker-configuration.d.ts` 文件。
 </Callout>
 
-#### Step 5 - Create a table
+#### 第 5 步 - 创建表
 
 <CreateTable/>
 
-#### Step 6 - Setup Drizzle config file
+#### 第 6 步 - 设置 Drizzle 配置文件
 
-**Drizzle config** - a configuration file that is used by [Drizzle Kit](/docs/kit-overview) and contains all the information about your database connection, migration folder and schema files.
+**Drizzle config** - 一个由 [Drizzle Kit](/docs/kit-overview) 使用的配置文件，包含你的数据库连接、迁移文件夹和 schema 文件的全部信息。
 
-Create a `drizzle.config.ts` file in the root of your project and add the following content:
+在你的项目根目录创建 `drizzle.config.ts` 文件，并添加以下内容：
 
 ```typescript copy filename="drizzle.config.ts"
 import 'dotenv/config';
@@ -100,15 +100,15 @@ export default defineConfig({
   },
 });
 ```
-<Callout title='tips'>
-You can check [our tutorial](/docs/guides/d1-http-with-drizzle-kit) on how to get env variables from CloudFlare
+<Callout title='提示'>
+你可以查看[我们的教程](/docs/guides/d1-http-with-drizzle-kit)，了解如何从 CloudFlare 获取环境变量
 </Callout>
 
-#### Step 7 - Applying changes to the database
+#### 第 7 步 - 将更改应用到数据库
 
 <ApplyChanges />
 
-#### Step 8 - Seed and Query the database
+#### 第 8 步 - 填充并查询数据库
 
 ```typescript copy
 import { drizzle } from 'drizzle-orm/d1';
@@ -125,6 +125,6 @@ export default {
 };
 ```
 
-#### Step 9 - Run index.ts file
+#### 第 9 步 - 运行 index.ts 文件
 
 <RunFile/>

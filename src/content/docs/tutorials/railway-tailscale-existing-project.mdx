@@ -1,5 +1,5 @@
 ---
-title: "Add private access to Drizzle Studio, Gateway or a database on Railway with Tailscale"
+title: "使用 Tailscale 为 Railway 上的 Drizzle Studio、Gateway 或数据库添加私有访问"
 date: "2026-09-15"
 ---
 
@@ -13,37 +13,37 @@ import ExternalLinkArrows from "@mdx/ExternalLinkArrows.astro";
 
 <ExternalLinkArrows />
 
-Railway's private network is reachable only from services inside the project. To reach Drizzle Studio or Drizzle Gateway from your machine, the service needs a public domain, and a public domain is open to everyone on the internet.
+Railway 的私有网络只能从项目内部的服务访问。要从你的机器访问 Drizzle Studio 或 Drizzle Gateway，该服务需要一个公网域名，而公网域名对互联网上的所有人都开放。
 
-This guide adds a Tailscale service to a project that already runs Drizzle Studio or Drizzle Gateway. The database UI then has an address that only devices on your tailnet can open, and you can remove its public domain. The database itself can get the same private address, so that `drizzle-kit` or a [desktop database client](https://www.rubberboots.app/) on your machine connects to it while public networking stays off.
+本指南向已在运行 Drizzle Studio 或 Drizzle Gateway 的项目中添加一个 Tailscale 服务。此后数据库 UI 会拥有一个只有你 tailnet 上的设备才能打开的地址，并且你可以移除其公网域名。数据库本身也可以获得同样的私有地址，这样你机器上的 `drizzle-kit` 或[桌面数据库客户端](https://www.rubberboots.app/)就能连接到它，同时公共网络保持关闭。
 
 <Callout type="info" highlighted>
-If you didn't deploy Drizzle Studio or Gateway yet, follow [Deploy Drizzle Studio or Gateway on Railway with private access over Tailscale](/docs/tutorials/railway-studio-tailscale).
+如果你还没有部署 Drizzle Studio 或 Gateway，请遵循 [Deploy Drizzle Studio or Gateway on Railway with private access over Tailscale](/docs/tutorials/railway-studio-tailscale)。
 </Callout>
 
 <Prerequisites title="This guide assumes the following:">
-  - Your project runs a service named `Drizzle Studio` or `Drizzle Gateway`.
+  - 你的项目运行着名为 `Drizzle Studio` 或 `Drizzle Gateway` 的服务。
 
-  - You have a [Tailscale](https://tailscale.com/) account.
+  - 你拥有一个 [Tailscale](https://tailscale.com/) 账户。
 
-  - You have the Tailscale client installed on the machine you work from, and that machine is signed in to your tailnet. You can find the downloads on the [Tailscale website](https://tailscale.com/download).
+  - 你在工作所用的机器上安装了 Tailscale 客户端，并且该机器已登录到你的 tailnet。你可以在 [Tailscale 网站](https://tailscale.com/download)上找到下载链接。
 
-  - MagicDNS is on in your tailnet, because the address and the machine name depend on it. Tailnets created on or after 2022-10-20 have it on by default. If your tailnet is older, check the [DNS page](https://login.tailscale.com/admin/dns).
+  - 你的 tailnet 已开启 MagicDNS，因为地址和机器名都依赖它。2022-10-20 及之后创建的 tailnet 默认已开启。如果你的 tailnet 更早，请查看 [DNS 页面](https://login.tailscale.com/admin/dns)。
 </Prerequisites>
 
-## Add the Tailscale service
+## 添加 Tailscale 服务
 
-Pick the tab for your database UI.
+选择与你的数据库 UI 对应的标签页。
 
 <Tabs items={['Drizzle Studio', 'Drizzle Gateway']}>
 <Tab>
 
 <Steps>
-#### Open the template
+#### 打开模板
 
-Press the button below to open the Tailscale for Drizzle template.
+点击下面的按钮打开 Tailscale for Drizzle 模板。
 
-**Don't deploy it right away.** Set the variables first.
+**不要立即部署。** 先设置变量。
 
 <a
   href="https://railway.com/new/template/tailscale-for-drizzle?referralCode=eobqmj&utm_medium=integration&utm_source=button&utm_campaign=tailscale-for-drizzle"
@@ -54,39 +54,39 @@ Press the button below to open the Tailscale for Drizzle template.
   <img src="https://railway.com/button.svg" alt="Deploy on Railway" width="183" height="40" />
 </a>
 
-Open the `Deploy to` dropdown and select the project that holds your Drizzle Studio service.
+打开 `Deploy to` 下拉菜单，选择承载你 Drizzle Studio 服务的项目。
 
-![Tailscale for Drizzle deploy form with TS_FORWARD_BROWSER set to a reference to the Drizzle Studio service](@/assets/images/tutorials/railway-tailscale-sidecar-studio-form.png)
+![Tailscale for Drizzle 部署表单，TS_FORWARD_BROWSER 已设置为指向 Drizzle Studio 服务的引用](@/assets/images/tutorials/railway-tailscale-sidecar-studio-form.png)
 
-#### Set the variables
+#### 设置变量
 
 <TableWrapper>
 
 | Variable | What to set |
 | --- | --- |
-| `TS_FORWARD_BROWSER` | The field is empty. Pick `RAILWAY_PRIVATE_DOMAIN` of your Studio service from the list. The field then reads `${{"Drizzle Studio".RAILWAY_PRIVATE_DOMAIN}}`. |
-| `TS_FORWARD_DATABASE` | Optional. If you also want to reach the database itself from your tailnet, for example with `drizzle-kit`, pick `RAILWAY_PRIVATE_DOMAIN` of your database service from the list. Port 5432 on the machine then forwards to your database over Railway's private network. You can also set it later on the Tailscale service's `Variables` tab. |
-| `TS_HOSTNAME` | Change it to `drizzle-studio`, or pick another name for the machine |
+| `TS_FORWARD_BROWSER` | 该字段为空。从列表中选择你的 Studio 服务的 `RAILWAY_PRIVATE_DOMAIN`。字段随后会显示 `${{"Drizzle Studio".RAILWAY_PRIVATE_DOMAIN}}`。 |
+| `TS_FORWARD_DATABASE` | 可选。如果你还想从 tailnet 访问数据库本身（例如使用 `drizzle-kit`），从列表中选择数据库服务的 `RAILWAY_PRIVATE_DOMAIN`。机器上的 5432 端口随后会通过 Railway 的私有网络转发到你的数据库。你也可以稍后在 Tailscale 服务的 `Variables` 标签页中设置它。 |
+| `TS_HOSTNAME` | 将其改为 `drizzle-studio`，或为该机器选择另一个名称 |
 
 </TableWrapper>
 
-Some variables, such as `TS_HOSTNAME`, are in the collapsed `Pre-Configured Environment Variables` section of the card. Expand it to see or change them.
+某些变量（例如 `TS_HOSTNAME`）位于卡片中折叠的 `Pre-Configured Environment Variables` 部分。展开它即可查看或修改它们。
 
-#### Deploy the template
+#### 部署模板
 
-On the service card, click `Save Config`. Then click `Review and deploy`. Railway opens your project with the template in a side panel. Click `Deploy Template` there.
+在服务卡片上，点击 `Save Config`。然后点击 `Review and deploy`。Railway 会在侧边面板中打开带有该模板的项目。在那里点击 `Deploy Template`。
 
-#### Remove the public domain
+#### 移除公共域名
 
-This step is optional. Without it, the database UI stays reachable on its public domain as well as on your tailnet.
+此步骤是可选的。不做这一步，数据库 UI 仍会同时通过其公网域名和你的 tailnet 可访问。
 
-Go to the `Settings` tab of the Drizzle Studio service and find the `Networking` section. If Railway generated a public domain, remove it. Keep the private domain.
+进入 Drizzle Studio 服务的 `Settings` 标签页，找到 `Networking` 部分。如果 Railway 生成了公网域名，将其删除。保留私有域名。
 
-![Drizzle Studio Settings tab with the delete button of the public domain marked](@/assets/images/tutorials/railway-drizzle-studio-remove-public-domain.png)
+![Drizzle Studio 的 Settings 标签页，已标出公网域名的删除按钮](@/assets/images/tutorials/railway-drizzle-studio-remove-public-domain.png)
 
-#### Sign in from the deploy log
+#### 从部署日志登录
 
-Open the `Tailscale` service, then its `Deployments` tab, and read the deploy log. The last lines of the log hold a sign-in link:
+打开 `Tailscale` 服务，然后打开其 `Deployments` 标签页，阅读部署日志。日志的最后几行包含一个登录链接：
 
 ```plaintext
 This service is not on your tailnet yet. Open this link and sign in
@@ -94,15 +94,15 @@ with the account that owns your tailnet:
   https://login.tailscale.com/a/xxxxxxxxxxxx
 ```
 
-Open the link and sign in. Anyone who opens that link first gets this machine on their tailnet, so do not forward it. The log is visible only to members of your Railway project.
+打开该链接并登录。先打开该链接的人会把这台机器加入其 tailnet，因此不要转发它。该日志只对你的 Railway 项目成员可见。
 
-![Tailscale deploy log with the sign-in message and a hidden link](@/assets/images/tutorials/railway-tailscale-signin-log.png)
+![Tailscale 部署日志，含登录消息和一个隐藏链接](@/assets/images/tutorials/railway-tailscale-signin-log.png)
 
-If your tailnet requires device approval, the log says so and the machine waits until you approve it on the [Machines page](https://login.tailscale.com/admin/machines).
+如果你的 tailnet 需要设备审批，日志会说明这一点，机器会等待你在 [Machines 页面](https://login.tailscale.com/admin/machines)上批准它。
 
-#### Read the address from the deploy log
+#### 从部署日志读取地址
 
-A few seconds after you sign in, the same log prints where to go:
+登录几秒后，同一日志会打印访问地址：
 
 ```plaintext
 joined tailnet: example.com
@@ -110,36 +110,36 @@ joined tailnet: example.com
 open https://drizzle-studio.example-com.ts.net from any device on your tailnet
 ```
 
-![Tailscale deploy log with the joined tailnet, open and 4983 ready lines](@/assets/images/tutorials/railway-tailscale-open-log.png)
+![Tailscale 部署日志，含 joined tailnet、open 和 4983 ready 这些行](@/assets/images/tutorials/railway-tailscale-open-log.png)
 
-Check that the tailnet name is yours. If it is not, someone else opened the sign-in link first, and their tailnet can now reach this service. To take the service back:
+检查 tailnet 名称是否是你的。如果不是，说明别人先打开了登录链接，其 tailnet 现在可以访问该服务。要收回该服务：
 
-1. On the project canvas, click the volume under the Tailscale service, open its `Settings` tab, and click `Wipe volume`.
-2. Type the confirmation text and click `Wipe`. Railway deletes the machine's key and redeploys the service.
-3. Open the sign-in link from the new deploy log yourself.
-4. Change `PASSCODE` on your Drizzle Studio service. If you set `TS_FORWARD_DATABASE`, also change the database user's password.
+1. 在项目画布上，点击 Tailscale 服务下的卷，打开其 `Settings` 标签页，然后点击 `Wipe volume`。
+2. 输入确认文本并点击 `Wipe`。Railway 会删除该机器的密钥并重新部署服务。
+3. 你自己从新的部署日志中打开登录链接。
+4. 修改你的 Drizzle Studio 服务上的 `PASSCODE`。如果你设置了 `TS_FORWARD_DATABASE`，还需修改数据库用户的密码。
 
-If your tailnet already has a machine with that name, the machine name ends in `-1`, `-2` and so on. Use the address the log prints.
+如果你的 tailnet 已有一台同名的机器，机器名会以 `-1`、`-2` 等结尾。请使用日志打印的地址。
 
-If HTTPS certificates are off in your tailnet, the address starts with `http://` and ends in `:4983` instead.
+如果你的 tailnet 关闭了 HTTPS 证书，地址会改为以 `http://` 开头并以 `:4983` 结尾。
 
-If you set `TS_FORWARD_DATABASE`, the log also prints `5432: ready`.
+如果你设置了 `TS_FORWARD_DATABASE`，日志还会打印 `5432: ready`。
 
-#### Open Drizzle Studio
+#### 打开 Drizzle Studio
 
-Open that address in your web browser. On the first `https://` visit, the Tailscale service still fetches its certificate, so the page can fail or load slowly for about two minutes. If that happens, reload the page.
+在 Web 浏览器中打开该地址。首次以 `https://` 访问时，Tailscale 服务仍在获取其证书，因此页面可能会失败或在大约两分钟内加载缓慢。如果发生这种情况，请重新加载页面。
 
-Drizzle Studio asks for a passcode on first use.
+Drizzle Studio 在首次使用时会要求输入口令。
 
-![Drizzle Studio passcode prompt with a hint to check PASSCODE in Railway container variables](@/assets/images/tutorials/railway-drizzle-studio-passcode-request.png)
+![Drizzle Studio 口令提示，带有一个提示：查看 Railway 容器变量中的 PASSCODE](@/assets/images/tutorials/railway-drizzle-studio-passcode-request.png)
 
-Open your Drizzle Studio service in Railway, go to the `Variables` tab, and copy the value of `PASSCODE`. Paste it into the prompt.
+在 Railway 中打开你的 Drizzle Studio 服务，进入 `Variables` 标签页，复制 `PASSCODE` 的值。将其粘贴到提示框中。
 
-#### Check the connection
+#### 检查连接
 
-Drizzle Studio opens on the database from `DATABASE_URL`, as it did on the public domain.
+Drizzle Studio 会打开 `DATABASE_URL` 所指向的数据库，就像它此前通过公网域名所做的那样。
 
-![Drizzle Studio on the tailnet with the posts table open](@/assets/images/tutorials/drizzle-studio-on-tailnet.png)
+![tailnet 上的 Drizzle Studio，已打开 posts 表](@/assets/images/tutorials/drizzle-studio-on-tailnet.png)
 
 </Steps>
 
@@ -147,11 +147,11 @@ Drizzle Studio opens on the database from `DATABASE_URL`, as it did on the publi
 <Tab>
 
 <Steps>
-#### Open the template
+#### 打开模板
 
-Press the button below to open the Tailscale for Drizzle template.
+点击下面的按钮打开 Tailscale for Drizzle 模板。
 
-**Don't deploy it right away.** Set the variables first.
+**不要立即部署。** 先设置变量。
 
 <a
   href="https://railway.com/new/template/tailscale-for-drizzle?referralCode=eobqmj&utm_medium=integration&utm_source=button&utm_campaign=tailscale-for-drizzle"
@@ -162,39 +162,39 @@ Press the button below to open the Tailscale for Drizzle template.
   <img src="https://railway.com/button.svg" alt="Deploy on Railway" width="183" height="40" />
 </a>
 
-Open the `Deploy to` dropdown and select the project that holds your Drizzle Gateway service.
+打开 `Deploy to` 下拉菜单，选择承载你 Drizzle Gateway 服务的项目。
 
-![Tailscale for Drizzle deploy form with TS_FORWARD_BROWSER set to a reference to the Drizzle Gateway service](@/assets/images/tutorials/railway-tailscale-sidecar-gateway-form.png)
+![Tailscale for Drizzle 部署表单，TS_FORWARD_BROWSER 已设置为指向 Drizzle Gateway 服务的引用](@/assets/images/tutorials/railway-tailscale-sidecar-gateway-form.png)
 
-#### Set the variables
+#### 设置变量
 
 <TableWrapper>
 
 | Variable | What to set |
 | --- | --- |
-| `TS_FORWARD_BROWSER` | The field is empty. Pick `RAILWAY_PRIVATE_DOMAIN` of your Gateway service from the list. The field then reads `${{"Drizzle Gateway".RAILWAY_PRIVATE_DOMAIN}}`. |
-| `TS_FORWARD_DATABASE` | Optional. If you also want to reach the database itself from your tailnet, for example with `drizzle-kit`, pick `RAILWAY_PRIVATE_DOMAIN` of your database service from the list. Port 5432 on the machine then forwards to your database over Railway's private network. You can also set it later on the Tailscale service's `Variables` tab. |
-| `TS_HOSTNAME` | Change it to `drizzle-gateway`, or pick another name for the machine |
+| `TS_FORWARD_BROWSER` | 该字段为空。从列表中选择你的 Gateway 服务的 `RAILWAY_PRIVATE_DOMAIN`。字段随后会显示 `${{"Drizzle Gateway".RAILWAY_PRIVATE_DOMAIN}}`。 |
+| `TS_FORWARD_DATABASE` | 可选。如果你还想从 tailnet 访问数据库本身（例如使用 `drizzle-kit`），从列表中选择数据库服务的 `RAILWAY_PRIVATE_DOMAIN`。机器上的 5432 端口随后会通过 Railway 的私有网络转发到你的数据库。你也可以稍后在 Tailscale 服务的 `Variables` 标签页中设置它。 |
+| `TS_HOSTNAME` | 将其改为 `drizzle-gateway`，或为该机器选择另一个名称 |
 
 </TableWrapper>
 
-Some variables, such as `TS_HOSTNAME`, are in the collapsed `Pre-Configured Environment Variables` section of the card. Expand it to see or change them.
+某些变量（例如 `TS_HOSTNAME`）位于卡片中折叠的 `Pre-Configured Environment Variables` 部分。展开它即可查看或修改它们。
 
-#### Deploy the template
+#### 部署模板
 
-On the service card, click `Save Config`. Then click `Review and deploy`. Railway opens your project with the template in a side panel. Click `Deploy Template` there.
+在服务卡片上，点击 `Save Config`。然后点击 `Review and deploy`。Railway 会在侧边面板中打开带有该模板的项目。在那里点击 `Deploy Template`。
 
-#### Remove the public domain
+#### 移除公共域名
 
-This step is optional. Without it, the database UI stays reachable on its public domain as well as on your tailnet.
+此步骤是可选的。不做这一步，数据库 UI 仍会同时通过其公网域名和你的 tailnet 可访问。
 
-Go to the `Settings` tab of the Drizzle Gateway service and find the `Networking` section. If Railway generated a public domain, remove it. Keep the private domain.
+进入 Drizzle Gateway 服务的 `Settings` 标签页，找到 `Networking` 部分。如果 Railway 生成了公网域名，将其删除。保留私有域名。
 
-![Drizzle Gateway Settings tab with the delete button of the public domain marked](@/assets/images/tutorials/railway-drizzle-gateway-networking.png)
+![Drizzle Gateway 的 Settings 标签页，已标出公网域名的删除按钮](@/assets/images/tutorials/railway-drizzle-gateway-networking.png)
 
-#### Sign in from the deploy log
+#### 从部署日志登录
 
-Open the `Tailscale` service, then its `Deployments` tab, and read the deploy log. The last lines of the log hold a sign-in link:
+打开 `Tailscale` 服务，然后打开其 `Deployments` 标签页，阅读部署日志。日志的最后几行包含一个登录链接：
 
 ```plaintext
 This service is not on your tailnet yet. Open this link and sign in
@@ -202,15 +202,15 @@ with the account that owns your tailnet:
   https://login.tailscale.com/a/xxxxxxxxxxxx
 ```
 
-Open the link and sign in. Anyone who opens that link first gets this machine on their tailnet, so do not forward it. The log is visible only to members of your Railway project.
+打开该链接并登录。先打开该链接的人会把这台机器加入其 tailnet，因此不要转发它。该日志只对你的 Railway 项目成员可见。
 
-![Tailscale deploy log with the sign-in message and a hidden link](@/assets/images/tutorials/railway-tailscale-signin-log.png)
+![Tailscale 部署日志，含登录消息和一个隐藏链接](@/assets/images/tutorials/railway-tailscale-signin-log.png)
 
-If your tailnet requires device approval, the log says so and the machine waits until you approve it on the [Machines page](https://login.tailscale.com/admin/machines).
+如果你的 tailnet 需要设备审批，日志会说明这一点，机器会等待你在 [Machines 页面](https://login.tailscale.com/admin/machines)上批准它。
 
-#### Read the address from the deploy log
+#### 从部署日志读取地址
 
-A few seconds after you sign in, the same log prints where to go:
+登录几秒后，同一日志会打印访问地址：
 
 ```plaintext
 joined tailnet: example.com
@@ -218,138 +218,138 @@ joined tailnet: example.com
 open https://drizzle-gateway.example-com.ts.net from any device on your tailnet
 ```
 
-![Tailscale deploy log with the joined tailnet, open and 4983 ready lines](@/assets/images/tutorials/railway-tailscale-open-log.png)
+![Tailscale 部署日志，含 joined tailnet、open 和 4983 ready 这些行](@/assets/images/tutorials/railway-tailscale-open-log.png)
 
-Check that the tailnet name is yours. If it is not, someone else opened the sign-in link first, and their tailnet can now reach this service. To take the service back:
+检查 tailnet 名称是否是你的。如果不是，说明别人先打开了登录链接，其 tailnet 现在可以访问该服务。要收回该服务：
 
-1. On the project canvas, click the volume under the Tailscale service, open its `Settings` tab, and click `Wipe volume`.
-2. Type the confirmation text and click `Wipe`. Railway deletes the machine's key and redeploys the service.
-3. Open the sign-in link from the new deploy log yourself.
-4. Change `MASTERPASS` on your Drizzle Gateway service. If you set `TS_FORWARD_DATABASE`, also change the database user's password.
+1. 在项目画布上，点击 Tailscale 服务下的卷，打开其 `Settings` 标签页，然后点击 `Wipe volume`。
+2. 输入确认文本并点击 `Wipe`。Railway 会删除该机器的密钥并重新部署服务。
+3. 你自己从新的部署日志中打开登录链接。
+4. 修改你的 Drizzle Gateway 服务上的 `MASTERPASS`。如果你设置了 `TS_FORWARD_DATABASE`，还需修改数据库用户的密码。
 
-If your tailnet already has a machine with that name, the machine name ends in `-1`, `-2` and so on. Use the address the log prints.
+如果你的 tailnet 已有一台同名的机器，机器名会以 `-1`、`-2` 等结尾。请使用日志打印的地址。
 
-If HTTPS certificates are off in your tailnet, the address starts with `http://` and ends in `:4983` instead.
+如果你的 tailnet 关闭了 HTTPS 证书，地址会改为以 `http://` 开头并以 `:4983` 结尾。
 
-If you set `TS_FORWARD_DATABASE`, the log also prints `5432: ready`.
+如果你设置了 `TS_FORWARD_DATABASE`，日志还会打印 `5432: ready`。
 
-#### Open Drizzle Gateway
+#### 打开 Drizzle Gateway
 
-Open that address in your web browser. On the first `https://` visit, the Tailscale service still fetches its certificate, so the page can fail or load slowly for about two minutes. If that happens, reload the page.
+在 Web 浏览器中打开该地址。首次以 `https://` 访问时，Tailscale 服务仍在获取其证书，因此页面可能会失败或在大约两分钟内加载缓慢。如果发生这种情况，请重新加载页面。
 
-Drizzle Gateway asks for a passcode on first use.
+Drizzle Gateway 在首次使用时会要求输入口令。
 
-![Drizzle Gateway passcode prompt with an empty field and a Continue button](@/assets/images/tutorials/railway-drizzle-gateway-passcode.png)
+![Drizzle Gateway 口令提示，字段为空并带有一个 Continue 按钮](@/assets/images/tutorials/railway-drizzle-gateway-passcode.png)
 
-Open your Drizzle Gateway service in Railway, go to the `Variables` tab, and copy the value of `MASTERPASS`. Paste it into the prompt.
+在 Railway 中打开你的 Drizzle Gateway 服务，进入 `Variables` 标签页，复制 `MASTERPASS` 的值。将其粘贴到提示框中。
 
-#### Check the connection
+#### 检查连接
 
-Drizzle Gateway opens with the connections you saved before.
+Drizzle Gateway 会带着你之前保存的连接启动。
 
-![Drizzle Gateway on the tailnet with the Postgres connection listed](@/assets/images/tutorials/drizzle-gateway-on-tailnet.png)
+![tailnet 上的 Drizzle Gateway，已列出 Postgres 连接](@/assets/images/tutorials/drizzle-gateway-on-tailnet.png)
 
 </Steps>
 
 </Tab>
 </Tabs>
 
-## Use other ports
+## 使用其他端口
 
-By default, `TS_FORWARD_BROWSER` uses port 4983 and `TS_FORWARD_DATABASE` uses port 5432, on the machine and on the service. To use other ports, write the value in the form `[port:]host[:port]`:
+默认情况下，`TS_FORWARD_BROWSER` 使用 4983 端口，`TS_FORWARD_DATABASE` 使用 5432 端口，在机器和服务上都是如此。要使用其他端口，请按 `[port:]host[:port]` 形式书写值：
 
 <TableWrapper>
 
 | Value | Port on the machine | Port on the service |
 | --- | --- | --- |
-| `host` | The default port | The default port |
+| `host` | 默认端口 | 默认端口 |
 | `host:port` | `port` | `port` |
 | `source_port:host:target_port` | `source_port` | `target_port` |
 
 </TableWrapper>
 
-For example, `5433:${{Postgres.RAILWAY_PRIVATE_DOMAIN}}:5432` forwards port 5433 on the machine to port 5432 of the database service.
+例如，`5433:${{Postgres.RAILWAY_PRIVATE_DOMAIN}}:5432` 会将机器上的 5433 端口转发到数据库服务的 5432 端口。
 
-If the port on the machine for `TS_FORWARD_BROWSER` is not 4983, an `http://` address in the log ends in that port.
+如果 `TS_FORWARD_BROWSER` 在机器上的端口不是 4983，日志中的 `http://` 地址会以该端口结尾。
 
-## Disable key expiry
+## 禁用密钥过期
 
-A machine that joined by signing in has its key expire on your tailnet's schedule, 180 days by default. When that happens, the Tailscale service prints a new sign-in link and waits. The address is unreachable until you click it.
+通过登录加入的机器，其密钥会按你 tailnet 的计划过期，默认 180 天。发生这种情况时，Tailscale 服务会打印一个新的登录链接并等待。在你点击它之前，该地址无法访问。
 
-To avoid that, open the [Machines page](https://login.tailscale.com/admin/machines) once, find the machine, open the menu at the far right of its row, and choose `Disable key expiry`.
+要避免这种情况，打开 [Machines 页面](https://login.tailscale.com/admin/machines)，找到该机器，打开其行最右侧的菜单，然后选择 `Disable key expiry`。
 
-![Tailscale Machines page menu with Disable key expiry](@/assets/images/tutorials/tailscale-machines-disable-key-expiry.png)
+![Tailscale Machines 页面菜单，含 Disable key expiry](@/assets/images/tutorials/tailscale-machines-disable-key-expiry.png)
 
 <Callout type="info">
-If you automate deployments and want no sign-in at all, set `TS_AUTHKEY` on the Tailscale service:
+如果你自动化部署并且完全不希望登录，请在 Tailscale 服务上设置 `TS_AUTHKEY`：
 
-- For an auth key, set `TS_AUTHKEY` to the key.
-- For an OAuth client secret, set `TS_AUTHKEY` to the secret with `?ephemeral=false&preauthorized=true` appended. Without that suffix, Tailscale removes the machine when it disconnects, and the machine waits for approval before it joins. Also set `TS_TAGS` to a tag you own, for example `tag:drizzle`. A tagged machine never has its key expire.
+- 对于 auth key，将 `TS_AUTHKEY` 设为该密钥。
+- 对于 OAuth 客户端密钥，将 `TS_AUTHKEY` 设为该密钥并附加 `?ephemeral=false&preauthorized=true`。没有该后缀，Tailscale 会在机器断开连接时将其移除，并且机器在加入前会等待审批。同时将 `TS_TAGS` 设为你拥有的 tag，例如 `tag:drizzle`。带 tag 的机器其密钥永不过期。
 
-The Tailscale service reads `TS_AUTHKEY` only before the machine joins. If the machine has already joined, remove the machine and wipe the volume first.
+Tailscale 服务只在机器加入前读取 `TS_AUTHKEY`。如果机器已经加入，请先删除该机器并清除卷。
 </Callout>
 
-## Troubleshoot the Tailscale setup
+## 排查 Tailscale 设置问题
 
-Open the entry that matches what you see.
+展开与你的现象相符的条目。
 
 <Callout>
 <Fragment slot="collapsed-title">The log prints no `open` line</Fragment>
 
-`TS_FORWARD_BROWSER` is empty, or the Tailscale service skipped it. A reference resolves to an empty value when it names a service that was not in the project when the template deployed. A skipped variable has its own line in the log, and the next entry explains that line. Open the Tailscale service's `Variables` tab, set `TS_FORWARD_BROWSER` to `${{"Drizzle Gateway".RAILWAY_PRIVATE_DOMAIN}}` (with `"Drizzle Studio"` for Studio), and click `Deploy` in the top bar.
+`TS_FORWARD_BROWSER` 为空，或者 Tailscale 服务跳过了它。当引用指向的服务在模板部署时不在项目中，该引用会解析为空值。被跳过的变量在日志中有自己的一行，下一条目会解释该行。打开 Tailscale 服务的 `Variables` 标签页，将 `TS_FORWARD_BROWSER` 设为 `${{"Drizzle Gateway".RAILWAY_PRIVATE_DOMAIN}}`（Studio 则用 `"Drizzle Studio"`），然后点击顶部栏中的 `Deploy`。
 </Callout>
 
 <Callout>
 <Fragment slot="collapsed-title">The log prints a line that ends in `skipped`</Fragment>
 
-The line starts with the variable name, then gives the reason:
+该行以变量名开头，然后给出原因：
 
-- `does not match [port:]host[:port]`: the value has more than two colons.
-- `has an empty target host`: the value has a port but no host. A reference that names a service outside your project resolves to an empty host.
-- `still contains a Railway reference that did not resolve`: Railway did not replace the reference. Check the service name inside it.
-- `has a port outside 1-65535`: a port is not a number from 1 to 65535.
-- `reuses port`: an earlier forward already uses that port on the machine.
-- `uses port 443, which the https listener owns`: pick another port on the machine. The address of the database UI already uses 443 when HTTPS certificates are on.
+- `does not match [port:]host[:port]`：值中包含多于两个冒号。
+- `has an empty target host`：值中有端口但没有主机。指向项目之外服务的引用会解析为空主机。
+- `still contains a Railway reference that did not resolve`：Railway 没有替换该引用。检查其中的服务名。
+- `has a port outside 1-65535`：某个端口不是 1 到 65535 之间的数字。
+- `reuses port`：先前的某个转发已经在机器上使用了该端口。
+- `uses port 443, which the https listener owns`：在机器上选择另一个端口。当 HTTPS 证书开启时，数据库 UI 的地址已经使用了 443。
 
-Fix the value on the Tailscale service's `Variables` tab and click `Deploy` in the top bar.
+在 Tailscale 服务的 `Variables` 标签页上修复该值，然后点击顶部栏中的 `Deploy`。
 </Callout>
 
 <Callout>
 <Fragment slot="collapsed-title">A new sign-in link appeared in the log</Fragment>
 
-The service restarted, for example after the key expired or the machine was removed. Open the newest link. The link works once.
+服务重启了，例如在密钥过期或机器被移除之后。打开最新的链接。该链接只能使用一次。
 </Callout>
 
 <Callout>
 <Fragment slot="collapsed-title">The log says the machine is waiting for approval</Fragment>
 
-Your tailnet has device approval turned on. Open the [Machines page](https://login.tailscale.com/admin/machines) and approve it.
+你的 tailnet 开启了设备审批。打开 [Machines 页面](https://login.tailscale.com/admin/machines)并批准它。
 </Callout>
 
 <Callout>
 <Fragment slot="collapsed-title">The address does not open</Fragment>
 
-Check these causes in order:
+按顺序检查以下原因：
 
-- Your device is signed in to another tailnet. Run `tailscale status` on your device and compare its tailnet with the one the log named.
-- The log printed an `http://` address. Use that exact address with the port, because `https://` works only when HTTPS certificates are on in your tailnet.
-- The Tailscale service is still fetching its certificate on the first `https://` visit. Wait about two minutes and reload the page.
-- MagicDNS is off, so the address does not resolve. Enable MagicDNS on the [DNS page](https://login.tailscale.com/admin/dns).
+- 你的设备登录到了另一个 tailnet。在你的设备上运行 `tailscale status`，并将其 tailnet 与日志中提到的 tailnet 进行比较。
+- 日志打印的是 `http://` 地址。请使用该确切地址并带上端口，因为只有当你的 tailnet 启用了 HTTPS 证书时 `https://` 才可用。
+- Tailscale 服务在首次 `https://` 访问时仍在获取其证书。等待大约两分钟并重新加载页面。
+- MagicDNS 已关闭，因此地址无法解析。在 [DNS 页面](https://login.tailscale.com/admin/dns)上启用 MagicDNS。
 </Callout>
 
 <Callout>
 <Fragment slot="collapsed-title">It worked for months and then stopped</Fragment>
 
-The machine's key expired. Open the Tailscale service's deploy log; it is printing a fresh sign-in link. Click it, then disable key expiry on the machine so it does not happen again.
+该机器的密钥过期了。打开 Tailscale 服务的部署日志；它正在打印一个新的登录链接。点击它，然后对该机器禁用密钥过期，以免再次发生。
 </Callout>
 
 <Callout>
 <Fragment slot="collapsed-title">The machine name gained a `-1` suffix</Fragment>
 
-Your tailnet already had a machine with this name, for example from an earlier deploy. Tailscale keeps the suffix. If you want the short name, rename the machine on the Machines page. Otherwise, use the address the log prints.
+你的 tailnet 已有一台使用此名称的机器，例如来自早先的某次部署。Tailscale 会保留该后缀。如果你想要短名称，请在 Machines 页面上重命名该机器。否则，请使用日志打印的地址。
 </Callout>
 
-## Next steps
+## 后续步骤
 
-- If you set `TS_FORWARD_DATABASE`, [connect Drizzle Kit to the database](/docs/tutorials/railway-postgres-tailscale) to run migrations over your tailnet.
-- [Drizzle migrations fundamentals](/docs/migrations) to choose how to apply schema changes.
+- 如果你设置了 `TS_FORWARD_DATABASE`，请[将 Drizzle Kit 连接到数据库](/docs/tutorials/railway-postgres-tailscale)，以通过你的 tailnet 运行迁移。
+- [Drizzle migrations fundamentals](/docs/migrations) 以选择如何应用 schema 变更。

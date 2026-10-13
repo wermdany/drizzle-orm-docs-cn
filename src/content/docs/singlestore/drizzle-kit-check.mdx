@@ -12,27 +12,27 @@ import Npx from "@mdx/Npx.astro";
 # `drizzle-kit check`
 
 <Prerequisites>
-- Get started with Drizzle and `drizzle-kit` - [read here](/docs/singlestore/get-started)
-- Drizzle schema fundamentals - [read here](/docs/singlestore/sql-schema-declaration)
-- Database connection basics - [read here](/docs/singlestore/connect-overview)
-- Drizzle migrations fundamentals - [read here](/docs/singlestore/migrations)
-- Drizzle Kit [overview](/docs/singlestore/kit-overview) and [config file](/docs/singlestore/drizzle-config-file)
-- `drizzle-kit generate` command - [read here](/docs/singlestore/drizzle-kit-generate)
+- 开始使用 Drizzle 和 `drizzle-kit` - [在此阅读](/docs/singlestore/get-started)
+- Drizzle schema 基础知识 - [在此阅读](/docs/singlestore/sql-schema-declaration)
+- 数据库连接基础 - [在此阅读](/docs/singlestore/connect-overview)
+- Drizzle 迁移基础知识 - [在此阅读](/docs/singlestore/migrations)
+- Drizzle Kit [概览](/docs/singlestore/kit-overview) 和 [配置文件](/docs/singlestore/drizzle-config-file)
+- `drizzle-kit generate` 命令 - [在此阅读](/docs/singlestore/drizzle-kit-generate)
 </Prerequisites>
 
-`drizzle-kit check` command lets you check consistency of your generated SQL migrations history.
+`drizzle-kit check` 命令让你可以检查已生成的 SQL 迁移历史的一致性。
 
-That's extremely useful when you have multiple developers working on the project and 
-altering database schema on different branches - read more about [migrations for teams](/docs/singlestore/kit-migrations-for-teams).
+当你有多个开发者在同一项目上工作，并在不同的分支上修改数据库 schema 时，
+这非常有用 - 阅读更多关于[团队迁移](/docs/singlestore/kit-migrations-for-teams)的内容。
 
 <br/>
 <hr/>
 <br/>
 
-`drizzle-kit check` command requires you to specify both `dialect` and database connection credentials, 
-you can provide them either via [drizzle.config.ts](/docs/singlestore/drizzle-config-file) config file or via CLI options
+`drizzle-kit check` 命令要求你同时指定 `dialect` 和数据库连接凭证，
+你可以通过 [drizzle.config.ts](/docs/singlestore/drizzle-config-file) 配置文件或 CLI 选项来提供它们
 
-<CodeTabs items={["With config file", "As CLI options"]}>
+<CodeTabs items={["使用配置文件", "作为 CLI 选项"]}>
 <Section>
 ```ts {5,8}
 // drizzle.config.ts
@@ -51,8 +51,8 @@ npx drizzle-kit check --dialect=singlestore
 ```
 </CodeTabs>
 
-### Multiple configuration files in one project
-You can have multiple config files in the project, it's very useful when you have multiple database stages or multiple databases on the same project:
+### 一个项目中的多个配置文件
+你可以在项目中拥有多个配置文件，当你有多个数据库阶段或多个数据库在同一项目中时，这非常有用：
 <Npx>
   drizzle-kit check --config=drizzle-dev.config.ts
   drizzle-kit check --config=drizzle-prod.config.ts
@@ -68,15 +68,15 @@ You can have multiple config files in the project, it's very useful when you hav
  └ 📜 tsconfig.json
 ```
 
-### Extended list of configurations
-We recommend configuring `drizzle-kit` through [drizzle.config.ts](/docs/singlestore/drizzle-config-file) file, 
-yet you can provide all configuration options through CLI if necessary, e.g. in CI/CD pipelines, etc.
+### 扩展的配置列表
+我们建议通过 [drizzle.config.ts](/docs/singlestore/drizzle-config-file) 文件来配置 `drizzle-kit`，
+但如果需要，你也可以通过 CLI 提供所有配置选项，例如在 CI/CD 流水线中等。
 <rem025/>
 |           |            |                                                                         |
 | :-------- | :--------- | :---------------------------------------------------------------------- |
-| `dialect` | `required` | Database dialect you are using. Can be `postgresql`, `mysql`, `sqlite`, or `singlestore` |
-| `out`     |            | Migrations folder, default=`./drizzle`                                  |
-| `config`  |            | Configuration file path, default=`drizzle.config.ts`                           |
+| `dialect` | `required` | 你正在使用的数据库方言。可以是 `postgresql`、`mysql`、`sqlite` 或 `singlestore` |
+| `out`     |            | 迁移文件夹，默认=`./drizzle`                                  |
+| `config`  |            | 配置文件路径，默认=`drizzle.config.ts`                           |
 <br/>
 <Npx>
 drizzle-kit check --dialect=singlestore

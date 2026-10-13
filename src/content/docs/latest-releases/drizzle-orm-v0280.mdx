@@ -1,15 +1,15 @@
 ---
-title: DrizzleORM v0.28.0 release
+title: DrizzleORM v0.28.0 发布
 pubDate: 2023-08-06
-description: Removed support for filtering by nested relations, Added Relational Queries mode config for mysql2 driver, improved IntelliSense performance for large schemas, improved Relational Queries Permormance and Read Usage. Added possibility to insert rows with default values for all columns.
+description: 移除了对嵌套关系过滤的支持，为 mysql2 驱动添加了 Relational Queries 模式配置，改进了大型 schema 下的 IntelliSense 性能，改进了 Relational Queries 的性能和读取用法。新增了为所有列插入默认值行的能力。
 ---
 import Section from "@mdx/Section.astro";
 
-## Breaking changes
+## 破坏性变更
 
-### Removed support for filtering by nested relations
+### 移除了按嵌套关系过滤的支持
 
-Current example won't work in `0.28.0`:
+当前示例在 `0.28.0` 中将不再生效：
 
 ```ts
 const usersWithPosts = await db.query.users.findMany({
@@ -20,21 +20,21 @@ const usersWithPosts = await db.query.users.findMany({
 });
 ```
 
-The `table` object in the `where` callback won't have fields from `with` and `extras`. We removed them to be able to build more efficient relational queries, which improved row reads and performance.
+`where` 回调中的 `table` 对象将不再包含来自 `with` 和 `extras` 的字段。我们移除了它们，以便构建更高效的关系查询，从而改进行读取和性能。
 
-If you have used those fields in the `where` callback before, there are several workarounds:
+如果你之前曾在 `where` 回调中使用过这些字段，有几种变通方法：
 
-1. Applying those filters manually on the code level after the rows are fetched;
-2. Using the core API.
+1. 在获取到行之后，在代码层面手动应用这些过滤器；
+2. 使用核心 API。
 
-### Added Relational Queries `mode` config for `mysql2` driver
+### 为 `mysql2` 驱动添加了 Relational Queries `mode` 配置
 
-Drizzle relational queries always generate exactly one SQL statement to run on the database and it has certain caveats. To have best in class support for every database out there we've introduced modes.
+Drizzle 关系查询总是生成恰好一条要在数据库上执行的 SQL 语句，这有其特定的注意事项。为了针对市面上各种数据库提供一流的支持，我们引入了模式（modes）。
 
-Drizzle relational queries use lateral joins of subqueries under the hood and for now PlanetScale does not support them.
+Drizzle 关系查询在底层使用子查询的 lateral join，而目前 PlanetScale 不支持它们。
 
-When using `mysql2` driver with regular MySQL database - you should specify mode: "default".
-When using `mysql2` driver with PlanetScale - you need to specify mode: "planetscale".
+当将 `mysql2` 驱动与常规 MySQL 数据库一起使用时——你应该指定 mode: "default"。
+当将 `mysql2` 驱动与 PlanetScale 一起使用时——你需要指定 mode: "planetscale"。
 
 ```ts copy {9}
 import { drizzle } from 'drizzle-orm/mysql2';
@@ -48,25 +48,25 @@ const client = await mysql.createConnection({
 const db = drizzle({ client, schema, mode: 'planetscale' });
 ```
 
-## Improved IntelliSense performance for large schemas
+## 提升了大型 schema 的 IntelliSense 性能
 
-We've run the diagnostics on a database schema with 85 tables, 666 columns, 26 enums, 172 indexes and 133 foreign keys. We've optimized internal types which resulted in **430%** speed up in IntelliSense.
+我们在一个包含 85 张表、666 个列、26 个枚举、172 个索引和 133 个外键的数据库 schema 上运行了诊断。我们优化了内部类型，使 IntelliSense 的速度提升了 **430%**。
 
-## Improved Relational Queries Permormance and Read Usage
+## 提升了 Relational Queries 的性能与读取用法
 
-In this release we've fully changed a way query is generated for Relational Queri API.
+在此版本中，我们彻底改变了为 Relational Query API 生成查询的方式。
 
-As a summary we've made current set of changes in query generation startegy:
+总结起来，我们在查询生成策略上做了以下一组改动：
 
-1. Lateral Joins: In the new version we're utilizing lateral joins, denoted by the "LEFT JOIN LATERAL" clauses, to retrieve specific data from related tables efficiently For MySQL in PlanetScale and SQLite, we've used simple subquery selects, which improved a query plan and overall performance
+1. Lateral Joins：在新版本中，我们利用由 "LEFT JOIN LATERAL" 子句表示的 lateral join，来高效地从相关表中检索特定数据。对于 PlanetScale 中的 MySQL 和 SQLite，我们使用了简单的子查询 select，这改进了查询计划和整体性能
 
-2. Selective Data Retrieval: In the new version we're retrieving only the necessary data from tables. This targeted data retrieval reduces the amount of unnecessary information fetched, resulting in a smaller dataset to process and faster execution.
+2. Selective Data Retrieval：在新版本中，我们只从表中检索必要的数据。这种有针对性的数据检索减少了获取的不必要信息量，从而得到更小的数据集进行处理，并加快执行速度。
 
-3. Reduced Aggregations: In the new version we've reduced the number of aggregation functions (e.g., COUNT, json_agg). By using json_build_array directly within the lateral joins, drizzle is aggregating the data in a more streamlined manner, leading to improved query performance.
+3. Reduced Aggregations：在新版本中，我们减少了聚合函数（例如 COUNT、json_agg）的数量。通过在 lateral join 中直接使用 json_build_array，drizzle 以更精简的方式聚合数据，从而改进了查询性能。
 
-4. Simplified Grouping: In the new version the GROUP BY clause is removed, as the lateral joins and subqueries already handle data aggregation more efficiently.
+4. Simplified Grouping：在新版本中，移除了 GROUP BY 子句，因为 lateral join 和子查询已经能更高效地处理数据聚合。
 
-For this drizzle query
+对于这个 drizzle 查询
 
 <Section>
 ```ts copy
@@ -90,7 +90,7 @@ const items = await db.query.comments.findMany({
 ```
 
 ```sql
--- Query generated now
+-- 现在生成的查询
 select "comments"."id",
        "comments"."user_id",
        "comments"."post_id",
@@ -119,7 +119,7 @@ limit 1
 ```
 
 ```sql
--- Query generated before
+-- 之前生成的查询
 SELECT "id",
        "user_id",
        "post_id",
@@ -168,16 +168,16 @@ LIMIT 1
 ```
 </Section>
 
-Read more about [Relational Queries](/docs/rqb) in the documentation.
+在文档中阅读更多关于 [关系查询](/docs/rqb) 的内容。
 
-## Possibility to insert rows with default values for all columns
+## 支持为所有列插入带有默认值的行
 
-You can now provide an empty object or an array of empty objects, and Drizzle will insert all defaults into the database.
+你现在可以提供一个空对象或空对象数组，Drizzle 会将所有默认值插入数据库。
 
 ```ts copy {2,5}
-// Insert 1 row with all defaults
+// 插入 1 行，全部使用默认值
 await db.insert(usersTable).values({});
 
-// Insert 2 rows with all defaults
+// 插入 2 行，全部使用默认值
 await db.insert(usersTable).values([{}, {}]);
 ```

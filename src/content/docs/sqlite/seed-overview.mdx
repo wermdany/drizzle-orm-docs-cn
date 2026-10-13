@@ -7,39 +7,39 @@ import Section from "@mdx/Section.astro";
 
 # Drizzle Seed
 
-`drizzle-seed` is a TypeScript library that helps you generate deterministic, yet realistic,
-fake data to populate your database. By leveraging a seedable pseudorandom number generator (pRNG),
-it ensures that the data you generate is consistent and reproducible across different runs.
-This is especially useful for testing, development, and debugging purposes.
+`drizzle-seed` 是一个 TypeScript 库，帮助你生成确定性的、同时又足够真实的
+假数据来填充数据库。通过利用可设定种子的伪随机数生成器（pRNG），
+它确保你生成的数据在不同运行之间保持一致且可复现。
+这在测试、开发和调试场景中特别有用。
 
-#### What is Deterministic Data Generation?
+#### 什么是确定性数据生成？
 
-Deterministic data generation means that the same input will always produce the same output.
-In the context of `drizzle-seed`, when you initialize the library with the same seed number,
-it will generate the same sequence of fake data every time. This allows for predictable and repeatable data sets.
+确定性数据生成意味着相同的输入总是产生相同的输出。
+在 `drizzle-seed` 的语境下，当你用相同的种子数字初始化该库时，
+它每次都会生成相同序列的假数据。这使数据集可预测且可重复。
 
-#### Pseudorandom Number Generator (pRNG)
+#### 伪随机数生成器（pRNG）
 
-A pseudorandom number generator is an algorithm that produces a sequence of numbers
-that approximates the properties of random numbers. However, because it's based on an initial value
-called a seed, you can control its randomness. By using the same seed, the pRNG will produce the
-same sequence of numbers, making your data generation process reproducible.
+伪随机数生成器是一种算法，它产生一个数字序列，
+以近似随机数的性质。然而，由于它基于一个称为种子的初始值，
+你可以控制它的随机性。通过使用相同的种子，pRNG 将产生
+相同的数字序列，使你的数据生成过程可复现。
 
-#### Benefits of Using a pRNG:
+#### 使用 pRNG 的好处：
 
-- Consistency: Ensures that your tests run on the same data every time.
-- Debugging: Makes it easier to reproduce and fix bugs by providing a consistent data set.
-- Collaboration: Team members can share seed numbers to work with the same data sets.
+- Consistency: 确保你的测试每次都运行在相同的数据上。
+- Debugging: 通过提供一致的数据集，更容易复现和修复 bug。
+- Collaboration: 团队成员可以共享种子数字，以使用相同的数据集。
 
-With drizzle-seed, you get the best of both worlds: the ability to generate realistic fake data and the control to reproduce it whenever needed.
+使用 drizzle-seed，你同时拥有两者的优势：既能生成真实的假数据，又能在需要时控制其复现。
 
-## Installation
+## 安装
 
 <Npm>drizzle-seed</Npm>
 
-## Basic Usage
+## 基本用法
 
-In this example we will create 10 users with random names and ids
+在这个示例中，我们将创建 10 个具有随机名字和 id 的 users
 
 ```ts {12}
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
@@ -59,12 +59,12 @@ async function main() {
 main();
 ```
 
-## Options
+## 选项
 
 **`count`**
 
-By default, the `seed` function will create 10 entities.
-However, if you need more for your tests, you can specify this in the seed options object
+默认情况下，`seed` 函数会创建 10 个实体。
+但如果你的测试需要更多，可以在 seed 选项对象中指定
 
 ```ts
 await seed(db, schema, { count: 1000 });
@@ -72,19 +72,19 @@ await seed(db, schema, { count: 1000 });
 
 **`seed`**
 
-If you need a seed to generate a different set of values for all subsequent runs, you can define a different number
-in the `seed` option. Any new number will generate a unique set of values
+如果你需要种子在所有后续运行中生成不同的值集合，可以在
+`seed` 选项中定义不同的数字。任何新的数字都会生成一组唯一的值
 
 ```ts
 await seed(db, schema, { seed: 12345 });
 ```
 
-## Reset database
+## 重置数据库
 
-With `drizzle-seed`, you can easily reset your database and seed it with new values, for example, in your test suites
+使用 `drizzle-seed`，你可以轻松重置数据库并用新值填充它，例如在你的测试套件中
 
 ```ts
-// path to a file with schema you want to reset
+// 指向你想重置的 schema 文件的路径
 import * as schema from "./schema.ts";
 import { reset } from "drizzle-seed";
 
@@ -96,9 +96,9 @@ async function main() {
 main();
 ```
 
-Different dialects will have different strategies for database resetting. For SQLite:
+不同的方言有不同的数据库重置策略。对于 SQLite：
 
-For SQLite, the `drizzle-seed` package will first disable the `foreign_keys` pragma to ensure the next step won't fail, and then generate `DELETE FROM` statements to empty the content of all tables
+对于 SQLite，`drizzle-seed` 包会先禁用 `foreign_keys` pragma 以确保下一步不会失败，然后生成 `DELETE FROM` 语句来清空所有表的内容
 
 ```sql
 PRAGMA foreign_keys = OFF;
@@ -108,21 +108,21 @@ DELETE FROM tableName2;
 PRAGMA foreign_keys = ON;
 ```
 
-## Refinements
+## 细化
 
-In case you need to change the behavior of the seed generator functions that `drizzle-seed` uses by default, you can specify your own implementation and even use your own list of values for the seeding process
+如果你需要改变 `drizzle-seed` 默认使用的 seed 生成器函数的行为，你可以指定自己的实现，甚至为填充过程使用自己的值列表
 
-`.refine` is a callback that receives a list of all available generator functions from `drizzle-seed`. It should return an object with keys representing the tables you want to refine, defining their behavior as needed. 
-Each table can specify several properties to simplify seeding your database:
+`.refine` 是一个回调，它接收 `drizzle-seed` 中所有可用生成器函数的列表。它应当返回一个对象，其键表示你想优化的表，并可按需定义它们的行为。
+每张表都可以指定若干属性来简化数据库填充：
 
 <rem025 />
 
-- `columns`: Refine the default behavior of each column by specifying the required generator function, or exclude the column from seeding by specifying `false`.
-- `count`: Specify the number of rows to insert into the database. By default, it's 10. If a global count is defined in the `seed()` options, the count defined here will override it for this specific table.
-- `with`: Define how many referenced entities to create for each parent table if you want to generate associated entities.
+- `columns`: 通过指定所需的生成器函数来优化每一列的默认行为，或者通过指定 `false` 将该列从填充中排除。
+- `count`: 指定要插入数据库的行数。默认是 10。如果在 `seed()` 选项中定义了全局 count，这里定义的 count 会针对该特定表覆盖它。
+- `with`: 如果你想生成关联实体，定义要为每张父表创建多少个被引用的实体。
 
 <Callout title='info'>
-You can also specify a weighted random distribution for the number of referenced values you want to create. For details on this API, you can refer to [Weighted Random docs](#weighted-random) docs section
+你还可以为想创建的被引用值的数量指定加权随机分布。关于此 API 的详细信息，你可以参考 [Weighted Random docs](#加权随机) 文档章节
 </Callout>
 
 **API**
@@ -138,7 +138,7 @@ await seed(db, schema).refine((f) => ({
 }));
 ```
 
-Let's check a few examples with an explanation of what will happen:
+让我们看几个示例，并解释会发生什么：
 
 ```ts filename='schema.ts'
 import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
@@ -155,7 +155,7 @@ export const posts = sqliteTable("posts", {
 });
 ```
 
-**Example 1**: Seed only the `users` table with 20 entities and with refined seed logic for the `name` column
+**示例 1**：仅填充 `users` 表，包含 20 个实体，并为 `name` 列使用优化后的 seed 逻辑
 ```ts filename='index.ts'
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { seed } from "drizzle-seed";
@@ -177,7 +177,7 @@ async function main() {
 main();
 ```
 
-**Example 2**: Seed only the `users` table, excluding the `name` column from seeding
+**示例 2**：仅填充 `users` 表，并将 `name` 列从填充中排除
 ```ts filename='index.ts'
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { seed } from "drizzle-seed";
@@ -189,7 +189,7 @@ async function main() {
   await seed(db, { users: schema.users }).refine((f) => ({
     users: {
         columns: {
-            name: false, // the name column will not be seeded, allowing the database to use its default value.
+            name: false, // name 列将不会被填充，允许数据库使用其默认值。
         }
     }
   }));
@@ -198,7 +198,7 @@ async function main() {
 main();
 ```
 
-**Example 3**: Seed the `users` table with 20 entities and add 10 `posts` for each `user` by seeding the `posts` table and creating a reference from `posts` to `users`
+**示例 3**：填充 `users` 表，包含 20 个实体，并通过填充 `posts` 表以及创建从 `posts` 到 `users` 的引用，为每个 `user` 添加 10 篇 `posts`
 ```ts filename='index.ts'
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { seed } from "drizzle-seed";
@@ -220,8 +220,8 @@ async function main() {
 main();
 ```
 
-**Example 4**: Seed the `users` table with 5 entities and populate the database with 100 `posts` without connecting them to the `users` entities. Refine `id` generation for `users` so 
-that it will give any int from `10000` to `20000` and remains unique, and refine `posts` to retrieve values from a self-defined array
+**示例 4**：填充 `users` 表，包含 5 个实体，并用 100 篇 `posts` 填充数据库，但不将它们与 `users` 实体关联。优化 `users` 的 `id` 生成，
+使其从 `10000` 到 `20000` 中取任意整数并保持唯一，同时优化 `posts` 以从自定义数组中取值
 ```ts filename='index.ts'
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { seed } from "drizzle-seed";
@@ -263,24 +263,24 @@ main();
 ```
 
 <Callout type='warning'>
-There are many more possibilities that we will define in these docs, but for now, you can explore a few sections in this documentation. Check the [Generators](/docs/sqlite/seed-functions) section to get familiar with all the available generator functions you can use.
+这些文档中还会定义更多可能性，但就目前而言，你可以浏览本文档中的几个章节。查看 [Generators](/docs/sqlite/seed-functions) 章节，熟悉所有可用的生成器函数。
 
-A particularly great feature is the ability to use weighted randomization, both for generator values created for a column and for determining the number of related entities that can be generated by `drizzle-seed`.
+一个特别出色的特性是能够使用加权随机化，无论是对为列创建的生成器值，还是对 `drizzle-seed` 可以生成的相关实体数量。
 
-Please check [Weighted Random docs](#weighted-random) for more info.
+详情请查看 [Weighted Random docs](#加权随机)。
 </Callout>
 
 
-## Weighted Random
+## 加权随机
 
-There may be cases where you need to use multiple datasets with a different priority that should be inserted into your database during the seed stage. For such cases, drizzle-seed provides an API called weighted random
+在某些情况下，你可能需要在填充阶段向数据库插入多组具有不同优先级的数据集。对于这类情况，drizzle-seed 提供了一个称为 weighted random 的 API
 
-The Drizzle Seed package has a few places where weighted random can be used:
+Drizzle Seed 包有几处可以使用加权随机：
 
-- Columns inside each table refinements
-- The `with` property, determining the amount of related entities to be created
+- 每张表优化项中的列
+- `with` 属性，决定要创建的关联实体数量
 
-Let's check an example for both:
+我们来看一个同时涉及两者的示例：
 
 ```ts filename="schema.ts"
 import { sqliteTable, integer, text, text, real } from "drizzle-orm/sqlite-core";
@@ -313,7 +313,7 @@ export const details = sqliteTable(
 );
 ```
 
-**Example 1**: Refine the `unitPrice` generation logic to generate `5000` random prices, with a 30% chance of prices between 10-100 and a 70% chance of prices between 100-300
+**示例 1**：优化 `unitPrice` 的生成逻辑，生成 `5000` 个随机价格，其中 30% 概率为 10-100 之间的价格，70% 概率为 100-300 之间的价格
 
 ```ts filename="index.ts"
 import { drizzle } from "drizzle-orm/better-sqlite3";
@@ -347,7 +347,7 @@ async function main() {
 main();
 ```
 
-**Example 2**: For each order, generate 1 to 3 details with a 60% chance, 5 to 7 details with a 30% chance, and 8 to 10 details with a 10% chance
+**示例 2**：对于每个 order，以 60% 的概率生成 1 到 3 个 details，以 30% 的概率生成 5 到 7 个 details，以 10% 的概率生成 8 到 10 个 details
 
 ```ts filename="index.ts"
 import { drizzle } from "drizzle-orm/better-sqlite3";
@@ -374,7 +374,7 @@ async function main() {
 main();
 ```
 
-## Complex example
+## 复杂示例
 
 <CodeTabs items={["main.ts", "schema.ts"]}>
 <Section>
@@ -606,18 +606,18 @@ export const details = sqliteTable('order_detail', {
 </Section>
 </CodeTabs>
 
-## Limitations
+## 限制
 
-#### Types limitations for `with`
+#### `with` 的类型限制
 
-Due to certain TypeScript limitations and the current API in Drizzle, it is not possible to properly infer references between tables, especially when circular dependencies between tables exist.
+由于 TypeScript 的某些限制以及 Drizzle 当前的 API，无法正确推断表之间的引用，尤其是当表之间存在循环依赖时。
 
-This means the `with` option will display all tables in the schema, and you will need to manually select the one that has a one-to-many relationship
+这意味着 `with` 选项会显示 schema 中的所有表，你需要手动选择具有一对多关系的那个表
 
 <Callout title='warning'>
-The `with` option works for one-to-many relationships. For example, if you have one `user` and many `posts`, you can use users `with` posts, but you cannot use posts `with` users
+`with` 选项适用于一对多关系。例如，如果你有一个 `user` 和多个 `posts`，你可以使用 users `with` posts，但不能使用 posts `with` users
 </Callout>
 
-#### Type limitations for the third parameter in Drizzle tables:
+#### Drizzle 表中第三个参数的类型限制：
 
-Currently, we do not have type support for the third parameter in Drizzle tables. While it will work at runtime, it will not function correctly at the type level
+目前，我们尚不支持 Drizzle 表中第三个参数的类型。它在运行时可以工作，但在类型层面无法正确运作

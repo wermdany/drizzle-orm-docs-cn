@@ -1,5 +1,5 @@
 ---
-title: Count rows
+title: 统计行数
 ---
 import Section from "@mdx/Section.astro";
 import Prerequisites from "@mdx/Prerequisites.astro";
@@ -8,14 +8,14 @@ import CodeTab from '@mdx/CodeTab.astro';
 import Callout from '@mdx/Callout.astro';
 
 <Prerequisites>
-- Get started with [SingleStore](/docs/singlestore/get-started-singlestore)
-- [Select statement](/docs/singlestore/select)
-- [Filters](/docs/singlestore/operators) and [sql operator](/docs/singlestore/sql)
-- [Aggregations](/docs/singlestore/select#aggregations) and [Aggregation helpers](/docs/singlestore/select#aggregations-helpers)
-- [Joins](/docs/singlestore/joins)
+- 开始使用 [SingleStore](/docs/singlestore/get-started-singlestore)
+- [查询语句](/docs/singlestore/select)
+- [过滤器](/docs/singlestore/operators)和 [sql 运算符](/docs/singlestore/sql)
+- [聚合](/docs/singlestore/select#聚合)和[聚合辅助函数](/docs/singlestore/select#聚合辅助函数)
+- [连接](/docs/singlestore/joins)
 </Prerequisites>
 
-To count all rows in table you can use `count()` function or `sql` operator like below:
+要统计表中的所有行，你可以像下面这样使用 `count()` 函数或 `sql` 运算符：
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
   <CodeTab>
@@ -27,12 +27,12 @@ To count all rows in table you can use `count()` function or `sql` operator like
 
     await db.select({ count: count() }).from(products);
 
-    // Under the hood, the count() function casts its result to a number at runtime.
+    // 在底层，count() 函数会在运行时将其结果转换为 number。
     await db.select({ count: sql`count(*)`.mapWith(Number) }).from(products);
     ```
 
     ```ts
-    // result type
+    // 结果类型
     type Result = {
       count: number;
     }[];
@@ -54,7 +54,7 @@ To count all rows in table you can use `count()` function or `sql` operator like
   ```
 </CodeTabs>
 
-To count rows where the specified column contains non-NULL values you can use `count()` function with a column:
+要统计指定列包含非 NULL 值的行，你可以使用带列的 `count()` 函数：
 
 <Section>
 ```ts copy {1}
@@ -62,7 +62,7 @@ await db.select({ count: count(products.discount) }).from(products);
 ```
 
 ```ts
-// result type
+// 结果类型
 type Result = {
   count: number;
 }[];
@@ -73,7 +73,7 @@ select count(`discount`) from products;
 ```
 </Section>
 
-Drizzle has simple and flexible API, which lets you create your custom solutions. In SingleStore, `count()` can be returned as a string by the driver, so cast it to a number when you need a numeric result:
+Drizzle 拥有简单灵活的 API，让你可以创建自定义解决方案。在 SingleStore 中，`count()` 可能会被驱动以字符串形式返回，因此当你需要数值结果时，请将其转换为 number：
 
 <Section>
 ```ts copy {5,7,11,12}
@@ -81,9 +81,9 @@ import { AnyColumn, sql } from 'drizzle-orm';
 
 const customCount = (column?: AnyColumn) => {
   if (column) {
-    return sql<number>`cast(count(${column}) as unsigned)`; // In SingleStore cast to unsigned integer
+    return sql<number>`cast(count(${column}) as unsigned)`; // 在 SingleStore 中转换为无符号整数
   } else {
-    return sql<number>`cast(count(*) as unsigned)`; // In SingleStore cast to unsigned integer
+    return sql<number>`cast(count(*) as unsigned)`; // 在 SingleStore 中转换为无符号整数
   }
 };
 
@@ -99,14 +99,14 @@ select cast(count(`discount`) as unsigned) from products;
 
 
 <Callout type="warning">
-By specifying `sql<number>`, you are telling Drizzle that the **expected** type of the field is `number`.<br />
-If you specify it incorrectly (e.g. use `sql<string>` for a field that will be returned as a number), the runtime value won't match the expected type.
-Drizzle cannot perform any type casts based on the provided type generic, because that information is not available at runtime.
+通过指定 `sql<number>`，你是在告诉 Drizzle 该字段的**期望**类型是 `number`。<br />
+如果你指定错误（例如对将作为数字返回的字段使用 `sql<string>`），运行时值将与期望类型不匹配。
+Drizzle 无法基于所提供的类型泛型执行任何类型转换，因为该信息在运行时不可用。
 
-If you need to apply runtime transformations to the returned value, you can use the [`.mapWith()`](/docs/singlestore/sql#sqlmapwith) method.
+如果你需要对返回值应用运行时转换，可以使用 [`.mapWith()`](/docs/singlestore/sql#sqlmapwith) 方法。
 </Callout>
 
-To count rows that match a condition you can use `.where()` method:
+要统计匹配某个条件的行，你可以使用 `.where()` 方法：
 
 <Section>
 ```ts copy {4,6}
@@ -123,7 +123,7 @@ select count(*) from products where price > 100
 ```
 </Section>
 
-This is how you can use `count()` function with joins and aggregations:
+以下是如何将 `count()` 函数与 join 和聚合一起使用：
 
 <CodeTabs items={["index.ts", "schema.ts"]}>
 	<CodeTab>
@@ -131,7 +131,7 @@ This is how you can use `count()` function with joins and aggregations:
     import { count, eq } from 'drizzle-orm';
     import { countries, cities } from './schema';
 
-    // Count cities in each country
+    // 统计每个国家中的城市数量
     await db
       .select({
         country: countries.name,

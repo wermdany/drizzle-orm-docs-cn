@@ -11,21 +11,21 @@ import WhatsNextPostgres from "@mdx/WhatsNextPostgres.astro";
 
 # Drizzle \<\> Appwrite Postgres
 <Prerequisites>
-- Database [connection basics](/docs/connect-overview) with Drizzle
-- Appwrite native PostgreSQL database - [website](https://appwrite.io) & [docs](https://appwrite.io/docs/products/databases/postgresql)
-- Appwrite PostgreSQL connections - [docs](https://appwrite.io/docs/products/databases/postgresql/connections)
-- Drizzle PostgreSQL drivers - [docs](/docs/get-started-postgresql)
+- 使用 Drizzle 的数据库[连接基础](/docs/connect-overview)
+- Appwrite 原生 PostgreSQL 数据库 - [网站](https://appwrite.io) 和 [文档](https://appwrite.io/docs/products/databases/postgresql)
+- Appwrite PostgreSQL 连接 - [文档](https://appwrite.io/docs/products/databases/postgresql/connections)
+- Drizzle PostgreSQL 驱动 - [文档](/docs/get-started-postgresql)
 </Prerequisites>
 
-Appwrite offers dedicated, native PostgreSQL databases that you connect to directly over TLS. There is no Appwrite-specific driver or abstraction layer, so you can use Drizzle with either the [`node-postgres`](https://node-postgres.com/) or [`postgres.js`](https://github.com/porsager/postgres) driver, the same way you would with any PostgreSQL server.
+Appwrite 提供专用的原生 PostgreSQL 数据库，你可以通过 TLS 直接连接。没有 Appwrite 专用的驱动或抽象层，因此你可以像使用任何 PostgreSQL 服务器一样，搭配 [`node-postgres`](https://node-postgres.com/) 或 [`postgres.js`](https://github.com/porsager/postgres) 驱动来使用 Drizzle。
 
-To get your connection string, open your database in the Appwrite Console and click **Credentials**. The **Drizzle** tab contains a ready-made snippet, and the **DSN** and **.env** tabs contain the raw connection string. You can also fetch it from the Appwrite API with `postgresql.get()`. The connection string already includes `sslmode=require`, so no extra TLS configuration is needed.
+要获取连接字符串，请在 Appwrite 控制台中打开你的数据库，然后点击 **Credentials**。**Drizzle** 标签页包含可直接使用的片段，**DSN** 和 **.env** 标签页包含原始连接字符串。你也可以通过 Appwrite API 使用 `postgresql.get()` 获取。连接字符串已包含 `sslmode=require`，因此无需额外的 TLS 配置。
 
 ```env
 DATABASE_URL="postgresql://admin:<password>@db-<hash>.<region>.appwrite.center:5432/<database>?sslmode=require"
 ```
 
-#### Step 1 - Install packages
+#### 第 1 步 - 安装依赖包
 <CodeTabs items={["node-postgres (pg)", "postgres.js"]}>
 <Npm>
  drizzle-orm@rc pg
@@ -39,10 +39,10 @@ DATABASE_URL="postgresql://admin:<password>@db-<hash>.<region>.appwrite.center:5
 
 </CodeTabs>
 
-#### Step 2 - Initialize the driver and make a query
+#### 第 2 步 - 初始化驱动并发起查询
 <CodeTabs items={["node-postgres (pg)", "postgres.js"]}>
 ```typescript
-// Make sure to install the 'pg' package
+// 确保安装 'pg' 包
 import { drizzle } from 'drizzle-orm/node-postgres';
 
 const db = drizzle(process.env.DATABASE_URL);
@@ -50,7 +50,7 @@ const db = drizzle(process.env.DATABASE_URL);
 const result = await db.execute('select 1');
 ```
 ```typescript
-// Make sure to install the 'postgres' package
+// 确保安装 'postgres' 包
 import { drizzle } from 'drizzle-orm/postgres-js';
 
 const db = drizzle(process.env.DATABASE_URL);
@@ -59,11 +59,11 @@ const result = await db.execute('select 1');
 ```
 </CodeTabs>
 
-If you need to provide your existing drivers:
+如果你需要提供自己已有的驱动：
 
 <CodeTabs items={["node-postgres (pg)", "postgres.js"]}>
 ```typescript
-// Make sure to install the 'pg' package
+// 确保安装 'pg' 包
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -75,7 +75,7 @@ const db = drizzle({ client: pool });
 const result = await db.execute('select 1');
 ```
 ```typescript
-// Make sure to install the 'postgres' package
+// 确保安装 'postgres' 包
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -86,15 +86,15 @@ const result = await db.execute('select 1');
 ```
 </CodeTabs>
 
-#### Connection pooling for serverless
+#### 面向 Serverless 的连接池
 
-Appwrite runs a [connection pooler](https://appwrite.io/docs/products/databases/postgresql/connection-pooling) on port `6432` of the same hostname. In serverless and edge environments, route your application traffic through the pooler so short-lived instances don't exhaust the engine's connection limit, and keep Drizzle Kit pointed at the direct engine port `5432`, because migrations issue DDL that needs a session-level connection.
+Appwrite 在同一主机名的 `6432` 端口上运行一个[连接池器](https://appwrite.io/docs/products/databases/postgresql/connection-pooling)。在 serverless 和 edge 环境中，请将应用流量经由连接池器转发，以免短生命周期的实例耗尽引擎的连接上限；同时让 Drizzle Kit 指向引擎的直接端口 `5432`，因为迁移会发出需要会话级连接的 DDL。
 
 ```env
-# Runtime: pooled, transaction mode
+# 运行时：经由连接池，事务模式
 DATABASE_URL="postgresql://admin:<password>@db-<hash>.<region>.appwrite.center:6432/<database>?sslmode=require"
 
-# Migrations & introspection: direct connection to the engine
+# 迁移与内省：直接连接引擎
 DIRECT_URL="postgresql://admin:<password>@db-<hash>.<region>.appwrite.center:5432/<database>?sslmode=require"
 ```
 
@@ -112,7 +112,7 @@ export default defineConfig({
 ```
 
 <Callout type="warning" emoji="⚙️">
-The pooler defaults to **transaction mode**, which does not keep a backend connection across statements, so server-side prepared statements are unavailable. With `postgres.js`, build the client yourself with `prepare: false` when connecting through the pooler:
+连接池器默认使用 **transaction mode**，它不会跨语句保持后端连接，因此服务端预处理语句不可用。使用 `postgres.js` 时，通过连接池器连接请自行构建客户端并传入 `prepare: false`：
 
 ```typescript
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -122,9 +122,9 @@ const queryClient = postgres(process.env.DATABASE_URL, { prepare: false });
 const db = drizzle({ client: queryClient });
 ```
 
-If you rely on prepared statements, advisory locks, `LISTEN`/`NOTIFY`, temporary tables or `SET LOCAL`, switch the pooler to session mode or use the direct port.
+如果你依赖预处理语句、advisory locks、`LISTEN`/`NOTIFY`、临时表或 `SET LOCAL`，请将连接池器切换为 session mode，或使用直接端口。
 </Callout>
 
-#### What's next?
+#### 下一步是什么？
 
 <WhatsNextPostgres/>

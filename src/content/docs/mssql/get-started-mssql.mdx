@@ -13,22 +13,22 @@ import WhatsNextMSSQL from "@mdx/WhatsNextMSSQL.astro";
 <br/>
 
 <Prerequisites>
-- Database [connection basics](/docs/mssql/connect-overview) with Drizzle
-- node-mssql [basics](https://github.com/tediousjs/node-mssql)
+- 使用 Drizzle 的数据库[连接基础](/docs/mssql/connect-overview)
+- node-mssql [基础](https://github.com/tediousjs/node-mssql)
 </Prerequisites>
 
-Drizzle has native support for MSSQL connections with the `mssql` driver.
+Drizzle 通过 `mssql` 驱动原生支持 MSSQL 连接。
 
-#### Step 1 - Install packages
+#### 步骤 1 - 安装包
 <Npm>
  drizzle-orm@rc mssql
  -D drizzle-kit@rc
 </Npm>
 
-#### Step 2 - Initialize the driver and make a query
-<CodeTabs items={["mssql", "mssql with config"]}>
+#### 步骤 2 - 初始化驱动并执行查询
+<CodeTabs items={["mssql", "带配置的 mssql"]}>
 ```typescript copy
-// Make sure to install the 'mssql' package 
+// 确保安装了 'mssql' 包 
 import { drizzle } from 'drizzle-orm/node-mssql';
 
 const db = drizzle(process.env.DATABASE_URL);
@@ -36,7 +36,7 @@ const db = drizzle(process.env.DATABASE_URL);
 const result = await db.execute('select 1');
 ```
 ```typescript copy
-// Make sure to install the 'mssql' package 
+// 确保安装了 'mssql' 包 
 import { drizzle } from 'drizzle-orm/node-mssql';
 
 const db = drizzle({
@@ -48,7 +48,7 @@ const result = await db.execute('select 1');
 </CodeTabs>
 
 <Callout type='warning'>
-As long as the `node-mssql` driver requires `await` on `Pool` initialization, we need to `await` it before each request - unless you are providing your own Pool instance to Drizzle. In that case, when you want to access `db.$client`, you first need to `await` it, and then use it
+由于 `node-mssql` 驱动在初始化 `Pool` 时需要 `await`，我们需要在每个请求之前 `await` 它 —— 除非你向 Drizzle 提供了自己的 Pool 实例。在那种情况下，当你想访问 `db.$client` 时，你需要先 `await` 它，然后再使用它
 
 ```ts
 const awaitedClient = await db.$client.$instance();
@@ -56,10 +56,10 @@ const response = awaitedClient.query...;
 ```
 </Callout>
 
-If you need to provide your existing driver:
+如果你需要提供现有的驱动：
 
 ```typescript copy
-// Make sure to install the 'mssql' package 
+// 确保安装了 'mssql' 包 
 import { drizzle } from "drizzle-orm/node-mssql";
 import { connect } from 'mssql';
 
@@ -69,6 +69,6 @@ const db = drizzle({ client: pool });
 const result = await db.execute('select 1');
 ```
 
-#### What's next?
+#### 接下来做什么？
 
 <WhatsNextMSSQL/>
